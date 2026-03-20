@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OTILYAS Dashboard 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f0eb;color:#2E2623;direction:rtl}
+.header{background:linear-gradient(135deg,#2E2623,#4a3f3a);color:#fff;padding:20px 30px;display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:1.6em;font-weight:300;letter-spacing:2px}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:#fff;border-radius:12px;padding:18px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.kpi .label{font-size:.78em;color:#997C60;margin-bottom:6px;font-weight:600}
+.kpi .value{font-size:1.6em;font-weight:700}
+.kpi .sub{font-size:.72em;color:#999;margin-top:3px}
+.positive{color:#2d8a4e}.negative{color:#cc3333}.neutral{color:#2E2623}
+.section{background:#fff;border-radius:12px;padding:22px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.section h2{font-size:1.15em;color:#2E2623;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #E1D9D0}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:768px){.grid-2{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr}.kpi-row{grid-template-columns:repeat(2,1fr)}}
+table{width:100%;border-collapse:collapse;font-size:.88em}
+th{background:#2E2623;color:#fff;padding:9px 10px;text-align:right;font-weight:500}
+td{padding:7px 10px;border-bottom:1px solid #eee}
+tr:hover{background:#f9f6f3}
+.total-row{background:#E1D9D0;font-weight:700}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72em;font-weight:600}
+.tag-urgent{background:#ffe0e0;color:#cc3333}
+.tag-april{background:#fff3d0;color:#996600}
+.tag-active{background:#d0f0d0;color:#2d8a4e}
+.tag-cancelled{background:#eee;color:#999;text-decoration:line-through}
+.tag-pending{background:#fff3d0;color:#996600}
+.chart-container{position:relative;height:260px}
+.action-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f0ece8}
+.action-saving{font-weight:700;color:#2d8a4e;min-width:90px;text-align:left}
+.scenario-card{border:2px solid #E1D9D0;border-radius:12px;padding:18px;text-align:center}
+.scenario-card:hover{border-color:#997C60}
+.scenario-card h3{font-size:.95em;margin-bottom:8px;color:#997C60}
+.scenario-card .big{font-size:1.4em;font-weight:700;margin:4px 0}
+.tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.tab{padding:7px 14px;border:none;background:#E1D9D0;border-radius:8px;cursor:pointer;font-size:.82em;font-weight:600;color:#2E2623}
+.tab.active{background:#2E2623;color:#fff}
+.tab-content{display:none}.tab-content.active{display:block}
+.alert{background:#fff8f0;border-right:4px solid #ff9900;padding:11px 14px;border-radius:0 8px 8px 0;margin-bottom:14px;font-size:.88em}
+.progress-bar{height:7px;background:#eee;border-radius:4px;overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;border-radius:4px}
+.bank-card{border:2px solid #E1D9D0;border-radius:12px;padding:16px;text-align:center}
+.bank-card h3{font-size:.9em;color:#997C60;margin-bottom:6px}
+.bank-card .bank-name{font-size:1.1em;font-weight:700;margin-bottom:4px}
+.bank-card .bank-detail{font-size:.78em;color:#666;margin:2px 0}
+.cc-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0ece8}
+.cc-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.7em;color:#fff}
+.cc-info{flex:1}
+.cc-info .cc-name{font-weight:600;font-size:.92em}
+.cc-info .cc-detail{font-size:.75em;color:#666}
+.cc-amount{font-weight:700;font-size:.95em;text-align:left}
+.sub-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0ece8}
+.sub-name{font-weight:600;font-size:.88em}
+.sub-price{font-weight:700;font-size:.88em;min-width:80px;text-align:left}
+.sub-card{font-size:.72em;color:#999}
+.timeline-item{position:relative;padding:10px 0 10px 24px;border-right:3px solid #E1D9D0;margin-right:8px}
+.timeline-item::before{content:'';position:absolute;right:-8px;top:14px;width:12px;height:12px;border-radius:50%;background:#997C60;border:2px solid #fff}
+.timeline-item .tl-date{font-size:.78em;color:#997C60;font-weight:600}
+.timeline-item .tl-title{font-size:.88em;font-weight:600;margin:2px 0}
+.timeline-item .tl-detail{font-size:.78em;color:#666}
+.footer{text-align:center;padding:18px;color:#999;font-size:.78em}
+</style>
+</head>
+<body>
+<div class="header"><div><h1>OTILYAS</h1><div>Financial Dashboard</div></div><div style="opacity:.7;font-size:.9em">March 2026</div></div>
+<div class="container">
+
+<!-- KPI Row -->
+<div class="kpi-row">
+<div class="kpi"><div class="label">Income (regular)</div><div class="value neutral">10,400</div><div class="sub">no fair</div></div>
+<div class="kpi"><div class="label">Expenses (budget)</div><div class="value neutral">20,254</div><div class="sub">biz + personal</div></div>
+<div class="kpi"><div class="label">Ofer transfer</div><div class="value positive">10,000</div><div class="sub">monthly</div></div>
+<div class="kpi"><div class="label">Gap (with Ofer)</div><div class="value negative">-2,400</div><div class="sub">regular month</div></div>
+<div class="kpi"><div class="label">Break-even</div><div class="value neutral">17,665</div><div class="sub">biz + home</div></div>
+<div class="kpi"><div class="label">Items/month</div><div class="value neutral">18</div><div class="sub">for balance</div></div>
+</div>
+
+<div class="alert"><strong>Good news:</strong> Installment 620 ends April. Dental 944 ends June. Total 1,564 freed!</div>
+
+<!-- Charts Row -->
+<div class="grid-2">
+<div class="section"><h2>Income by Channel</h2><div class="chart-container"><canvas id="incomeChart"></canvas></div></div>
+<div class="section"><h2>Expense Breakdown</h2><div class="chart-container"><canvas id="expenseChart"></canvas></div></div>
+</div>
+
+<!-- Income Detail -->
+<div class="section"><h2>Income Detail</h2>
+<table><thead><tr><th>Channel</th><th>Jan</th><th>Feb</th><th>Target</th></tr></thead><tbody>
+<tr><td>Hyp (shop+fair)</td><td>18,116</td><td>4,875</td><td>5,500</td></tr>
+<tr><td>WIX</td><td>3,702</td><td>2,695</td><td>3,000</td></tr>
+<tr><td>MASKIT</td><td>1,338</td><td>1,240</td><td>1,300</td></tr>
+<tr><td>Israel Museum</td><td>-</td><td>427</td><td>400</td></tr>
+<tr><td>MUZA</td><td>-</td><td>-</td><td>200</td></tr>
+<tr class="total-row"><td>TOTAL</td><td>23,155</td><td>9,237</td><td>10,400</td></tr>
+</tbody></table></div>
+
+<!-- WOLT Insight -->
+<div class="section"><h2>WOLT Insight</h2>
+<div class="grid-2"><div>
+<p style="font-size:1.05em;margin-bottom:8px"><strong>76% of WOLT = grocery, not restaurant!</strong></p>
+<p style="font-size:.85em;color:#666;margin-bottom:12px">Jan: 11 orders 2,105 | Feb: 8 orders 2,003</p>
+<div style="display:flex;gap:12px">
+<div style="flex:1;text-align:center;padding:12px;background:#ffe0e0;border-radius:8px">
+<div style="font-size:.78em;color:#cc3333">Grocery via WOLT</div>
+<div style="font-size:1.4em;font-weight:700;color:#cc3333">1,560/mo</div>
+<div style="font-size:.72em">+25% premium vs supermarket</div></div>
+<div style="flex:1;text-align:center;padding:12px;background:#d0f0d0;border-radius:8px">
+<div style="font-size:.78em;color:#2d8a4e">Restaurants</div>
+<div style="font-size:1.4em;font-weight:700;color:#2d8a4e">417/mo</div>
+<div style="font-size:.72em">reasonable</div></div></div></div>
+<div><div class="chart-container" style="height:190px"><canvas id="woltChart"></canvas></div></div></div></div>
+
+<!-- ========== NEW: Bank Accounts & Credit Cards ========== -->
+<div class="section"><h2>&#x1f3e6; Bank Accounts & Credit Cards</h2>
+<div class="grid-2">
+<!-- Business Account -->
+<div class="bank-card" style="border-color:#2E2623">
+<div style="font-size:.72em;color:#fff;background:#2E2623;display:inline-block;padding:2px 10px;border-radius:10px;margin-bottom:8px">Business</div>
+<div class="bank-name">International Bank</div>
+<div class="bank-detail">Branch 105 | Account ...31</div>
+<div class="bank-detail">Credit limit: <strong>10,000</strong></div>
+<div style="margin-top:10px;padding-top:10px;border-top:1px solid #eee">
+<div class="cc-row" style="border:none;padding:4px 0">
+<div class="cc-icon" style="background:#2E2623">MAX</div>
+<div class="cc-info"><div class="cc-name">MAX 1116</div><div class="cc-detail">Business card</div></div>
+</div></div></div>
+<!-- Personal Account -->
+<div class="bank-card" style="border-color:#997C60">
+<div style="font-size:.72em;color:#fff;background:#997C60;display:inline-block;padding:2px 10px;border-radius:10px;margin-bottom:8px">Personal</div>
+<div class="bank-name">Discount Bank</div>
+<div class="bank-detail">Branch 100 | Account ...0739</div>
+<div class="bank-detail">Credit limit: <strong>15,000</strong></div>
+<div style="margin-top:10px;padding-top:10px;border-top:1px solid #eee">
+<div class="cc-row" style="border:none;padding:4px 0">
+<div class="cc-icon" style="background:#1a5276">DIN</div>
+<div class="cc-info"><div class="cc-name">Diners 0112</div><div class="cc-detail">~14,000/mo | charge 15th</div></div>
+</div>
+<div class="cc-row" style="border:none;padding:4px 0">
+<div class="cc-icon" style="background:#6c3483">VISA</div>
+<div class="cc-info"><div class="cc-name">Visa 8953</div><div class="cc-detail">~2,100/mo | charge 2nd</div></div>
+</div></div></div>
+</div>
+
+<!-- Diners Breakdown -->
+<div style="margin-top:14px">
+<h3 style="font-size:.95em;color:#997C60;margin-bottom:8px">Diners 0112 Breakdown (~14,000/mo)</h3>
+<div class="chart-container" style="height:200px"><canvas id="dinersChart"></canvas></div>
+</div>
+</div>
+
+<!-- ========== NEW: Subscriptions ========== -->
+<div class="section"><h2>&#x1f4cb; Active Subscriptions</h2>
+<div class="tabs">
+<button class="tab active" onclick="showTab(this,'tabBizSub')">Business USD</button>
+<button class="tab" onclick="showTab(this,'tabBizILS')">Business ILS</button>
+<button class="tab" onclick="showTab(this,'tabCancelled')">Cancelled</button>
+<button class="tab" onclick="showTab(this,'tabPending')">Pending Action</button>
+</div>
+
+<div id="tabBizSub" class="tab-content active">
+<div class="sub-row"><div><div class="sub-name">Claude</div><div class="sub-card">credit card</div></div><div class="sub-price">$100/mo</div></div>
+<div class="sub-row"><div><div class="sub-name">Shopify</div><div class="sub-card">credit card</div></div><div class="sub-price">$43.95/mo</div></div>
+<div class="sub-row"><div><div class="sub-name">Canva (Teams)</div><div class="sub-card">credit card</div></div><div class="sub-price">$30/mo</div></div>
+<div class="sub-row"><div><div class="sub-name">Midjourney</div><div class="sub-card">credit card</div></div><div class="sub-price">$30/mo</div></div>
+<div class="sub-row"><div><div class="sub-name">GPT4</div><div class="sub-card">credit card</div></div><div class="sub-price">$20/mo</div></div>
+<div class="sub-row" style="background:#E1D9D0;border-radius:8px;padding:8px 10px;margin-top:4px"><div><strong>Total USD</strong></div><div class="sub-price" style="font-size:1em">$223.95/mo</div></div>
+</div>
+
+<div id="tabBizILS" class="tab-content">
+<div class="sub-row"><div><div class="sub-name">Google Play</div><div class="sub-card">various</div></div><div class="sub-price">220/mo</div></div>
+<div class="sub-row"><div><div class="sub-name">Spotify</div><div class="sub-card">MAX 1116</div></div><div class="sub-price">44/mo</div></div>
+<div class="sub-row"><div><div class="sub-name">Wolt+</div><div class="sub-card">Diners 0112</div></div><div class="sub-price">49/mo</div></div>
+<div class="sub-row"><div><div class="sub-name">Microsoft 365</div><div class="sub-card">annual</div></div><div class="sub-price">36/mo</div></div>
+<div class="sub-row"><div><div class="sub-name">Instagram Verified</div><div class="sub-card">credit card</div></div><div class="sub-price">54/mo</div></div>
+<div class="sub-row"><div><div class="sub-name">Card fees</div><div class="sub-card">Discount</div></div><div class="sub-price">20/mo</div></div>
+<div class="sub-row" style="background:#E1D9D0;border-radius:8px;padding:8px 10px;margin-top:4px"><div><strong>Total ILS subs</strong></div><div class="sub-price" style="font-size:1em">423/mo</div></div>
+</div>
+
+<div id="tabCancelled" class="tab-content">
+<div class="sub-row"><div><div class="sub-name" style="text-decoration:line-through;color:#999">PayPlus</div></div><div><span class="tag tag-cancelled">cancelled</span></div></div>
+<div class="sub-row"><div><div class="sub-name" style="text-decoration:line-through;color:#999">Etsy</div></div><div><span class="tag tag-cancelled">cancelled</span></div></div>
+<div class="sub-row"><div><div class="sub-name" style="text-decoration:line-through;color:#999">VELO</div></div><div><span class="tag tag-cancelled">cancelled</span></div></div>
+<div class="sub-row"><div><div class="sub-name" style="text-decoration:line-through;color:#999">INSTORIES</div></div><div><span class="tag tag-cancelled">cancelled</span></div></div>
+<div class="sub-row"><div><div class="sub-name" style="text-decoration:line-through;color:#999">Mifal HaPais</div></div><div><span class="tag tag-cancelled">cancelled</span></div></div>
+</div>
+
+<div id="tabPending" class="tab-content">
+<div class="sub-row" style="background:#fff0f0;border-radius:8px;padding:8px 10px"><div><div class="sub-name">GPT4 <span class="tag tag-urgent">cancel NOW</span></div></div><div class="sub-price negative">$20/mo</div></div>
+<div class="sub-row" style="background:#fff0f0;border-radius:8px;padding:8px 10px;margin-top:4px"><div><div class="sub-name">Canva: Teams &rarr; Pro <span class="tag tag-urgent">downgrade</span></div></div><div class="sub-price negative">$17/mo save</div></div>
+<div class="sub-row" style="background:#fff0f0;border-radius:8px;padding:8px 10px;margin-top:4px"><div><div class="sub-name">Instagram Verified <span class="tag tag-urgent">cancel NOW</span></div></div><div class="sub-price negative">54/mo</div></div>
+<div class="sub-row" style="background:#fff3d0;border-radius:8px;padding:8px 10px;margin-top:4px"><div><div class="sub-name">Wolt+ <span class="tag tag-april">cancel by 16/04</span></div></div><div class="sub-price negative">49/mo</div></div>
+<div class="sub-row" style="background:#fff0f0;border-radius:8px;padding:8px 10px;margin-top:4px"><div><div class="sub-name">Card fees <span class="tag tag-urgent">cancel NOW</span></div></div><div class="sub-price negative">20/mo</div></div>
+</div>
+</div>
+
+<!-- ========== NEW: Credit Inquiries ========== -->
+<div class="section"><h2>&#x1f50d; Credit Inquiries (BDI/LAI)</h2>
+<p style="font-size:.82em;color:#666;margin-bottom:12px">Requests to view your credit information</p>
+<table>
+<thead><tr><th>Date</th><th>Company</th><th>Via</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>08/08/2024</td><td>Max IT Finance Ltd</td><td>BDI Coface</td><td><span class="tag tag-active">OK</span></td></tr>
+<tr><td>06/03/2024</td><td>First International Bank</td><td>LAI Credit Bureau</td><td><span class="tag tag-active">OK</span></td></tr>
+</tbody>
+</table>
+<p style="font-size:.75em;color:#999;margin-top:8px">2 inquiries in last 2 years. Low inquiry count = positive signal.</p>
+</div>
+
+<!-- ========== NEW: Key Dates Timeline ========== -->
+<div class="section"><h2>&#x1f4c5; Key Financial Dates</h2>
+<div class="timeline-item">
+<div class="tl-date">April 2026</div>
+<div class="tl-title positive">Installment ends (+620/mo)</div>
+<div class="tl-detail">Discount Bank installment plan completes</div>
+</div>
+<div class="timeline-item">
+<div class="tl-date">16 April 2026</div>
+<div class="tl-title negative">Cancel Wolt+ before 18/04 renewal</div>
+<div class="tl-detail">Calendar reminder set</div>
+</div>
+<div class="timeline-item">
+<div class="tl-date">15 April 2026</div>
+<div class="tl-title">Check Phoenix/Migdal price increase</div>
+<div class="tl-detail">Insurance premium review</div>
+</div>
+<div class="timeline-item">
+<div class="tl-date">June 2026</div>
+<div class="tl-title positive">Dental (Clalit Smile) ends (+944/mo)</div>
+<div class="tl-detail">Total freed after June: 1,564/mo</div>
+</div>
+<div class="timeline-item" style="border-right-color:#2d8a4e">
+<div class="tl-date">June 2026</div>
+<div class="tl-title positive" style="font-size:1em">Target: Balance!</div>
+<div class="tl-detail">All cuts + installments ending = positive cash flow</div>
+</div>
+</div>
+
+<!-- Savings Actions -->
+<div class="section"><h2>Savings Actions</h2>
+<div class="action-item" style="background:#fff0f0;padding:10px;border-radius:8px;margin-bottom:8px"><div><strong>Stop WOLT grocery</strong> <span class="tag tag-urgent">NOW</span></div><div class="action-saving">1,010/mo</div></div>
+<div class="action-item"><div>Installment ends <span class="tag tag-april">April</span></div><div class="action-saving">620/mo</div></div>
+<div class="action-item"><div>Cancel GPT4 <span class="tag tag-urgent">NOW</span></div><div class="action-saving">73/mo</div></div>
+<div class="action-item"><div>Google One downgrade <span class="tag tag-april">April</span></div><div class="action-saving">65/mo</div></div>
+<div class="action-item"><div>Canva downgrade <span class="tag tag-urgent">NOW</span></div><div class="action-saving">62/mo</div></div>
+<div class="action-item"><div>Cancel Instagram Verified <span class="tag tag-urgent">NOW</span></div><div class="action-saving">54/mo</div></div>
+<div class="action-item"><div>Cancel Wolt+ <span class="tag tag-april">16/04</span></div><div class="action-saving">49/mo</div></div>
+<div class="action-item"><div>Cancel card fees <span class="tag tag-urgent">NOW</span></div><div class="action-saving">20/mo</div></div>
+<div class="action-item" style="background:#E1D9D0;padding:10px;border-radius:8px"><div><strong>TOTAL savings</strong></div><div class="action-saving" style="font-size:1.15em">1,953/mo</div></div></div>
+
+<!-- Strategic Scenarios -->
+<div class="section"><h2>Strategic Scenarios</h2>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+<div class="scenario-card"><h3>A. Shop as-is</h3><div>In: 9,775 | Out: 20,796</div><div class="big negative">-1,021</div><div class="sub">with Ofer 10K</div></div>
+<div class="scenario-card" style="border-color:#2d8a4e"><h3>B. Rent + Online</h3><div>In: 11,900 | Out: 19,916</div><div class="big positive">+1,984</div><div class="sub">with Ofer 10K</div></div>
+<div class="scenario-card"><h3>C. Hybrid</h3><div>In: 11,775 | Out: 20,796</div><div class="big positive">+979</div><div class="sub">with Ofer 10K</div></div>
+</div><p style="margin-top:12px;font-size:.82em;color:#997C60;text-align:center">Shop: owned, 13sqm Shenkin. Est rent ~7,000. Needs survey.</p></div>
+
+<!-- Path to Balance -->
+<div class="section" style="background:linear-gradient(135deg,#f0fff0,#fff)"><h2>Path to Balance</h2>
+<div style="max-width:450px;margin:0 auto">
+<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:.88em"><span>Current gap</span><span class="negative" style="font-weight:700">-2,400</span></div><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#cc3333"></div></div></div>
+<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:.88em"><span>+ Cuts (1,953)</span><span class="negative">-447</span></div><div class="progress-bar"><div class="progress-fill" style="width:80%;background:#ff9900"></div></div></div>
+<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:.88em"><span>+ Installment ends Apr (620)</span><span class="positive">+173</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;background:#2d8a4e"></div></div></div>
+<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:.88em"><span>+ Dental ends Jun (944)</span><span class="positive" style="font-weight:700">+1,117</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;background:#2d8a4e"></div></div></div>
+<p style="text-align:center;margin-top:18px;font-size:1.05em;font-weight:700;color:#2d8a4e">Balance by June 2026</p></div></div>
+
+</div>
+<div class="footer">OTILYAS Dashboard | Rif | March 2026</div>
+<script>
+function showTab(btn,id){document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active')}
+new Chart(document.getElementById('incomeChart'),{type:'bar',data:{labels:['Hyp','WIX','MASKIT','Museum','MUZA'],datasets:[{label:'Jan',data:[18116,3702,1338,0,0],backgroundColor:'#2E2623'},{label:'Feb',data:[4875,2695,1240,427,0],backgroundColor:'#AF9C87'},{label:'Target',data:[5500,3000,1300,400,200],backgroundColor:'#D8C9B8'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true}}}});
+new Chart(document.getElementById('expenseChart'),{type:'doughnut',data:{labels:['Biz Fixed','Biz Var','Pers Fixed','Pers Var','Install','Annual'],datasets:[{data:[3184,6700,1235,6211,944,2000],backgroundColor:['#2E2623','#AF9C87','#997C60','#D8C9B8','#E1D9D0','#f5f0eb'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+new Chart(document.getElementById('woltChart'),{type:'pie',data:{labels:['Grocery 76%','Restaurant 20%','Parcels 3%','Wolt+ 1%'],datasets:[{data:[1560,417,65,49],backgroundColor:['#cc3333','#2d8a4e','#D8C9B8','#E1D9D0']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+new Chart(document.getElementById('dinersChart'),{type:'bar',data:{labels:['Grocery','WOLT','Shopping','Restaurants','Gas','Pharmacy','Other'],datasets:[{label:'Monthly avg',data:[3800,1600,1600,870,490,435,5205],backgroundColor:['#2E2623','#cc3333','#AF9C87','#997C60','#D8C9B8','#E1D9D0','#f5f0eb']}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}}});
+</script>
+</body></html>
