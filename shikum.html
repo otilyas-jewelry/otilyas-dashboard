@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>אגף שיקום — כרמל שפריצר</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f6f8;
+  --card: #ffffff;
+  --header-bg: #1a365d;
+  --header-accent: #2b6cb0;
+  --blue: #2b6cb0;
+  --blue-light: #ebf4ff;
+  --green: #276749;
+  --green-bg: #e6ffed;
+  --green-light: #c6f6d5;
+  --red: #c53030;
+  --red-bg: #fff5f5;
+  --red-light: #fed7d7;
+  --amber: #b7791f;
+  --amber-bg: #fefcbf;
+  --purple: #6b46c1;
+  --purple-bg: #faf5ff;
+  --text: #1a202c;
+  --text-sec: #4a5568;
+  --text-muted: #a0aec0;
+  --border: #e2e8f0;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-lg: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04);
+  --font: 'Heebo', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); direction: rtl; }
+
+.header {
+  background: linear-gradient(135deg, #2d3748, #4a5568);
+  color: #fff;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,.2);
+}
+.header h1 { font-size: 1.3em; font-weight: 700; }
+.header-sub { font-size: .75em; opacity: .8; margin-top: 2px; }
+.header-right { text-align: left; }
+.header-right .time { font-family: var(--mono); font-size: .8em; }
+.back-link { color: rgba(255,255,255,.7); text-decoration: none; font-size: .78em; display: inline-flex; align-items: center; gap: 4px; transition: color .2s; }
+.back-link:hover { color: #fff; }
+
+.container { max-width: 960px; margin: 0 auto; padding: 14px; }
+
+/* KPI row */
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+.kpi {
+  background: var(--card); border-radius: var(--radius);
+  padding: 16px 14px; text-align: center;
+  box-shadow: var(--shadow); transition: transform .2s;
+  border-top: 3px solid transparent;
+}
+.kpi:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.kpi-label { font-size: .68em; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .3px; margin-bottom: 4px; }
+.kpi-value { font-family: var(--mono); font-size: 1.4em; font-weight: 700; line-height: 1.1; }
+.kpi-sub { font-size: .65em; color: var(--text-muted); margin-top: 3px; }
+
+/* Alert */
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  font-size: .84em;
+  box-shadow: var(--shadow);
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.alert-info { background: var(--blue-light); border-right: 4px solid var(--blue); }
+.alert-warn { background: var(--amber-bg); border-right: 4px solid var(--amber); }
+.alert-danger { background: var(--red-bg); border-right: 4px solid var(--red); }
+.alert-good { background: var(--green-bg); border-right: 4px solid var(--green); }
+
+/* Card */
+.card {
+  background: var(--card); border-radius: var(--radius);
+  padding: 18px; margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.card-title {
+  font-size: 1em; font-weight: 700; color: var(--header-bg);
+  margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.card-title .badge {
+  font-size: .65em; font-weight: 600;
+  padding: 2px 8px; border-radius: 10px;
+}
+
+/* Appeal card */
+.appeal {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  transition: all .2s;
+  position: relative;
+}
+.appeal:hover { border-color: var(--blue); box-shadow: var(--shadow-lg); }
+.appeal-id {
+  font-family: var(--mono); font-size: .72em; color: var(--text-muted);
+  background: #f7fafc; display: inline-block; padding: 2px 8px; border-radius: 6px;
+  margin-bottom: 6px;
+}
+.appeal-type {
+  display: inline-block; padding: 2px 8px; border-radius: 10px;
+  font-size: .68em; font-weight: 600; margin-right: 6px;
+}
+.type-complaint { background: var(--red-bg); color: var(--red); }
+.type-request { background: var(--amber-bg); color: var(--amber); }
+.type-positive { background: var(--green-bg); color: var(--green); }
+.type-general { background: var(--purple-bg); color: var(--purple); }
+.appeal-subject { font-weight: 700; font-size: .92em; margin: 6px 0 4px; }
+.appeal-detail { font-size: .8em; color: var(--text-sec); line-height: 1.6; }
+.appeal-status {
+  position: absolute; top: 14px; left: 14px;
+  display: inline-block; padding: 2px 10px; border-radius: 10px;
+  font-size: .68em; font-weight: 600;
+}
+.status-waiting { background: var(--amber-bg); color: var(--amber); }
+.status-done { background: var(--green-bg); color: var(--green); }
+.status-active { background: var(--blue-light); color: var(--blue); }
+
+/* Timeline */
+.timeline-item {
+  position: relative;
+  padding: 10px 0 10px 22px;
+  border-right: 3px solid var(--border);
+  margin-right: 8px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  right: -8px; top: 14px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--blue);
+  border: 2px solid #fff;
+}
+.timeline-item.done::before { background: var(--green); }
+.timeline-item.warn::before { background: var(--amber); }
+.tl-date { font-size: .75em; color: var(--blue); font-weight: 600; }
+.tl-text { font-size: .85em; font-weight: 600; margin: 2px 0; }
+.tl-sub { font-size: .75em; color: var(--text-sec); }
+
+/* MRI table */
+table { width: 100%; border-collapse: collapse; font-size: .82em; }
+th { background: var(--header-bg); color: #fff; padding: 8px 10px; text-align: right; font-weight: 500; font-size: .85em; }
+td { padding: 7px 10px; border-bottom: 1px solid var(--border); }
+tr:hover { background: #f7fafc; }
+
+/* Tag */
+.tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .68em; font-weight: 600; }
+.tag-pending { background: var(--amber-bg); color: var(--amber); }
+.tag-done { background: var(--green-bg); color: var(--green); }
+.tag-urgent { background: var(--red-bg); color: var(--red); }
+
+/* Task list */
+.task { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: .84em; }
+.task:last-child { border-bottom: none; }
+.task-check { flex-shrink: 0; width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: .7em; margin-top: 1px; }
+.task-check.done { background: var(--green); border-color: var(--green); color: #fff; }
+.task-check.pending { border-color: var(--amber); }
+
+/* Contact card */
+.contact-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: .84em; }
+.contact-row:last-child { border-bottom: none; }
+
+/* Section nav */
+.nav { display: flex; gap: 4px; overflow-x: auto; padding: 4px 0 12px; scrollbar-width: none; }
+.nav::-webkit-scrollbar { display: none; }
+.nav a {
+  flex-shrink: 0; padding: 6px 14px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; font-size: .75em; font-weight: 600;
+  color: var(--text-sec); text-decoration: none;
+  transition: all .2s; white-space: nowrap;
+}
+.nav a:hover, .nav a.active { background: #2d3748; color: #fff; border-color: #2d3748; }
+
+/* Reveal */
+.reveal { opacity: 0; transform: translateY(12px); transition: all .5s; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Footer */
+.footer { text-align: center; padding: 20px; font-size: .72em; color: var(--text-muted); }
+
+/* Prescription */
+.rx-card {
+  background: linear-gradient(135deg, var(--blue-light), #f0f5ff);
+  border: 1px solid #bee3f8;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+}
+.rx-status {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .82em; font-weight: 600; color: var(--amber);
+  background: #fff; padding: 4px 12px; border-radius: 8px;
+  margin-bottom: 8px;
+}
+.rx-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(183,121,31,.4)} 50%{opacity:.5;box-shadow:0 0 0 5px rgba(183,121,31,0)} }
+
+@media(max-width:640px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<script>
+const D = {
+  lastUpdated: '2026-03-20',
+
+  person: {
+    name: 'כרמל שפריצר',
+    id: '051976975',
+    phone: '0544940815',
+  },
+
+  // All appeals to אגף שיקום
+  appeals: [
+    {
+      id: '82058388',
+      date: '19/03/2026',
+      category: 'טיפול רפואי > הפניות לטיפול',
+      type: 'תלונה/בקשה',
+      subject: 'שוחרר מבני ציון לפני המלחמה באמצע בירורים חשובים',
+      detail: 'כרמל שוחרר מבית חולים בני ציון לפני פרוץ המלחמה באמצע בדיקות חשובות. מאז לא הושלם הבירור הרפואי.',
+      status: 'ממתין לתשובה',
+    },
+    {
+      id: '82058408',
+      date: '19/03/2026',
+      category: 'טיפול רפואי > הפניות לטיפול',
+      type: 'בקשה',
+      subject: 'עובדת שיקום הבטיחה לבקר בבית — לא הגיעה',
+      detail: 'עובדת השיקום הבטיחה ביקור בית אך לא הגיעה ולא עדכנה. הפנייה מבקשת מעקב ומימוש ההבטחה.',
+      status: 'ממתין לתשובה',
+    },
+    {
+      id: '82058428',
+      date: '19/03/2026',
+      category: 'טיפול רפואי > הפניות לטיפול',
+      type: 'בקשה',
+      subject: 'צירוף כל המסמכים הרלוונטיים מבתי חולים ומבני ציון',
+      detail: 'בקשה לצירוף כל המסמכים הרפואיים הרלוונטיים מבתי חולים ומבני ציון. המסמכים יעידו על מצבו ויאשרו את הצורך בטיפול.',
+      status: 'ממתין לתשובה',
+    },
+    {
+      id: '82058474',
+      date: '19/03/2026',
+      category: 'מרפאה > הפניות לטיפול',
+      type: 'תלונה',
+      subject: 'תלונה על העובדת הסוציאלית סוקולובסקי שמנוטרלת מלטפל',
+      detail: 'שוחחנו והבטחת לי שתיצור קשר — תלונה על כך שהעובדת הסוציאלית סוקולובסקי מנוטרלת ולא מטפלת בעניינו.',
+      status: 'ממתין לתשובה',
+    },
+    {
+      id: '82058526',
+      date: '19/03/2026',
+      category: 'מרפאה > הפניות לטיפול',
+      type: 'משוב חיובי',
+      subject: 'גב\' בן אברהם מאירה — תפקוד מצוין',
+      detail: 'משוב חיובי על עובדת המרפאה גב\' בן אברהם מאירה על תפקוד מצוין ויחס טוב.',
+      status: 'נשלח',
+    },
+    {
+      id: '82058540',
+      date: '19/03/2026',
+      category: 'מרפאה > הפניות לטיפול',
+      type: 'משוב חיובי',
+      subject: 'ד"ר אלרון משה — עזרה יוצאת דופן',
+      detail: 'משוב חיובי על ד"ר אלרון משה מאגף השיקום בטבריה על עזרה יוצאת דופן.',
+      status: 'נשלח',
+    },
+    {
+      id: 'פניית הציבור',
+      date: '19/03/2026',
+      category: 'פנייה כללית',
+      type: 'תלונה',
+      subject: 'ניתוק המערכת מאז המלחמה — מצב מדרדר',
+      detail: 'פנייה על כך שמאז פרוץ המלחמה נזרק מבית חולים בני ציון באמצע בדיקות חשובות. סובל מגירוי עצבי מהגב, נפל פיזית ונפשית. עובדת שיקום לא הגיעה לביקור בית כפי שהובטח. תלונה על ניתוק המערכת ואי-טיפול בתקופה שמצבו מדרדר.',
+      status: 'ממתין לתשובה',
+    },
+  ],
+
+  // Prescription / referral status
+  prescription: {
+    date: '19/03/2026',
+    status: 'בהמתנה לטיפול',
+    note: 'בקרוב נכניס את ההזמנה לטיפול באגף',
+  },
+
+  // MRI under anesthesia status
+  mri: {
+    status: 'ממתין לאישור טופס 17',
+    reason: 'גירוי עצבי מהגב, נדרש MRI בהרדמה בשל PTSD',
+    steps: [
+      { text: 'אישור פסיכיאטרית — נשלח למרפאה', done: true },
+      { text: 'הרופאה צירפה הפניה רפואית', done: true },
+      { text: 'הוגשה בקשה לטופס 17', done: true },
+      { text: 'המתנה לאישור טופס 17', done: false },
+      { text: 'בדיקת מכון מור / מאר — MRI בהרדמה למבוגר עם PTSD', done: false },
+      { text: 'קביעת תור (רמב"ם / מור / מאר) עם הפניה + טופס 17', done: false },
+    ],
+    institutes: [
+      { name: 'רמב"ם', phone: '1-700-505150', anesthesia: 'כן', clalit: 'כן', notes: 'מייל: mri@rambam.health.gov.il, פקס: 04-7772759' },
+      { name: 'מכון מור', phone: '*3171 / 1-700-70-30-31', anesthesia: 'כן (השמנה/קלסטרופוביה)', clalit: 'כן', notes: 'לברר אם מקבלים PTSD כסיבה' },
+      { name: 'מכון מאר (MAR)', phone: '*5867', anesthesia: 'לברר', clalit: 'כן (הסכם חדש!)', notes: 'mri@mar-ltd.com, זמינות גבוהה' },
+      { name: 'אסותא חיפה', phone: '—', anesthesia: 'כן (מעל 18)', clalit: 'מכבי בלבד', notes: 'לא רלוונטי לכרמל' },
+    ],
+  },
+
+  // Key contacts
+  contacts: [
+    { name: 'ד"ר אלרון משה', role: 'רופא באגף שיקום (טבריה)', note: 'משוב חיובי מכרמל' },
+    { name: 'גב\' בן אברהם מאירה', role: 'עובדת מרפאה', note: 'תפקוד מצוין' },
+    { name: 'סוקולובסקי', role: 'עובדת סוציאלית', note: 'תלונה — מנוטרלת מלטפל' },
+    { name: 'ד"ר קרסניאנסקי סמיון', role: 'אורתופד מומחה (25128)', note: 'אישור 01/2026' },
+    { name: 'ד"ר פרנסס דאור', role: 'פנימית, בני ציון (30898)', note: 'שחרור 02/2026' },
+  ],
+
+  // All tasks related to שיקום
+  tasks: [
+    { text: 'מעקב תשובה — פנייה 82058388 (שחרור בני ציון)', done: false, urgent: true },
+    { text: 'מעקב תשובה — פנייה 82058408 (עובדת שיקום לא הגיעה)', done: false, urgent: true },
+    { text: 'מעקב תשובה — פנייה 82058428 (צירוף מסמכים)', done: false, urgent: false },
+    { text: 'מעקב תשובה — פנייה 82058474 (תלונה על סוקולובסקי)', done: false, urgent: true },
+    { text: 'מעקב תשובה — פניית הציבור (ניתוק המערכת)', done: false, urgent: true },
+    { text: 'המתנה לאישור טופס 17 ל-MRI בהרדמה', done: false, urgent: true },
+    { text: 'לבדוק מכון מור — MRI בהרדמה למבוגר עם PTSD, עובדים עם כללית?', done: false, urgent: false },
+    { text: 'לבדוק מכון מאר — MRI בהרדמה, עובדים עם כללית?', done: false, urgent: false },
+    { text: 'קביעת תור MRI בהרדמה (אחרי אישור טופס 17)', done: false, urgent: false },
+    { text: 'הפניה רפואית — הוגשה', done: true, urgent: false },
+    { text: 'אישור פסיכיאטרית — נשלח', done: true, urgent: false },
+    { text: 'בקשה לטופס 17 — הוגשה', done: true, urgent: false },
+    { text: 'משוב חיובי — גב\' בן אברהם מאירה', done: true, urgent: false },
+    { text: 'משוב חיובי — ד"ר אלרון משה', done: true, urgent: false },
+  ],
+};
+
+// Calculations
+const tasksDone = D.tasks.filter(t => t.done).length;
+const tasksTotal = D.tasks.length;
+const tasksOpen = tasksTotal - tasksDone;
+const appealsWaiting = D.appeals.filter(a => a.status === 'ממתין לתשובה').length;
+const urgentTasks = D.tasks.filter(t => !t.done && t.urgent).length;
+</script>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <h1>אגף שיקום — משימות</h1>
+    <div class="header-sub">כרמל שפריצר | משרד הביטחון</div>
+  </div>
+  <div class="header-right">
+    <a href="carmel.html" class="back-link">&#8592; חזרה לדשבורד הראשי</a>
+    <div class="time" id="clock"></div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- Nav -->
+<nav class="nav">
+  <a href="#summary" class="active">סקירה</a>
+  <a href="#appeals">פניות</a>
+  <a href="#mri">MRI</a>
+  <a href="#rx">מרשם</a>
+  <a href="#contacts">אנשי קשר</a>
+  <a href="#all-tasks">כל המשימות</a>
+</nav>
+
+<!-- KPIs -->
+<section id="summary">
+<div class="kpi-grid">
+  <div class="kpi" style="border-top-color:var(--amber)">
+    <div class="kpi-label">פניות ממתינות</div>
+    <div class="kpi-value" style="color:var(--amber)" id="kpiWaiting"></div>
+    <div class="kpi-sub">מתוך <span id="kpiTotal"></span> פניות</div>
+  </div>
+  <div class="kpi" style="border-top-color:var(--red)">
+    <div class="kpi-label">משימות דחופות</div>
+    <div class="kpi-value" style="color:var(--red)" id="kpiUrgent"></div>
+    <div class="kpi-sub">דורשות טיפול</div>
+  </div>
+  <div class="kpi" style="border-top-color:var(--green)">
+    <div class="kpi-label">הושלמו</div>
+    <div class="kpi-value" style="color:var(--green)" id="kpiDone"></div>
+    <div class="kpi-sub" id="kpiDoneSub"></div>
+  </div>
+</div>
+</section>
+
+<!-- Alerts -->
+<div id="alerts"></div>
+
+<!-- Prescription status -->
+<section id="rx" class="reveal">
+<div class="rx-card">
+  <div class="rx-status"><span class="rx-dot"></span> <span id="rxStatus"></span></div>
+  <div style="font-weight:700;font-size:.92em;margin-bottom:4px">מרשם / הפניה — סטטוס</div>
+  <div style="font-size:.82em;color:var(--text-sec)" id="rxNote"></div>
+  <div style="font-size:.72em;color:var(--text-muted);margin-top:6px" id="rxDate"></div>
+</div>
+</section>
+
+<!-- Appeals -->
+<section id="appeals" class="card reveal">
+  <div class="card-title">פניות לאגף שיקום <span class="badge" style="background:var(--amber-bg);color:var(--amber)" id="appealsBadge"></span></div>
+  <div id="appealsList"></div>
+</section>
+
+<!-- MRI -->
+<section id="mri" class="card reveal">
+  <div class="card-title">MRI בהרדמה <span class="badge" style="background:var(--amber-bg);color:var(--amber)" id="mriStatusBadge"></span></div>
+
+  <div style="font-size:.84em;color:var(--text-sec);margin-bottom:12px" id="mriReason"></div>
+
+  <div style="font-weight:700;font-size:.88em;margin-bottom:8px">שלבים</div>
+  <div id="mriTimeline"></div>
+
+  <div style="font-weight:700;font-size:.88em;margin:16px 0 8px">מכונים אפשריים</div>
+  <div style="overflow-x:auto">
+    <table id="mriTable">
+      <thead>
+        <tr>
+          <th>מכון</th>
+          <th>טלפון</th>
+          <th>הרדמה?</th>
+          <th>כללית?</th>
+          <th>הערות</th>
+        </tr>
+      </thead>
+      <tbody id="mriTableBody"></tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:12px;padding:10px;background:#f7fafc;border-radius:8px;font-size:.78em;color:var(--text-sec)">
+    <strong>הערות לתיאום:</strong> שליחת הפניה + התחייבות כספית למייל/פקס | צום לפני הבדיקה (הרדמה) | להישאר ~1.5 שעות אחרי להתעוררות
+  </div>
+</section>
+
+<!-- Contacts -->
+<section id="contacts" class="card reveal">
+  <div class="card-title">אנשי קשר רפואיים <span class="badge" style="background:var(--blue-light);color:var(--blue)">אגף שיקום</span></div>
+  <div id="contactsList"></div>
+</section>
+
+<!-- All Tasks -->
+<section id="all-tasks" class="card reveal">
+  <div class="card-title">כל המשימות <span class="badge" id="taskBadge" style="background:var(--green-bg);color:var(--green)"></span></div>
+  <div id="tasksList"></div>
+</section>
+
+<!-- Footer -->
+<div class="footer" id="lastUpdate"></div>
+
+</div>
+
+<script>
+// ═══ RENDER ═══
+
+// Clock
+function updateClock() {
+  const n = new Date();
+  document.getElementById('clock').textContent = n.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}) + ' · ' + n.toLocaleDateString('he-IL',{day:'numeric',month:'short'});
+}
+updateClock(); setInterval(updateClock, 60000);
+
+// KPIs
+document.getElementById('kpiWaiting').textContent = appealsWaiting;
+document.getElementById('kpiTotal').textContent = D.appeals.length;
+document.getElementById('kpiUrgent').textContent = urgentTasks;
+document.getElementById('kpiDone').textContent = tasksDone + '/' + tasksTotal;
+document.getElementById('kpiDoneSub').textContent = tasksOpen + ' משימות פתוחות';
+
+// Alerts
+(function(){
+  let html = '';
+  if (appealsWaiting > 0) {
+    html += `<div class="alert alert-warn"><span>&#9888;&#65039;</span><div><strong>${appealsWaiting} פניות ממתינות לתשובה</strong> — יש לעקוב מול אגף שיקום</div></div>`;
+  }
+  if (D.mri.status.includes('ממתין')) {
+    html += `<div class="alert alert-info"><span>&#128300;</span><div><strong>MRI בהרדמה:</strong> ${D.mri.status} | לבדוק מכון מור/מאר</div></div>`;
+  }
+  if (D.prescription.status.includes('בהמתנה')) {
+    html += `<div class="alert alert-info"><span>&#128203;</span><div><strong>מרשם/הפניה:</strong> ${D.prescription.status} — "${D.prescription.note}"</div></div>`;
+  }
+  document.getElementById('alerts').innerHTML = html;
+})();
+
+// Prescription
+document.getElementById('rxStatus').textContent = D.prescription.status;
+document.getElementById('rxNote').textContent = D.prescription.note;
+document.getElementById('rxDate').textContent = 'תאריך: ' + D.prescription.date;
+
+// Appeals
+(function(){
+  document.getElementById('appealsBadge').textContent = appealsWaiting + ' ממתינות';
+
+  const typeClass = { 'תלונה/בקשה': 'type-complaint', 'תלונה': 'type-complaint', 'בקשה': 'type-request', 'משוב חיובי': 'type-positive', 'פנייה כללית': 'type-general' };
+  const statusClass = { 'ממתין לתשובה': 'status-waiting', 'נשלח': 'status-done', 'פעיל': 'status-active' };
+
+  document.getElementById('appealsList').innerHTML = D.appeals.map(a => `
+    <div class="appeal">
+      <span class="appeal-status ${statusClass[a.status] || 'status-waiting'}">${a.status}</span>
+      <div>
+        <span class="appeal-id">${a.id}</span>
+        <span class="appeal-type ${typeClass[a.type] || 'type-general'}">${a.type}</span>
+      </div>
+      <div class="appeal-subject">${a.subject}</div>
+      <div class="appeal-detail">${a.detail}</div>
+      <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">${a.category} · ${a.date}</div>
+    </div>
+  `).join('');
+})();
+
+// MRI
+(function(){
+  document.getElementById('mriStatusBadge').textContent = D.mri.status;
+  document.getElementById('mriReason').textContent = D.mri.reason;
+
+  document.getElementById('mriTimeline').innerHTML = D.mri.steps.map(s => `
+    <div class="timeline-item ${s.done?'done':'warn'}">
+      <div class="tl-text" style="${s.done?'text-decoration:line-through;color:var(--text-muted)':''}">${s.text}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('mriTableBody').innerHTML = D.mri.institutes.map(i => `
+    <tr>
+      <td style="font-weight:600">${i.name}</td>
+      <td style="font-family:var(--mono);font-size:.88em">${i.phone}</td>
+      <td>${i.anesthesia}</td>
+      <td>${i.clalit}</td>
+      <td style="font-size:.78em;color:var(--text-sec)">${i.notes}</td>
+    </tr>
+  `).join('');
+})();
+
+// Contacts
+document.getElementById('contactsList').innerHTML = D.contacts.map(c => `
+  <div class="contact-row">
+    <div><span style="font-weight:600">${c.name}</span><br><span style="font-size:.75em;color:var(--text-sec)">${c.role}</span></div>
+    <div style="font-size:.78em;color:var(--text-muted)">${c.note}</div>
+  </div>
+`).join('');
+
+// Tasks
+(function(){
+  document.getElementById('taskBadge').textContent = tasksDone + '/' + tasksTotal + ' הושלמו';
+
+  // Sort: urgent first, then pending, then done
+  const sorted = [...D.tasks].sort((a,b) => {
+    if (a.done !== b.done) return a.done ? 1 : -1;
+    if (a.urgent !== b.urgent) return a.urgent ? -1 : 1;
+    return 0;
+  });
+
+  document.getElementById('tasksList').innerHTML = sorted.map(t => `
+    <div class="task">
+      <div class="task-check ${t.done?'done':'pending'}">${t.done?'&#10003;':''}</div>
+      <div style="${t.done?'color:var(--text-muted);text-decoration:line-through':''}">
+        ${t.text}
+        ${!t.done && t.urgent ? '<span class="tag tag-urgent" style="margin-right:6px">דחוף</span>' : ''}
+      </div>
+    </div>
+  `).join('');
+})();
+
+// Last update
+document.getElementById('lastUpdate').textContent = 'עודכן ' + new Date(D.lastUpdated).toLocaleDateString('he-IL',{day:'numeric',month:'long',year:'numeric'});
+
+// Scroll reveal
+const obs = new IntersectionObserver(e => e.forEach(en => { if(en.isIntersecting) en.target.classList.add('visible') }), {threshold:.08});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Nav highlight
+const navObs = new IntersectionObserver(e => e.forEach(en => {
+  if(en.isIntersecting) {
+    document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+    const a = document.querySelector(`.nav a[href="#${en.target.id}"]`);
+    if(a) a.classList.add('active');
+  }
+}), {threshold:.3});
+document.querySelectorAll('section[id]').forEach(s => navObs.observe(s));
+</script>
+
+</body>
+</html>
