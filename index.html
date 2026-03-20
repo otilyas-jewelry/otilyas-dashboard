@@ -458,6 +458,109 @@ const DATA = {
     { date: '08/08/2024', company: 'Max IT Finance Ltd', via: 'BDI Coface' },
     { date: '06/03/2024', company: 'First International Bank', via: 'LAI Credit Bureau' },
   ],
+
+  // Insurance
+  insurance: {
+    total: { monthly: 1589, yearly: 19063 },
+    categories: [
+      {
+        name: 'בריאות', icon: '🏥', monthly: 790, yearly: 9480,
+        policies: [
+          { company: 'כללית', name: 'מושלם פלטינום (שב"ן)', monthly: 104, status: 'active', ends: null },
+          { company: 'הראל', name: 'סיעודי (קבוצתי קופ"ח)', monthly: 128, status: 'active', policy: '300994208', ends: null },
+          { company: 'מגדל', name: 'מחלות קשות (אישי)', monthly: 127, status: 'warning', policy: '22945374', ends: '2026-06-01', note: 'מסתיים! לחדש' },
+          { company: 'הראל', name: 'שיניים (ותיקי אל על)', monthly: 170, status: 'active', policy: '507551298', ends: '2030-01', note: 'טלי+יובל+גיא' },
+          { company: 'הפניקס', name: 'שיניים (קבוצתי)', monthly: 75, status: 'duplicate', policy: '310351743397', ends: '2028-02', note: 'כפל ביטוח!' },
+          { company: 'הפניקס', name: 'חבילת כיסויים (קבוצתי)', monthly: 186, status: 'warning', policy: '2651100089', ends: '2026-09', note: 'מסתיים 9/2026' },
+        ],
+        alerts: ['כפל שיניים משולש: ₪387/חודש מ-3 מקורות!', 'כללית סמייל (₪142) נגמר יוני — לא לחדש']
+      },
+      {
+        name: 'רכב', icon: '🚗', monthly: 639, yearly: 7667,
+        policies: [
+          { company: 'AIG', name: 'מאזדה CX-5 (חובה+מקיף)', monthly: 366, status: 'active', policy: '1681471725', ends: '2026-11-30', note: 'עופר נהג עיקרי' },
+          { company: 'הראל', name: 'קיה סול 2011 (חובה+מקיף)', monthly: 273, status: 'active', policy: '8038115940', ends: '2026-08-31', note: 'טלי נהגת' },
+        ],
+        alerts: ['תביעה אחת (01/2026): ₪10,628 — סגורה']
+      },
+      {
+        name: 'דירה', icon: '🏠', monthly: 49, yearly: 586,
+        policies: [
+          { company: 'הפניקס', name: 'מבנה', monthly: 49, status: 'danger', policy: '250961711664874', ends: '2026-03-31', note: 'מסתיים בעוד 11 יום!' },
+        ],
+        alerts: ['מס רכוש (מלחמה): ₪493 חד פעמי שולם']
+      },
+      {
+        name: 'עסק', icon: '💼', monthly: 111, yearly: 1331,
+        policies: [
+          { company: 'כלל', name: 'מקיף לבית עסק', monthly: 111, status: 'active', policy: '644830746', ends: '2026-12-31', note: 'סוכנת: יעל לוי' },
+        ],
+        alerts: []
+      },
+    ],
+    agents: [
+      { name: 'אבידן ביטוחים (סה-פיי)', contact: 'יעל לוי', phone: '074-7505151', email: 'yael@avidan-ins.co.il', scope: 'עסק' },
+      { name: 'וריטס סוכנויות כאל', phone: '03-9208056', scope: 'רכב (הראל)' },
+    ],
+    openQuestions: [
+      'מנורה מבנה ותכולה — עדיין פעיל?',
+      'עופר — אין כיסוי שיניים בהראל?',
+      '6 פוליסות כללי בפורטל — טרם מופו',
+      'הפניקס חבילה מסתיימת 9/2026 — מה הפלאן?',
+    ],
+    pension: {
+      tali: [
+        { company: 'הפניקס', type: 'קרן השתלמות' },
+        { company: 'הפניקס', type: 'פוליסת השקעה' },
+        { company: 'מנורה', type: 'פנסיה' },
+      ],
+      ofer: [
+        { company: 'כלל', type: 'חיסכון', value: 339000 },
+        { company: 'הראל', type: 'פנסיה', value: 742293 },
+        { company: 'הראל', type: 'גמל להשקעה', value: 68278 },
+        { company: 'הראל', type: 'קופות גמל', value: 39000 },
+      ],
+    },
+  },
+
+  // Open tasks from all agents
+  openTasks: {
+    'פיננסי (ריף)': [
+      { task: 'לברר העברות 99400 — ₪8,163 ב-2 חודשים', priority: 'medium' },
+      { task: 'דוח MUZA ינואר+פברואר — טרם הגיע', priority: 'low' },
+      { task: 'דמי כרטיס ₪19.80 — לבטל', priority: 'high' },
+      { task: 'דוח רו"ח עמית ינואר+פברואר — ממתין מטלי', priority: 'medium' },
+      { task: 'לבטל GPT4 ($20/חודש)', priority: 'high' },
+      { task: 'להוריד Canva מ-Teams ל-Pro ($30→$13)', priority: 'high' },
+      { task: 'לבטל Instagram Verified (₪53.50)', priority: 'high' },
+      { task: 'לבטל Wolt+ (עד 16/04)', priority: 'medium' },
+      { task: 'Google Workspace — לבדוק אם באמת צריך', priority: 'low' },
+      { task: 'ברכת הזהב: בפעם הבאה MAX 1116!', priority: 'medium' },
+      { task: 'להראות הסכם בנק — ריבית על חריגה', priority: 'medium' },
+    ],
+    'ביטוחים (שירה)': [
+      { task: 'הפניקס מבנה מסתיים 31/03! לחדש דחוף!', priority: 'critical' },
+      { task: 'מגדל מחלות קשות מסתיים 01/06 — לחדש', priority: 'high' },
+      { task: 'הפניקס חבילה מסתיימת 9/2026 — לבדוק חלופות', priority: 'medium' },
+      { task: 'כללית סמייל נגמר יוני — לא לחדש (חיסכון ₪142)', priority: 'medium' },
+      { task: 'כפל שיניים — לבדוק אם אפשר לוותר על הפניקס שיניים', priority: 'medium' },
+      { task: '6 פוליסות כללי בפורטל — למפות', priority: 'low' },
+      { task: 'עופר — לבדוק כיסוי שיניים', priority: 'low' },
+      { task: 'מנורה מבנה ותכולה — עדיין פעיל?', priority: 'low' },
+      { task: 'בדיקת הפניקס/מגדל עליית מחיר (15/04)', priority: 'medium' },
+    ],
+    'תפעול (אנג\'ל)': [
+      { task: 'עיבוד חשבוניות מרץ — ממתין לסוף החודש', priority: 'medium' },
+      { task: 'טבלת הוצאות מאוחדת ינואר+פברואר — ממתין לפיזיות', priority: 'medium' },
+      { task: 'Etsy — מעקב סגירה', priority: 'low' },
+    ],
+    'משפטי (ניצן)': [
+      { task: 'אימות דומיין otilyas.com — הושלם ✅', priority: 'done' },
+    ],
+    'שיווק (ליהי)': [
+      { task: 'Meta Ads — להתחיל קמפיין ראשון', priority: 'low' },
+    ],
+  },
 };
 
 // ══════════════════════════════════════════════
@@ -542,6 +645,8 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
   <a href="#expenses" class="nav-pill">הוצאות</a>
   <a href="#subs" class="nav-pill">מנויים</a>
   <a href="#savings" class="nav-pill">חיסכון</a>
+  <a href="#insurance" class="nav-pill">ביטוחים</a>
+  <a href="#tasks" class="nav-pill">משימות</a>
   <a href="#dates" class="nav-pill">תאריכים</a>
   <a href="#strategy" class="nav-pill">אסטרטגיה</a>
 </nav>
@@ -737,6 +842,45 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
   <p style="font-size:.8em;color:var(--text-secondary);margin-bottom:10px">בקשות לצפייה במידע האשראי שלך</p>
   <table id="creditTable"></table>
   <p style="font-size:.72em;color:var(--text-muted);margin-top:8px">2 בירורים ב-2 שנים. מספר נמוך = סימן חיובי.</p>
+</section>
+
+<!-- Insurance -->
+<section id="insurance" class="section reveal">
+  <h2>ביטוחים <span class="updated">מקור: שירה (סוכנת ביטוח) | 20/03/2026</span></h2>
+  <div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap">
+    <div style="flex:1;min-width:140px;text-align:center;padding:14px;background:var(--gold-pale);border-radius:var(--radius)">
+      <div style="font-size:.72em;color:var(--gold);font-weight:600">סה"כ חודשי</div>
+      <div style="font-family:var(--font-display);font-size:1.5em;font-weight:700" id="insTotal"></div>
+    </div>
+    <div style="flex:1;min-width:140px;text-align:center;padding:14px;background:var(--gold-pale);border-radius:var(--radius)">
+      <div style="font-size:.72em;color:var(--gold);font-weight:600">סה"כ שנתי</div>
+      <div style="font-family:var(--font-display);font-size:1.5em;font-weight:700" id="insYearly"></div>
+    </div>
+    <div style="flex:1;min-width:140px;text-align:center;padding:14px;background:var(--red-light);border-radius:var(--radius)">
+      <div style="font-size:.72em;color:var(--red);font-weight:600">כפל שיניים!</div>
+      <div style="font-family:var(--font-display);font-size:1.5em;font-weight:700;color:var(--red)">₪387/חודש</div>
+    </div>
+  </div>
+  <div id="insuranceCategories"></div>
+  <div style="margin-top:14px" id="insuranceAlerts"></div>
+  <div style="margin-top:14px">
+    <h3 style="font-size:.88em;color:var(--gold);margin-bottom:8px">שאלות פתוחות</h3>
+    <div id="insQuestions" style="font-size:.82em"></div>
+  </div>
+  <div style="margin-top:14px">
+    <h3 style="font-size:.88em;color:var(--gold);margin-bottom:8px">פנסיה וחיסכון</h3>
+    <div class="grid-2" id="pensionGrid"></div>
+  </div>
+  <div style="margin-top:14px">
+    <h3 style="font-size:.88em;color:var(--gold);margin-bottom:8px">סוכנויות ביטוח</h3>
+    <div id="insAgents" style="font-size:.82em"></div>
+  </div>
+</section>
+
+<!-- Open Tasks -->
+<section id="tasks" class="section reveal">
+  <h2>משימות פתוחות — כל הסוכנים</h2>
+  <div id="tasksList"></div>
 </section>
 
 <!-- Strategy -->
@@ -1093,7 +1237,7 @@ document.querySelectorAll('section[id]').forEach(s => navObserver.observe(s));
 // ═══ CHARTS ═══
 Chart.defaults.color = '#999';
 Chart.defaults.borderColor = 'rgba(0,0,0,.05)';
-Chart.defaults.font.family = 'IBM Plex Sans Hebrew';
+Chart.defaults.font.family = 'Rubik';
 const legendOpts = { position:'bottom', labels:{ color:'#666', font:{size:11}, padding:12, usePointStyle:true, pointStyle:'circle' } };
 
 // Income chart
@@ -1141,6 +1285,107 @@ new Chart(document.getElementById('dinersChart'), {
   data: { labels: dinersLabels, datasets: [{ label:'פבר (בפועל)', data: dinersValues, backgroundColor: dinersLabels.map((_,i) => dinersColors[i%dinersColors.length]), borderRadius:4, barPercentage:.65 }] },
   options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true}} }
 });
+
+// ═══ INSURANCE ═══
+(function() {
+  const ins = DATA.insurance;
+  document.getElementById('insTotal').textContent = `₪${fmt(ins.total.monthly)}`;
+  document.getElementById('insYearly').textContent = `₪${fmt(ins.total.yearly)}`;
+
+  // Categories with policies
+  let html = '';
+  ins.categories.forEach(cat => {
+    html += `<div style="margin-bottom:14px;border:1px solid var(--gold-pale);border-radius:var(--radius);overflow:hidden">`;
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bg)">
+      <div style="font-weight:700;font-size:.95em">${cat.icon} ${cat.name}</div>
+      <div style="font-family:var(--font-mono);font-weight:700">₪${fmt(cat.monthly)}/חודש</div>
+    </div>`;
+    html += `<div style="padding:0 14px 10px">`;
+    cat.policies.forEach(p => {
+      let statusTag = '';
+      if (p.status === 'danger') statusTag = '<span class="tag tag-urgent">דחוף!</span>';
+      else if (p.status === 'warning') statusTag = '<span class="tag tag-april">מסתיים בקרוב</span>';
+      else if (p.status === 'duplicate') statusTag = '<span class="tag tag-urgent">כפל!</span>';
+      else statusTag = '<span class="tag tag-active">פעיל</span>';
+
+      const endsText = p.ends ? ` · עד ${p.ends}` : '';
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0ece8;font-size:.84em">
+        <div>
+          <div style="font-weight:600">${p.company} — ${p.name}</div>
+          <div style="font-size:.78em;color:var(--text-muted)">${p.note || ''}${endsText}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-family:var(--font-mono);font-weight:600">₪${p.monthly}</span>
+          ${statusTag}
+        </div>
+      </div>`;
+    });
+    // Category alerts
+    cat.alerts.forEach(a => {
+      html += `<div style="font-size:.78em;padding:6px 8px;margin-top:6px;background:var(--amber-bg);border-radius:6px;color:var(--amber)">⚠️ ${a}</div>`;
+    });
+    html += `</div></div>`;
+  });
+  document.getElementById('insuranceCategories').innerHTML = html;
+
+  // Open questions
+  document.getElementById('insQuestions').innerHTML = ins.openQuestions.map(q =>
+    `<div style="padding:5px 0;border-bottom:1px solid #f0ece8">❓ ${q}</div>`
+  ).join('');
+
+  // Pension
+  let pHtml = '<div style="font-size:.84em"><div style="font-weight:700;margin-bottom:6px;color:var(--gold)">טלי</div>';
+  ins.pension.tali.forEach(p => {
+    pHtml += `<div style="padding:4px 0">${p.company} — ${p.type}</div>`;
+  });
+  pHtml += '</div><div style="font-size:.84em"><div style="font-weight:700;margin-bottom:6px;color:var(--gold)">עופר</div>';
+  let oferTotal = 0;
+  ins.pension.ofer.forEach(p => {
+    oferTotal += (p.value || 0);
+    pHtml += `<div style="display:flex;justify-content:space-between;padding:4px 0"><span>${p.company} — ${p.type}</span><span style="font-family:var(--font-mono);font-weight:600">${p.value ? '₪'+fmt(p.value) : '—'}</span></div>`;
+  });
+  pHtml += `<div style="display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid var(--gold-pale);margin-top:4px;font-weight:700"><span>סה"כ (2023)</span><span style="font-family:var(--font-mono)">₪${fmt(oferTotal)}</span></div>`;
+  pHtml += '</div>';
+  document.getElementById('pensionGrid').innerHTML = pHtml;
+
+  // Agents
+  document.getElementById('insAgents').innerHTML = ins.agents.map(a =>
+    `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0ece8">
+      <div><strong>${a.name}</strong>${a.contact ? ' · '+a.contact : ''}</div>
+      <div style="color:var(--text-muted)">${a.scope} · ${a.phone}</div>
+    </div>`
+  ).join('');
+})();
+
+// ═══ OPEN TASKS ═══
+(function() {
+  const priorityMap = { critical: { label: 'קריטי', cls: 'tag-urgent', sort: 0 }, high: { label: 'גבוה', cls: 'tag-urgent', sort: 1 }, medium: { label: 'בינוני', cls: 'tag-april', sort: 2 }, low: { label: 'נמוך', cls: 'tag-active', sort: 3 }, done: { label: 'הושלם', cls: 'tag-done', sort: 4 } };
+
+  let html = '';
+  let totalOpen = 0;
+  for (const [agent, tasks] of Object.entries(DATA.openTasks)) {
+    const openCount = tasks.filter(t => t.priority !== 'done').length;
+    totalOpen += openCount;
+    const sorted = [...tasks].sort((a,b) => (priorityMap[a.priority]?.sort||3) - (priorityMap[b.priority]?.sort||3));
+
+    html += `<div style="margin-bottom:14px">`;
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg);border-radius:8px;margin-bottom:6px">
+      <span style="font-weight:700;font-size:.9em">${agent}</span>
+      <span style="font-family:var(--font-mono);font-size:.8em;color:var(--gold)">${openCount} פתוחות</span>
+    </div>`;
+    sorted.forEach(t => {
+      const p = priorityMap[t.priority] || priorityMap.medium;
+      const isDone = t.priority === 'done';
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-bottom:1px solid #f0ece8;font-size:.84em;${isDone?'opacity:.5;text-decoration:line-through':''}">
+        <span>${t.task}</span>
+        <span class="tag ${p.cls}" style="flex-shrink:0;margin-right:8px">${p.label}</span>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  html = `<div style="text-align:center;padding:8px;margin-bottom:12px;background:var(--amber-bg);border-radius:8px;font-weight:600;color:var(--amber)">${totalOpen} משימות פתוחות מכל הסוכנים</div>` + html;
+  document.getElementById('tasksList').innerHTML = html;
+})();
 
 // Budget vs actual
 const bLabels = Object.keys(DATA.varPersonal);
