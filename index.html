@@ -2,351 +2,1067 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OTILYAS Dashboard 2026</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>OTILYAS — Financial Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=IBM+Plex+Sans+Hebrew:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f0eb;color:#2E2623;direction:rtl}
-.header{background:linear-gradient(135deg,#2E2623,#4a3f3a);color:#fff;padding:20px 30px;display:flex;justify-content:space-between;align-items:center}
-.header h1{font-size:1.6em;font-weight:300;letter-spacing:2px}
-.header-date{opacity:.7;font-size:.9em}
-.container{max-width:1200px;margin:0 auto;padding:20px}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:20px}
-.kpi{background:#fff;border-radius:12px;padding:18px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.kpi .label{font-size:.78em;color:#997C60;margin-bottom:6px;font-weight:600}
-.kpi .value{font-size:1.6em;font-weight:700}
-.kpi .sub{font-size:.72em;color:#999;margin-top:3px}
-.positive{color:#2d8a4e}.negative{color:#cc3333}.neutral{color:#2E2623}
-.section{background:#fff;border-radius:12px;padding:22px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.section h2{font-size:1.15em;color:#2E2623;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #E1D9D0}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:768px){.grid-2{grid-template-columns:1fr}.kpi-row{grid-template-columns:repeat(2,1fr)}.scenario-grid{grid-template-columns:1fr !important}}
-table{width:100%;border-collapse:collapse;font-size:.88em}
-th{background:#2E2623;color:#fff;padding:9px 10px;text-align:right;font-weight:500}
-td{padding:7px 10px;border-bottom:1px solid #eee}
-tr:hover{background:#f9f6f3}
-.total-row{background:#E1D9D0;font-weight:700}
-.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72em;font-weight:600}
-.tag-urgent{background:#ffe0e0;color:#cc3333}
-.tag-april{background:#fff3d0;color:#996600}
-.tag-active{background:#d0f0d0;color:#2d8a4e}
-.tag-cancelled{background:#eee;color:#999;text-decoration:line-through}
-.tag-new{background:#e0e8ff;color:#3355cc}
-.chart-container{position:relative;height:260px}
-.action-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f0ece8}
-.action-saving{font-weight:700;color:#2d8a4e;min-width:90px;text-align:left}
-.scenario-card{border:2px solid #E1D9D0;border-radius:12px;padding:18px;text-align:center}
-.scenario-card:hover{border-color:#997C60}
-.scenario-card h3{font-size:.95em;margin-bottom:8px;color:#997C60}
-.scenario-card .big{font-size:1.4em;font-weight:700;margin:4px 0}
-.tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
-.tab{padding:7px 14px;border:none;background:#E1D9D0;border-radius:8px;cursor:pointer;font-size:.82em;font-weight:600;color:#2E2623}
-.tab.active{background:#2E2623;color:#fff}
-.tab-content{display:none}.tab-content.active{display:block}
-.alert{background:#fff8f0;border-right:4px solid #ff9900;padding:11px 14px;border-radius:0 8px 8px 0;margin-bottom:14px;font-size:.88em}
-.alert-red{background:#fff0f0;border-right-color:#cc3333}
-.progress-bar{height:7px;background:#eee;border-radius:4px;overflow:hidden;margin-top:4px}
-.progress-fill{height:100%;border-radius:4px}
-.bank-card{border:2px solid #E1D9D0;border-radius:12px;padding:16px}
-.bank-card h3{font-size:.9em;color:#997C60;margin-bottom:6px}
-.cc-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0ece8}
-.cc-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.7em;color:#fff;flex-shrink:0}
-.cc-info{flex:1}
-.cc-info .cc-name{font-weight:600;font-size:.92em}
-.cc-info .cc-detail{font-size:.75em;color:#666}
-.cc-amount{font-weight:700;font-size:.95em;text-align:left;white-space:nowrap}
-.sub-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0ece8}
-.sub-name{font-weight:600;font-size:.88em}
-.sub-price{font-weight:700;font-size:.88em;min-width:80px;text-align:left}
-.sub-card{font-size:.72em;color:#999}
-.timeline-item{position:relative;padding:10px 0 10px 24px;border-right:3px solid #E1D9D0;margin-right:8px}
-.timeline-item::before{content:'';position:absolute;right:-8px;top:14px;width:12px;height:12px;border-radius:50%;background:#997C60;border:2px solid #fff}
-.timeline-item .tl-date{font-size:.78em;color:#997C60;font-weight:600}
-.timeline-item .tl-title{font-size:.88em;font-weight:600;margin:2px 0}
-.timeline-item .tl-detail{font-size:.78em;color:#666}
-.updated{font-size:.7em;color:#997C60;font-weight:400}
-.footer{text-align:center;padding:18px;color:#999;font-size:.78em}
+:root {
+  --bg: #f5f0eb;
+  --bg-card: #ffffff;
+  --bg-hover: #faf7f4;
+  --bg-header: #2E2623;
+  --gold: #997C60;
+  --gold-light: #AF9C87;
+  --gold-pale: #E1D9D0;
+  --gold-bg: #D8C9B8;
+  --text: #2E2623;
+  --text-secondary: #666;
+  --text-muted: #999;
+  --green: #2d8a4e;
+  --green-bg: #d0f0d0;
+  --green-light: #f0fff0;
+  --red: #cc3333;
+  --red-bg: #ffe0e0;
+  --red-light: #fff0f0;
+  --amber: #996600;
+  --amber-bg: #fff3d0;
+  --blue: #3355cc;
+  --blue-bg: #e0e8ff;
+  --radius: 12px;
+  --shadow: 0 2px 8px rgba(0,0,0,.06);
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'IBM Plex Sans Hebrew', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  direction: rtl;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, var(--bg-header), #4a3f3a);
+  color: #fff;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,.15);
+}
+.header h1 {
+  font-family: var(--font-display);
+  font-size: 1.5em;
+  font-weight: 300;
+  letter-spacing: 3px;
+}
+.header-sub { font-size: .78em; opacity: .7; margin-top: 2px; }
+.header-date {
+  text-align: left;
+  font-size: .78em;
+  opacity: .7;
+  line-height: 1.5;
+}
+.live-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  background: #2d8a4e;
+  border-radius: 50%;
+  margin-left: 4px;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(45,138,78,.4) }
+  50% { opacity:.5; box-shadow:0 0 0 5px rgba(45,138,78,0) }
+}
+
+/* Container */
+.container { max-width: 1100px; margin: 0 auto; padding: 16px; }
+
+/* Nav */
+.section-nav {
+  display: flex; gap: 5px;
+  overflow-x: auto; padding: 4px 0 12px;
+  scrollbar-width: none;
+}
+.section-nav::-webkit-scrollbar { display: none }
+.nav-pill {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border: 1px solid var(--gold-pale);
+  border-radius: 18px;
+  font-size: .76em; font-weight: 600;
+  color: var(--gold);
+  background: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all .2s;
+}
+.nav-pill:hover, .nav-pill.active {
+  background: var(--bg-header);
+  color: #fff;
+  border-color: var(--bg-header);
+}
+
+/* KPI */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.kpi {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: transform .2s;
+}
+.kpi:hover { transform: translateY(-2px); }
+.kpi .label { font-size: .72em; color: var(--gold); margin-bottom: 4px; font-weight: 600; letter-spacing: .3px; }
+.kpi .value { font-family: var(--font-display); font-size: 1.5em; font-weight: 700; }
+.kpi .sub { font-size: .68em; color: var(--text-muted); margin-top: 2px; }
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+.neutral { color: var(--text); }
+
+/* Alert */
+.alert {
+  background: #fff8f0;
+  border-right: 4px solid #ff9900;
+  padding: 12px 16px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-bottom: 12px;
+  font-size: .85em;
+  box-shadow: var(--shadow);
+  animation: slideIn .4s ease;
+}
+.alert-green { background: var(--green-light); border-right-color: var(--green); }
+.alert-red { background: var(--red-light); border-right-color: var(--red); }
+@keyframes slideIn { from { opacity:0; transform:translateX(10px) } to { opacity:1; transform:translateX(0) } }
+
+/* Section */
+.section {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+.section h2 {
+  font-family: var(--font-display);
+  font-size: 1.15em;
+  color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--gold-pale);
+}
+.section h2 .updated { font-family: var(--font-body); font-size: .6em; color: var(--gold); font-weight: 400; }
+
+/* Grid */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:768px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .kpi-row { grid-template-columns: repeat(2,1fr); }
+  .scenario-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Table */
+table { width: 100%; border-collapse: collapse; font-size: .85em; }
+th { background: var(--bg-header); color: #fff; padding: 8px 10px; text-align: right; font-weight: 500; font-size: .85em; }
+td { padding: 7px 10px; border-bottom: 1px solid #f0ece8; }
+tr:hover { background: var(--bg-hover); }
+.total-row { background: var(--gold-pale); font-weight: 700; }
+.num { text-align: left; font-family: var(--font-mono); font-size: .9em; }
+
+/* Tags */
+.tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .7em; font-weight: 600; }
+.tag-urgent { background: var(--red-bg); color: var(--red); }
+.tag-april { background: var(--amber-bg); color: var(--amber); }
+.tag-active { background: var(--green-bg); color: var(--green); }
+.tag-cancelled { background: #eee; color: #999; text-decoration: line-through; }
+.tag-new { background: var(--blue-bg); color: var(--blue); }
+.tag-done { background: var(--green-bg); color: var(--green); }
+
+/* Chart */
+.chart-container { position: relative; height: 250px; }
+@media(max-width:640px) { .chart-container { height: 200px; } }
+
+/* Tabs */
+.tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+.tab { padding: 7px 14px; border: none; background: var(--gold-pale); border-radius: 8px; cursor: pointer; font-size: .8em; font-weight: 600; color: var(--text); font-family: var(--font-body); }
+.tab.active { background: var(--bg-header); color: #fff; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Sub rows */
+.sub-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid #f0ece8; }
+.sub-name { font-weight: 600; font-size: .86em; }
+.sub-price { font-family: var(--font-mono); font-weight: 700; font-size: .86em; min-width: 85px; text-align: left; }
+.sub-card { font-size: .7em; color: var(--text-muted); }
+.sub-total { background: var(--gold-pale); border-radius: 8px; padding: 9px 12px; margin-top: 6px; }
+
+/* Action items */
+.action-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0ece8; }
+.action-saving { font-family: var(--font-mono); font-weight: 700; color: var(--green); min-width: 95px; text-align: left; }
+
+/* Timeline */
+.timeline-item { position: relative; padding: 10px 0 10px 24px; border-right: 3px solid var(--gold-pale); margin-right: 8px; }
+.timeline-item::before { content:''; position: absolute; right: -8px; top: 14px; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); border: 2px solid #fff; }
+.timeline-item .tl-date { font-size: .76em; color: var(--gold); font-weight: 600; }
+.timeline-item .tl-title { font-size: .86em; font-weight: 600; margin: 2px 0; }
+.timeline-item .tl-detail { font-size: .76em; color: var(--text-secondary); }
+
+/* Cards */
+.bank-card { border: 2px solid var(--gold-pale); border-radius: var(--radius); padding: 16px; }
+.cc-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0ece8; }
+.cc-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .68em; color: #fff; flex-shrink: 0; }
+.cc-info { flex: 1; }
+.cc-name { font-weight: 600; font-size: .9em; }
+.cc-detail { font-size: .73em; color: var(--text-secondary); }
+.cc-amount { font-family: var(--font-mono); font-weight: 700; font-size: .9em; text-align: left; white-space: nowrap; }
+
+/* Scenario */
+.scenario-card { border: 2px solid var(--gold-pale); border-radius: var(--radius); padding: 16px; text-align: center; transition: border-color .2s; }
+.scenario-card:hover { border-color: var(--gold); }
+.scenario-card h3 { font-family: var(--font-display); font-size: .95em; margin-bottom: 6px; color: var(--gold); }
+.scenario-card .big { font-family: var(--font-display); font-size: 1.5em; font-weight: 700; margin: 4px 0; }
+.scenario-card .sub { font-size: .72em; color: var(--text-muted); }
+
+/* Progress */
+.progress-bar { height: 7px; background: #eee; border-radius: 4px; overflow: hidden; margin-top: 4px; }
+.progress-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+
+/* Countdown */
+.countdown-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0ece8; }
+.countdown-item:last-child { border-bottom: none; }
+.cd-badge { font-family: var(--font-mono); font-size: .72em; font-weight: 600; padding: 3px 10px; border-radius: 6px; min-width: 70px; text-align: center; }
+.cd-urgent { background: var(--red-bg); color: var(--red); }
+.cd-soon { background: var(--amber-bg); color: var(--amber); }
+.cd-ok { background: var(--green-bg); color: var(--green); }
+.cd-done { background: #eee; color: #999; text-decoration: line-through; }
+
+/* Footer */
+.footer { text-align: center; padding: 20px; color: var(--text-muted); font-size: .76em; }
+.footer .mono { font-family: var(--font-mono); font-size: .9em; }
+
+/* Reveal animation */
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity .5s, transform .5s; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
-<div class="header"><div><h1>OTILYAS</h1><div>Financial Dashboard</div></div><div class="header-date">Updated: 20 March 2026</div></div>
+
+<!-- ═══════════════════════════════════════════
+     DATA CONFIG — Edit this section to update
+     ═══════════════════════════════════════════ -->
+<script>
+const DATA = {
+  lastUpdated: '2026-03-20',
+  usdRate: 3.65,
+
+  // Income by channel
+  income: {
+    months: ['ינואר', 'פברואר'],
+    channels: {
+      'הייפ (חנות+יריד)': { data: [18116, 4875], target: 5500, label: 'Hyp' },
+      'WIX':               { data: [3702, 2695],  target: 3000, label: 'WIX' },
+      'MASKIT':             { data: [1338, 1240],  target: 1300, label: 'MASKIT' },
+      'מוזיאון ישראל':     { data: [0, 427],      target: 400,  label: 'Museum' },
+      'MUZA':               { data: [0, 0],        target: 200,  label: 'MUZA' },
+    },
+    fairMonth: [true, false],
+    targetRegular: 10400,
+  },
+
+  // Fixed business expenses
+  fixedBusiness: {
+    'רו"ח (עמית)': 527, 'ארנונה': 476, 'ביטוח לאומי': 253,
+    'נסיעות': 242, 'חשמל': 200, 'הייפ מכשיר': 149,
+    'הייפ תוכנה (כספיט)': 106, 'שילוט': 55, 'פרטנר עסקי': 30,
+  },
+
+  // USD subscriptions
+  subsUSD: {
+    'Claude': { price: 100, card: 'MAX 1116' },
+    'Shopify': { price: 43.95, card: 'Diners 0112' },
+    'Canva (Teams)': { price: 30, card: 'credit card' },
+    'Midjourney': { price: 30, card: 'credit card' },
+    'GPT4': { price: 20, card: 'credit card', cancel: true },
+  },
+
+  // ILS subscriptions
+  subsILS: {
+    'Google Play (all)': { price: 220, card: 'various' },
+    'Spotify': { price: 43.90, card: 'Diners 0112' },
+    'Google Workspace': { price: 25.60, card: 'Diners 0112 (EUR)' },
+    'Wolt+': { price: 49, card: 'Diners 0112', cancel: true, cancelBy: '16/04' },
+    'Microsoft 365': { price: 36, card: 'Diners (annual)' },
+    'Instagram Verified': { price: 54, card: 'Google Play', cancel: true },
+    'Google One': { price: 8, card: 'Diners 0112' },
+  },
+
+  // Standing orders (horaot keva) on Diners
+  standingOrders: {
+    'סלקום': { price: 215.43, card: 'Diners 0112' },
+    'הפניקס ביטוח': { price: 185.82, card: 'Diners 0112' },
+    'ביטוח סיעודי כלל': { price: 151, card: 'Bank' },
+    'בריאות כללית': { price: 142, card: 'Bank' },
+    'מגדל ביטוח': { price: 126.74, card: 'Diners 0112' },
+    'סאני Samsung': { price: 69.80, card: 'Diners 0112' },
+    'דינמיקה/פרטנר': { price: 59.90, card: 'Diners 0112' },
+    'עמותת ותיק': { price: 239, card: 'Bank' },
+    'מסלול מורחב': { price: 25, card: 'Bank' },
+    'דמי כרטיס': { price: 29.80, card: 'Diners+Visa', cancel: true },
+  },
+
+  // Variable expenses
+  varBusiness: {
+    'חומרי גלם': { actual: [5514, 12383], budget: 5000 },
+    'אריזות': { actual: [1845, 0], budget: 500 },
+    'משלוחים': { actual: [339, 320], budget: 350 },
+    'סליקה (עמלות)': { actual: [232, 232], budget: 250 },
+    'סחורה/מוצרים': { actual: [258, 601], budget: 300 },
+    'ציוד': { actual: [817, 0], budget: 200 },
+    'ציוד משרדי': { actual: [278, 0], budget: 100 },
+  },
+  varPersonal: {
+    'סופר/מכולת': { actual: 5400, budget: 3000 },
+    'WOLT': { actual: 1610, budget: 600 },
+    'מסעדות/קפה': { actual: 870, budget: 600 },
+    'ביגוד/קניות': { actual: 673, budget: 400 },
+    'בית מרקחת': { actual: 435, budget: 350 },
+    'דלק': { actual: 490, budget: 500 },
+    'טיפולי יופי': { actual: 750, budget: 300 },
+    'העברות BIT': { actual: 988, budget: 300 },
+    'שונות': { actual: 100, budget: 100 },
+  },
+
+  // Installments (BOTH end April!)
+  installments: [
+    { name: 'פריסת דיסקונט', amount: 620, payment: '23/24', endsDate: '2026-04-15', pct: 96 },
+    { name: 'כללית סמייל (שיניים)', amount: 944, payment: '2/3', endsDate: '2026-04-15', pct: 67 },
+    { name: 'ברכת הזהב', amount: 1449, payment: 'done', endsDate: '2026-03-01', pct: 100 },
+  ],
+
+  oferTransfer: 10000,
+  annualReserve: 2000,
+
+  // Credit cards — actual Feb data from Cal
+  creditCards: {
+    diners: {
+      name: 'Diners 0112', total: 13708, dueDate: '15/04/2026',
+      breakdown: {
+        'סופר (Bol, שופרסל)': 5400, 'WOLT': 1610, 'BIT העברות': 988,
+        'שיניים (2/3)': 944, 'טיפולי יופי': 750, 'פריסה (23/24)': 620,
+        'דלק (פז)': 490, 'בית מרקחת': 435, 'תקשורת': 345,
+        'ביטוח (מגדל+הפניקס)': 313, 'קניות': 673, 'מנויים+דמי כרטיס': 103,
+      }
+    },
+    visa: {
+      name: 'Visa 8953', total: 1172, dueDate: '02/04/2026',
+      breakdown: {
+        'צדקה': 403, 'אופנה': 367, 'כושר': 210,
+        'אוכל': 157, 'מסעדות': 32, 'בית': 13, 'דמי כרטיס': 20,
+      }
+    },
+  },
+
+  // Bank accounts
+  banks: {
+    business: { name: 'בינלאומי', branch: 105, account: '...31', limit: 10000, card: 'MAX 1116' },
+    personal: { name: 'דיסקונט', branch: 100, account: '...0739', limit: 56000, used: 12866, validUntil: '30/06/2026' },
+  },
+
+  // WOLT analysis
+  wolt: {
+    grocery: 1230, restaurant: 380,
+    jan: { orders: 11, total: 2105 },
+    feb: { orders: 8, total: 2003, diners: 1610 },
+  },
+
+  // Key dates
+  keyDates: [
+    { date: '2026-03-24', label: 'חידוש Google One 2TB', type: 'info' },
+    { date: '2026-03-31', label: 'הפניקס מבנה מסתיים!', type: 'danger' },
+    { date: '2026-04-02', label: 'חיוב Visa 8953 (1,172)', type: 'info' },
+    { date: '2026-04-07', label: 'חידוש CapCut', type: 'info' },
+    { date: '2026-04-10', label: 'חידוש Instagram Verified', type: 'warn' },
+    { date: '2026-04-15', label: 'פריסה + שיניים נגמרים! (+1,564)', type: 'good' },
+    { date: '2026-04-15', label: 'בדיקת הפניקס + מגדל מחירים', type: 'warn' },
+    { date: '2026-04-16', label: 'לבטל Wolt+ (לפני 18/04)', type: 'danger' },
+    { date: '2026-05-01', label: 'יעד: איזון!', type: 'good' },
+  ],
+
+  // Savings actions
+  savingsActions: [
+    { label: 'WOLT: לקנות בסופר רגיל', save: 1010, tag: 'עכשיו', urgent: true },
+    { label: 'פריסה נגמרת', save: 620, tag: 'אפריל' },
+    { label: 'שיניים נגמר (היה יוני!)', save: 944, tag: 'אפריל' },
+    { label: 'ביטול GPT4', save: 73, tag: 'עכשיו', urgent: true },
+    { label: 'Google One downgrade', save: 65, tag: 'אפריל' },
+    { label: 'Canva Teams→Pro', save: 62, tag: 'עכשיו', urgent: true },
+    { label: 'ביטול Instagram Verified', save: 54, tag: 'עכשיו', urgent: true },
+    { label: 'ביטול Wolt+', save: 49, tag: '16/04' },
+    { label: 'ביטול דמי כרטיס', save: 30, tag: 'עכשיו', urgent: true },
+  ],
+
+  cancelled: ['PayPlus', 'Etsy', 'VELO', 'INSTORIES', 'מפעל הפיס'],
+
+  // Shop
+  shop: { location: 'שינקין, ת"א', size: '13 מ"ר', estRent: 7000 },
+
+  // Credit inquiries
+  creditInquiries: [
+    { date: '08/08/2024', company: 'Max IT Finance Ltd', via: 'BDI Coface' },
+    { date: '06/03/2024', company: 'First International Bank', via: 'LAI Credit Bureau' },
+  ],
+};
+
+// ══════════════════════════════════════════════
+// CALCULATION ENGINE
+// ══════════════════════════════════════════════
+const CALC = (() => {
+  const c = {};
+  const today = new Date();
+  c.today = today;
+
+  // Totals
+  c.fixedBizTotal = Object.values(DATA.fixedBusiness).reduce((a,b) => a+b, 0);
+  c.subsUSDTotal = Object.values(DATA.subsUSD).reduce((a,s) => a+s.price, 0);
+  c.subsILSTotal = Object.values(DATA.subsILS).reduce((a,s) => a+s.price, 0);
+  c.subsUSDinILS = Math.round(c.subsUSDTotal * DATA.usdRate);
+  c.standingTotal = Object.values(DATA.standingOrders).reduce((a,s) => a+s.price, 0);
+  c.varBizBudget = Object.values(DATA.varBusiness).reduce((a,v) => a+v.budget, 0);
+  c.varPersonalBudget = Object.values(DATA.varPersonal).reduce((a,v) => a+v.budget, 0);
+  c.varPersonalActual = Object.values(DATA.varPersonal).reduce((a,v) => a+v.actual, 0);
+
+  // Active installments
+  c.activeInstallments = DATA.installments.filter(i => new Date(i.endsDate) > today);
+  c.installmentsTotal = c.activeInstallments.reduce((a,i) => a+i.amount, 0);
+
+  // Expense groups
+  c.bizFixed = c.fixedBizTotal + c.subsILSTotal + c.subsUSDinILS;
+  c.personalFixed = c.standingTotal;
+  c.totalExpenses = c.bizFixed + c.varBizBudget + c.personalFixed + c.varPersonalBudget + c.installmentsTotal + DATA.annualReserve;
+
+  // Income
+  const channels = Object.values(DATA.income.channels);
+  const nm = DATA.income.months.length;
+  c.incomeByMonth = [];
+  for (let m = 0; m < nm; m++) c.incomeByMonth.push(channels.reduce((a,ch) => a+ch.data[m], 0));
+  c.incomeTarget = DATA.income.targetRegular;
+
+  // Gap
+  c.gap = c.incomeTarget + DATA.oferTransfer - c.totalExpenses;
+
+  // Savings
+  c.totalSavings = DATA.savingsActions.reduce((a,s) => a+s.save, 0);
+  c.gapAfterSavings = c.gap + c.totalSavings;
+
+  // Credit utilization
+  c.creditUsedPct = Math.round((DATA.banks.personal.used / DATA.banks.personal.limit) * 100);
+
+  // Countdowns
+  c.countdowns = DATA.keyDates.map(kd => {
+    const d = Math.ceil((new Date(kd.date) - today) / 86400000);
+    return { ...kd, days: d };
+  }).filter(kd => kd.days > -14).sort((a,b) => a.days - b.days);
+
+  return c;
+})();
+
+function fmt(n) {
+  const abs = Math.abs(Math.round(n));
+  return (n < 0 ? '-' : '') + abs.toLocaleString('en-US');
+}
+function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
+</script>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header">
+  <div>
+    <h1>OTILYAS</h1>
+    <div class="header-sub">Financial Dashboard</div>
+  </div>
+  <div class="header-date">
+    <div id="clock"></div>
+    <div><span class="live-dot"></span> LIVE</div>
+  </div>
+</div>
+
 <div class="container">
 
-<!-- KPI Row -->
-<div class="kpi-row">
-<div class="kpi"><div class="label">Income (regular)</div><div class="value neutral">10,400</div><div class="sub">no fair</div></div>
-<div class="kpi"><div class="label">Expenses (budget)</div><div class="value neutral">20,254</div><div class="sub">biz + personal</div></div>
-<div class="kpi"><div class="label">Ofer transfer</div><div class="value positive">10,000</div><div class="sub">monthly</div></div>
-<div class="kpi"><div class="label">Gap (with Ofer)</div><div class="value negative">-2,400</div><div class="sub">regular month</div></div>
-<div class="kpi"><div class="label">Credit limit</div><div class="value neutral">56,000</div><div class="sub">combined all cards</div></div>
-<div class="kpi"><div class="label">Used (02/03)</div><div class="value neutral">12,866</div><div class="sub">23% of limit</div></div>
+<!-- Nav -->
+<nav class="section-nav">
+  <a href="#overview" class="nav-pill active">סקירה</a>
+  <a href="#income" class="nav-pill">הכנסות</a>
+  <a href="#cards" class="nav-pill">כרטיסים</a>
+  <a href="#expenses" class="nav-pill">הוצאות</a>
+  <a href="#subs" class="nav-pill">מנויים</a>
+  <a href="#savings" class="nav-pill">חיסכון</a>
+  <a href="#dates" class="nav-pill">תאריכים</a>
+  <a href="#strategy" class="nav-pill">אסטרטגיה</a>
+</nav>
+
+<!-- Alerts (dynamic) -->
+<div id="alerts"></div>
+
+<!-- KPIs -->
+<section id="overview">
+<div class="kpi-row" id="kpis"></div>
+</section>
+
+<!-- Charts -->
+<div class="grid-2 reveal">
+  <div class="section"><h2>הכנסות לפי ערוץ</h2><div class="chart-container"><canvas id="incomeChart"></canvas></div></div>
+  <div class="section"><h2>פילוח הוצאות</h2><div class="chart-container"><canvas id="expenseChart"></canvas></div></div>
 </div>
 
-<div class="alert" style="background:#f0fff0;border-right-color:#2d8a4e"><strong>Update:</strong> Both installment (620) AND dental (944) end in <strong>April</strong>! Total <strong>1,564 freed in April</strong> — balance one month earlier!</div>
-<div class="alert alert-red"><strong>Note:</strong> Birkhat HaZahav 1,449 charged on Diners again — next time use MAX 1116!</div>
+<!-- Income -->
+<section id="income" class="section reveal">
+  <h2>פירוט הכנסות</h2>
+  <table id="incomeTable"></table>
+</section>
 
-<!-- Charts Row -->
-<div class="grid-2">
-<div class="section"><h2>Income by Channel</h2><div class="chart-container"><canvas id="incomeChart"></canvas></div></div>
-<div class="section"><h2>Expense Breakdown</h2><div class="chart-container"><canvas id="expenseChart"></canvas></div></div>
-</div>
+<!-- WOLT -->
+<section class="section reveal">
+  <h2>ניתוח WOLT <span class="updated">from Diners 03/26</span></h2>
+  <div class="grid-2">
+    <div>
+      <p style="font-size:1em;margin-bottom:8px;font-weight:700">WOLT פברואר: ₪1,610 (7 עסקאות)</p>
+      <p style="font-size:.82em;color:var(--text-secondary);margin-bottom:12px" id="woltInfo"></p>
+      <div style="display:flex;gap:10px">
+        <div style="flex:1;text-align:center;padding:14px;background:var(--red-bg);border-radius:var(--radius)">
+          <div style="font-size:.76em;color:var(--red)">סופר דרך WOLT</div>
+          <div style="font-family:var(--font-display);font-size:1.4em;font-weight:700;color:var(--red)" id="woltGrocery"></div>
+          <div style="font-size:.68em;color:var(--text-muted)">+25% פרמיה מול סופר רגיל</div>
+        </div>
+        <div style="flex:1;text-align:center;padding:14px;background:var(--green-bg);border-radius:var(--radius)">
+          <div style="font-size:.76em;color:var(--green)">מסעדות</div>
+          <div style="font-family:var(--font-display);font-size:1.4em;font-weight:700;color:var(--green)" id="woltRest"></div>
+          <div style="font-size:.68em;color:var(--text-muted)">סביר</div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-container" style="height:190px"><canvas id="woltChart"></canvas></div>
+  </div>
+</section>
 
-<!-- Income Detail -->
-<div class="section"><h2>Income Detail</h2>
-<table><thead><tr><th>Channel</th><th>Jan</th><th>Feb</th><th>Target</th></tr></thead><tbody>
-<tr><td>Hyp (shop+fair)</td><td>18,116</td><td>4,875</td><td>5,500</td></tr>
-<tr><td>WIX</td><td>3,702</td><td>2,695</td><td>3,000</td></tr>
-<tr><td>MASKIT</td><td>1,338</td><td>1,240</td><td>1,300</td></tr>
-<tr><td>Israel Museum</td><td>-</td><td>427</td><td>400</td></tr>
-<tr><td>MUZA</td><td>-</td><td>-</td><td>200</td></tr>
-<tr class="total-row"><td>TOTAL</td><td>23,155</td><td>9,237</td><td>10,400</td></tr>
-</tbody></table></div>
+<!-- Bank & Credit Cards -->
+<section id="cards" class="section reveal">
+  <h2>חשבונות בנק וכרטיסי אשראי <span class="updated">actual from Cal 03/26</span></h2>
+  <div class="grid-2" id="bankCards"></div>
+  <!-- Diners breakdown -->
+  <div style="margin-top:16px">
+    <h3 style="font-size:.95em;color:var(--gold);margin-bottom:10px">Diners 0112 — פברואר בפועל: <span id="dinersTotal"></span></h3>
+    <div class="grid-2">
+      <div class="chart-container" style="height:240px"><canvas id="dinersChart"></canvas></div>
+      <div><table id="dinersTable"></table></div>
+    </div>
+  </div>
+</section>
 
-<!-- WOLT Insight -->
-<div class="section"><h2>WOLT Insight <span class="updated">updated from Diners 03/26</span></h2>
-<div class="grid-2"><div>
-<p style="font-size:1.05em;margin-bottom:8px"><strong>WOLT Feb: 1,610 (7 transactions)</strong></p>
-<p style="font-size:.85em;color:#666;margin-bottom:12px">Jan: 11 orders 2,105 | Feb: 8 orders 2,003 | Feb (Diners): 1,610</p>
-<div style="display:flex;gap:12px">
-<div style="flex:1;text-align:center;padding:12px;background:#ffe0e0;border-radius:8px">
-<div style="font-size:.78em;color:#cc3333">Grocery via WOLT</div>
-<div style="font-size:1.4em;font-weight:700;color:#cc3333">~1,230/mo</div>
-<div style="font-size:.72em">+25% premium vs supermarket</div></div>
-<div style="flex:1;text-align:center;padding:12px;background:#d0f0d0;border-radius:8px">
-<div style="font-size:.78em;color:#2d8a4e">Restaurants</div>
-<div style="font-size:1.4em;font-weight:700;color:#2d8a4e">~380/mo</div>
-<div style="font-size:.72em">reasonable</div></div></div></div>
-<div><div class="chart-container" style="height:190px"><canvas id="woltChart"></canvas></div></div></div></div>
+<!-- Visa breakdown -->
+<section class="section reveal">
+  <h2>Visa 8953 — פברואר: <span id="visaTotal"></span> <span class="updated">actual from Cal 03/26</span></h2>
+  <table id="visaTable"></table>
+</section>
 
-<!-- Bank Accounts & Credit Cards -->
-<div class="section"><h2>Bank Accounts & Credit Cards <span class="updated">updated from Cal 03/26</span></h2>
-<div class="grid-2">
-<!-- Business Account -->
-<div class="bank-card" style="border-color:#2E2623">
-<div style="font-size:.72em;color:#fff;background:#2E2623;display:inline-block;padding:2px 10px;border-radius:10px;margin-bottom:8px">Business</div>
-<div style="font-size:1.1em;font-weight:700">International Bank</div>
-<div style="font-size:.78em;color:#666">Branch 105 | Account ...31</div>
-<div style="font-size:.78em;color:#666">Credit limit: <strong>10,000</strong></div>
-<div style="margin-top:10px;padding-top:10px;border-top:1px solid #eee">
-<div class="cc-row" style="border:none;padding:4px 0">
-<div class="cc-icon" style="background:#2E2623">MAX</div>
-<div class="cc-info"><div class="cc-name">MAX 1116</div><div class="cc-detail">Business card</div></div>
-</div></div></div>
-<!-- Personal Account -->
-<div class="bank-card" style="border-color:#997C60">
-<div style="font-size:.72em;color:#fff;background:#997C60;display:inline-block;padding:2px 10px;border-radius:10px;margin-bottom:8px">Personal</div>
-<div style="font-size:1.1em;font-weight:700">Discount Bank</div>
-<div style="font-size:.78em;color:#666">Branch 100 | Account ...0739</div>
-<div style="font-size:.78em;color:#666">Combined limit: <strong>56,000</strong> | Used: <strong>12,866</strong> (23%)</div>
-<div style="font-size:.72em;color:#2d8a4e;margin-top:2px">Valid until 30/06/2026</div>
-<div style="margin-top:10px;padding-top:10px;border-top:1px solid #eee">
-<div class="cc-row">
-<div class="cc-icon" style="background:#1a5276">DIN</div>
-<div class="cc-info"><div class="cc-name">Diners 0112</div><div class="cc-detail">Feb charge: 13,708 | due 15/04</div></div>
-<div class="cc-amount negative">13,708</div>
-</div>
-<div class="cc-row" style="border:none">
-<div class="cc-icon" style="background:#6c3483">VISA</div>
-<div class="cc-info"><div class="cc-name">Visa 8953</div><div class="cc-detail">Feb charge: 1,172 | due 02/04</div></div>
-<div class="cc-amount">1,172</div>
-</div></div></div>
-</div>
+<!-- Expenses -->
+<section id="expenses" class="reveal">
+  <div class="grid-2">
+    <div class="section">
+      <h2>הוצאות קבועות עסקי</h2>
+      <table id="fixedBizTable"></table>
+    </div>
+    <div class="section">
+      <h2>הוצאות קבועות אישי (הוראות קבע)</h2>
+      <table id="standingTable"></table>
+    </div>
+  </div>
+  <div class="section">
+    <h2>תקציב vs בפועל — הוצאות אישיות משתנות</h2>
+    <div class="chart-container"><canvas id="budgetChart"></canvas></div>
+  </div>
+</section>
 
-<!-- Diners Breakdown - ACTUAL DATA -->
-<div style="margin-top:14px">
-<h3 style="font-size:.95em;color:#997C60;margin-bottom:8px">Diners 0112 — Feb Actual: 13,708</h3>
-<div class="grid-2">
-<div class="chart-container" style="height:220px"><canvas id="dinersChart"></canvas></div>
-<div style="font-size:.82em">
-<table>
-<tr><td>Grocery (Bol, Shupersal, etc)</td><td style="text-align:left;font-weight:700">5,400</td></tr>
-<tr><td>WOLT</td><td style="text-align:left;font-weight:700;color:#cc3333">1,610</td></tr>
-<tr><td>Installment (23/24)</td><td style="text-align:left;font-weight:700">620</td></tr>
-<tr><td>Dental (2/3)</td><td style="text-align:left;font-weight:700">944</td></tr>
-<tr><td>BIT transfers</td><td style="text-align:left;font-weight:700">988</td></tr>
-<tr><td>Beauty (Boutique 3)</td><td style="text-align:left;font-weight:700">750</td></tr>
-<tr><td>Gas (Paz)</td><td style="text-align:left;font-weight:700">490</td></tr>
-<tr><td>Pharmacy</td><td style="text-align:left;font-weight:700">435</td></tr>
-<tr><td>Insurance (Migdal+Phoenix)</td><td style="text-align:left;font-weight:700">313</td></tr>
-<tr><td>Telecom (Cellcom+Dyn+Sunny)</td><td style="text-align:left;font-weight:700">345</td></tr>
-<tr><td>Shopping (Adidas,Fox,etc)</td><td style="text-align:left;font-weight:700">673</td></tr>
-<tr><td>Subscriptions+Fees</td><td style="text-align:left;font-weight:700">103</td></tr>
-<tr style="background:#E1D9D0;font-weight:700"><td>TOTAL</td><td style="text-align:left">13,708</td></tr>
-</table>
-</div>
-</div></div>
-</div>
-
-<!-- Visa 8953 Breakdown -->
-<div class="section"><h2>Visa 8953 — Feb: 1,172 <span class="updated">actual from Cal 03/26</span></h2>
-<div style="font-size:.85em;color:#666;margin-bottom:8px">Charge date: 02/04/2026</div>
-<table>
-<thead><tr><th>Category</th><th>Amount</th><th>Details</th></tr></thead>
-<tbody>
-<tr><td>Fashion</td><td>367</td><td>TRIANGLE 64, Chelsy 193, Collect 50, Yehuda 60</td></tr>
-<tr><td>Charity</td><td>403</td><td>Hazdamnut Shnia 313, WIZO 90</td></tr>
-<tr><td>Fitness</td><td>210</td><td>FIT-FREE 170, Pilates 10, other 30</td></tr>
-<tr><td>Food</td><td>157</td><td>Deli 135, Meshek 22</td></tr>
-<tr><td>Restaurants</td><td>32</td><td>mae 32</td></tr>
-<tr><td>Home</td><td>13</td><td>Tzur DIY 13</td></tr>
-<tr><td>Card fee</td><td>20</td><td>Discount Bank</td></tr>
-<tr class="total-row"><td>TOTAL</td><td>1,172</td><td></td></tr>
-</tbody></table>
-</div>
-
-<!-- Active Subscriptions -->
-<div class="section"><h2>Active Subscriptions <span class="updated">verified from Cal statements</span></h2>
-<div class="tabs">
-<button class="tab active" onclick="showTab(this,'tabBizSub')">Business USD</button>
-<button class="tab" onclick="showTab(this,'tabBizILS')">Business ILS</button>
-<button class="tab" onclick="showTab(this,'tabStanding')">Standing Orders</button>
-<button class="tab" onclick="showTab(this,'tabPending')">Pending Action</button>
-</div>
-
-<div id="tabBizSub" class="tab-content active">
-<div class="sub-row"><div><div class="sub-name">Claude</div><div class="sub-card">credit card</div></div><div class="sub-price">$100/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Shopify</div><div class="sub-card">Diners 0112 ($5 = 15.65)</div></div><div class="sub-price">$43.95/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Canva (Teams)</div><div class="sub-card">credit card</div></div><div class="sub-price">$30/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Midjourney</div><div class="sub-card">credit card</div></div><div class="sub-price">$30/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">GPT4</div><div class="sub-card">credit card</div></div><div class="sub-price">$20/mo</div></div>
-<div class="sub-row" style="background:#E1D9D0;border-radius:8px;padding:8px 10px;margin-top:4px"><div><strong>Total USD</strong></div><div class="sub-price" style="font-size:1em">$223.95/mo</div></div>
-</div>
-
-<div id="tabBizILS" class="tab-content">
-<div class="sub-row"><div><div class="sub-name">Google Play</div><div class="sub-card">various</div></div><div class="sub-price">220/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Spotify</div><div class="sub-card">Diners 0112 (verified)</div></div><div class="sub-price">43.90/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Google Workspace</div><div class="sub-card">Diners 0112 (EUR 6.90)</div></div><div class="sub-price">~25.60/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Google One</div><div class="sub-card">Diners 0112</div></div><div class="sub-price">8/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Wolt+</div><div class="sub-card">Diners 0112</div></div><div class="sub-price">49/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Microsoft 365</div><div class="sub-card">annual</div></div><div class="sub-price">36/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Instagram Verified</div><div class="sub-card">credit card</div></div><div class="sub-price">54/mo</div></div>
-<div class="sub-row" style="background:#E1D9D0;border-radius:8px;padding:8px 10px;margin-top:4px"><div><strong>Total ILS subs</strong></div><div class="sub-price" style="font-size:1em">~436/mo</div></div>
-</div>
-
-<div id="tabStanding" class="tab-content">
-<p style="font-size:.82em;color:#666;margin-bottom:8px">Standing orders (horaot keva) verified from Diners 0112:</p>
-<div class="sub-row"><div><div class="sub-name">Sunny Samsung 360</div><div class="sub-card">Diners 0112 <span class="tag tag-new">NEW</span></div></div><div class="sub-price">69.80/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Cellcom</div><div class="sub-card">Diners 0112</div></div><div class="sub-price">215.43/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Migdal Insurance</div><div class="sub-card">Diners 0112</div></div><div class="sub-price">126.74/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Phoenix Insurance</div><div class="sub-card">Diners 0112</div></div><div class="sub-price">185.82/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Dinamica Cellular</div><div class="sub-card">Diners 0112</div></div><div class="sub-price">59.90/mo</div></div>
-<div class="sub-row"><div><div class="sub-name">Card fees</div><div class="sub-card">Diners 10 + Visa 19.80</div></div><div class="sub-price">29.80/mo</div></div>
-<div class="sub-row" style="background:#E1D9D0;border-radius:8px;padding:8px 10px;margin-top:4px"><div><strong>Total standing</strong></div><div class="sub-price" style="font-size:1em">687.49/mo</div></div>
-</div>
-
-<div id="tabPending" class="tab-content">
-<div class="sub-row" style="background:#fff0f0;border-radius:8px;padding:8px 10px"><div><div class="sub-name">GPT4 <span class="tag tag-urgent">cancel NOW</span></div></div><div class="sub-price negative">$20/mo</div></div>
-<div class="sub-row" style="background:#fff0f0;border-radius:8px;padding:8px 10px;margin-top:4px"><div><div class="sub-name">Canva: Teams &rarr; Pro <span class="tag tag-urgent">downgrade</span></div></div><div class="sub-price negative">$17/mo save</div></div>
-<div class="sub-row" style="background:#fff0f0;border-radius:8px;padding:8px 10px;margin-top:4px"><div><div class="sub-name">Instagram Verified <span class="tag tag-urgent">cancel NOW</span></div></div><div class="sub-price negative">54/mo</div></div>
-<div class="sub-row" style="background:#fff3d0;border-radius:8px;padding:8px 10px;margin-top:4px"><div><div class="sub-name">Wolt+ <span class="tag tag-april">cancel by 16/04</span></div></div><div class="sub-price negative">49/mo</div></div>
-<div class="sub-row" style="background:#fff0f0;border-radius:8px;padding:8px 10px;margin-top:4px"><div><div class="sub-name">Card fees <span class="tag tag-urgent">cancel NOW</span></div></div><div class="sub-price negative">29.80/mo</div></div>
-</div>
-</div>
+<!-- Subscriptions -->
+<section id="subs" class="section reveal">
+  <h2>מנויים פעילים <span class="updated">verified from Cal</span></h2>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab(this,'tabUSD')">$ דולר</button>
+    <button class="tab" onclick="showTab(this,'tabILS')">₪ שקלים</button>
+    <button class="tab" onclick="showTab(this,'tabStanding')">הוראות קבע</button>
+    <button class="tab" onclick="showTab(this,'tabPending')">לטיפול</button>
+    <button class="tab" onclick="showTab(this,'tabCancelled')">בוטלו</button>
+  </div>
+  <div id="tabUSD" class="tab-content active"></div>
+  <div id="tabILS" class="tab-content"></div>
+  <div id="tabStanding" class="tab-content"></div>
+  <div id="tabPending" class="tab-content"></div>
+  <div id="tabCancelled" class="tab-content"></div>
+</section>
 
 <!-- Installments -->
-<div class="section"><h2>Installments (ending soon!) <span class="updated">verified from Diners 03/26</span></h2>
-<div class="grid-2">
-<div style="border:2px solid #2d8a4e;border-radius:12px;padding:16px;text-align:center">
-<div style="font-size:.78em;color:#2d8a4e;font-weight:600">Bank Installment</div>
-<div style="font-size:1.3em;font-weight:700;margin:4px 0">619.58/mo</div>
-<div style="font-size:.85em">Payment <strong>23 of 24</strong></div>
-<div style="font-size:.95em;font-weight:700;color:#2d8a4e;margin-top:4px">Last payment: April!</div>
-<div class="progress-bar" style="margin-top:8px"><div class="progress-fill" style="width:96%;background:#2d8a4e"></div></div>
-<div style="font-size:.72em;color:#999;margin-top:2px">96% complete</div>
-</div>
-<div style="border:2px solid #2d8a4e;border-radius:12px;padding:16px;text-align:center">
-<div style="font-size:.78em;color:#2d8a4e;font-weight:600">Dental (Clalit Smile)</div>
-<div style="font-size:1.3em;font-weight:700;margin:4px 0">944/mo</div>
-<div style="font-size:.85em">Payment <strong>2 of 3</strong></div>
-<div style="font-size:.95em;font-weight:700;color:#2d8a4e;margin-top:4px">Last payment: April!</div>
-<div class="progress-bar" style="margin-top:8px"><div class="progress-fill" style="width:67%;background:#2d8a4e"></div></div>
-<div style="font-size:.72em;color:#999;margin-top:2px">67% complete</div>
-</div>
-</div>
-<p style="text-align:center;margin-top:12px;font-size:1em;font-weight:700;color:#2d8a4e">Both end April = 1,564/mo freed!</p>
-</div>
+<section class="section reveal">
+  <h2>פריסות ותשלומים <span class="updated">verified from Diners 03/26</span></h2>
+  <div class="grid-2" id="installGrid" style="gap:12px"></div>
+  <p id="installSummary" style="text-align:center;margin-top:12px;font-size:1.05em;font-weight:700;color:var(--green)"></p>
+</section>
 
-<!-- Credit Inquiries -->
-<div class="section"><h2>Credit Inquiries (BDI/LAI)</h2>
-<p style="font-size:.82em;color:#666;margin-bottom:12px">Requests to view your credit information</p>
-<table>
-<thead><tr><th>Date</th><th>Company</th><th>Via</th><th>Status</th></tr></thead>
-<tbody>
-<tr><td>08/08/2024</td><td>Max IT Finance Ltd</td><td>BDI Coface</td><td><span class="tag tag-active">OK</span></td></tr>
-<tr><td>06/03/2024</td><td>First International Bank</td><td>LAI Credit Bureau</td><td><span class="tag tag-active">OK</span></td></tr>
-</tbody>
-</table>
-<p style="font-size:.75em;color:#999;margin-top:8px">2 inquiries in last 2 years. Low inquiry count = positive signal.</p>
-</div>
+<!-- Savings -->
+<section id="savings" class="section reveal">
+  <h2>פעולות חיסכון</h2>
+  <div id="savingsList"></div>
+</section>
 
-<!-- Key Dates Timeline -->
-<div class="section"><h2>Key Financial Dates</h2>
-<div class="timeline-item">
-<div class="tl-date">02 April 2026</div>
-<div class="tl-title">Visa 8953 charge date (Feb: 1,172)</div>
-<div class="tl-detail">Discount Bank</div>
-</div>
-<div class="timeline-item">
-<div class="tl-date">15 April 2026</div>
-<div class="tl-title positive">Installment LAST payment (620) + Dental LAST payment (944)</div>
-<div class="tl-detail">Both complete! 1,564/mo freed from May onwards</div>
-</div>
-<div class="timeline-item">
-<div class="tl-date">15 April 2026</div>
-<div class="tl-title">Check Phoenix/Migdal price increase</div>
-<div class="tl-detail">Insurance premium review</div>
-</div>
-<div class="timeline-item">
-<div class="tl-date">16 April 2026</div>
-<div class="tl-title negative">Cancel Wolt+ before 18/04 renewal</div>
-<div class="tl-detail">Calendar reminder set</div>
-</div>
-<div class="timeline-item" style="border-right-color:#2d8a4e">
-<div class="tl-date">May 2026</div>
-<div class="tl-title positive" style="font-size:1em">Target: Balance!</div>
-<div class="tl-detail">All cuts + installments ending = positive cash flow</div>
+<!-- Path to balance -->
+<section class="section reveal" style="background:linear-gradient(135deg,var(--green-light),#fff)">
+  <h2>מסלול לאיזון <span class="updated">corrected from Cal data</span></h2>
+  <div id="balancePath" style="max-width:480px;margin:0 auto"></div>
+</section>
+
+<!-- Key dates -->
+<section id="dates" class="section reveal">
+  <h2>תאריכים חשובים — ספירה לאחור</h2>
+  <div id="countdownList"></div>
+</section>
+
+<!-- Credit inquiries -->
+<section class="section reveal">
+  <h2>בירורי אשראי (BDI/LAI)</h2>
+  <p style="font-size:.8em;color:var(--text-secondary);margin-bottom:10px">בקשות לצפייה במידע האשראי שלך</p>
+  <table id="creditTable"></table>
+  <p style="font-size:.72em;color:var(--text-muted);margin-top:8px">2 בירורים ב-2 שנים. מספר נמוך = סימן חיובי.</p>
+</section>
+
+<!-- Strategy -->
+<section id="strategy" class="section reveal">
+  <h2>תרחישים אסטרטגיים</h2>
+  <div class="scenario-grid" id="scenarioGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"></div>
+  <p style="margin-top:12px;font-size:.82em;color:var(--gold);text-align:center" id="shopInfo"></p>
+</section>
+
+<div class="footer">
+  <div>OTILYAS Dashboard | Rif Agent</div>
+  <div class="mono" id="lastUpdate"></div>
 </div>
 </div>
 
-<!-- Savings Actions -->
-<div class="section"><h2>Savings Actions</h2>
-<div class="action-item" style="background:#fff0f0;padding:10px;border-radius:8px;margin-bottom:8px"><div><strong>Stop WOLT grocery</strong> <span class="tag tag-urgent">NOW</span></div><div class="action-saving">1,010/mo</div></div>
-<div class="action-item"><div>Installment ends <span class="tag tag-april">April</span></div><div class="action-saving">620/mo</div></div>
-<div class="action-item"><div>Dental ends <span class="tag tag-april">April</span> (was June!)</div><div class="action-saving">944/mo</div></div>
-<div class="action-item"><div>Cancel GPT4 <span class="tag tag-urgent">NOW</span></div><div class="action-saving">73/mo</div></div>
-<div class="action-item"><div>Google One downgrade <span class="tag tag-april">April</span></div><div class="action-saving">65/mo</div></div>
-<div class="action-item"><div>Canva downgrade <span class="tag tag-urgent">NOW</span></div><div class="action-saving">62/mo</div></div>
-<div class="action-item"><div>Cancel Instagram Verified <span class="tag tag-urgent">NOW</span></div><div class="action-saving">54/mo</div></div>
-<div class="action-item"><div>Cancel Wolt+ <span class="tag tag-april">16/04</span></div><div class="action-saving">49/mo</div></div>
-<div class="action-item"><div>Cancel card fees <span class="tag tag-urgent">NOW</span></div><div class="action-saving">29.80/mo</div></div>
-<div class="action-item" style="background:#E1D9D0;padding:10px;border-radius:8px"><div><strong>TOTAL savings (cuts + endings)</strong></div><div class="action-saving" style="font-size:1.15em">2,907/mo</div></div></div>
-
-<!-- Strategic Scenarios -->
-<div class="section"><h2>Strategic Scenarios</h2>
-<div class="scenario-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-<div class="scenario-card"><h3>A. Shop as-is</h3><div>In: 9,775 | Out: 20,796</div><div class="big negative">-1,021</div><div class="sub">with Ofer 10K</div></div>
-<div class="scenario-card" style="border-color:#2d8a4e"><h3>B. Rent + Online</h3><div>In: 11,900 | Out: 19,916</div><div class="big positive">+1,984</div><div class="sub">with Ofer 10K</div></div>
-<div class="scenario-card"><h3>C. Hybrid</h3><div>In: 11,775 | Out: 20,796</div><div class="big positive">+979</div><div class="sub">with Ofer 10K</div></div>
-</div><p style="margin-top:12px;font-size:.82em;color:#997C60;text-align:center">Shop: owned, 13sqm Shenkin. Est rent ~7,000. Needs survey.</p></div>
-
-<!-- Path to Balance - UPDATED -->
-<div class="section" style="background:linear-gradient(135deg,#f0fff0,#fff)"><h2>Path to Balance <span class="updated">corrected from Cal data</span></h2>
-<div style="max-width:450px;margin:0 auto">
-<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:.88em"><span>Current gap</span><span class="negative" style="font-weight:700">-2,400</span></div><div class="progress-bar"><div class="progress-fill" style="width:0%;background:#cc3333"></div></div></div>
-<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:.88em"><span>+ Subscription cuts (1,363)</span><span class="negative">-1,037</span></div><div class="progress-bar"><div class="progress-fill" style="width:57%;background:#ff9900"></div></div></div>
-<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:.88em"><span>+ Installment + Dental end Apr (1,564)</span><span class="positive" style="font-weight:700">+527</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;background:#2d8a4e"></div></div></div>
-<p style="text-align:center;margin-top:18px;font-size:1.1em;font-weight:700;color:#2d8a4e">Balance by May 2026!</p>
-<p style="text-align:center;font-size:.82em;color:#997C60">(one month earlier than before!)</p>
-</div></div>
-
-</div>
-<div class="footer">OTILYAS Dashboard | Rif | Updated 20 March 2026</div>
+<!-- ══════════════════════════════════════════════
+     RENDER ENGINE
+     ══════════════════════════════════════════════ -->
 <script>
-function showTab(btn,id){document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active')}
-new Chart(document.getElementById('incomeChart'),{type:'bar',data:{labels:['Hyp','WIX','MASKIT','Museum','MUZA'],datasets:[{label:'Jan',data:[18116,3702,1338,0,0],backgroundColor:'#2E2623'},{label:'Feb',data:[4875,2695,1240,427,0],backgroundColor:'#AF9C87'},{label:'Target',data:[5500,3000,1300,400,200],backgroundColor:'#D8C9B8'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true}}}});
-new Chart(document.getElementById('expenseChart'),{type:'doughnut',data:{labels:['Biz Fixed','Biz Var','Pers Fixed','Pers Var','Install+Dental','Annual'],datasets:[{data:[3184,6700,1235,6211,1564,2000],backgroundColor:['#2E2623','#AF9C87','#997C60','#D8C9B8','#E1D9D0','#f5f0eb'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
-new Chart(document.getElementById('woltChart'),{type:'pie',data:{labels:['Grocery 76%','Restaurant 24%'],datasets:[{data:[1230,380],backgroundColor:['#cc3333','#2d8a4e']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
-new Chart(document.getElementById('dinersChart'),{type:'bar',data:{labels:['Grocery','WOLT','BIT','Dental','Beauty','Installment','Gas','Pharmacy','Telecom','Insurance','Shopping','Subs+Fees'],datasets:[{label:'Feb (actual)',data:[5400,1610,988,944,750,620,490,435,345,313,673,103],backgroundColor:['#2E2623','#cc3333','#6c3483','#E1D9D0','#d4a0c0','#AF9C87','#997C60','#88b88b','#5dade2','#f0b27a','#D8C9B8','#f5f0eb']}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}}});
+// Clock
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}) + ' · ' +
+    now.toLocaleDateString('he-IL',{day:'numeric',month:'short',year:'numeric'});
+}
+updateClock(); setInterval(updateClock, 30000);
+
+// Alerts
+(function() {
+  const el = document.getElementById('alerts');
+  let html = '';
+  // Both installments end April
+  const activeInst = DATA.installments.filter(i => new Date(i.endsDate) > CALC.today);
+  if (activeInst.length > 0) {
+    const total = activeInst.reduce((a,i) => a+i.amount, 0);
+    const days = Math.ceil((new Date(activeInst[0].endsDate) - CALC.today) / 86400000);
+    if (days <= 45) html += `<div class="alert alert-green"><strong>חדשות טובות:</strong> פריסה (${fmt(activeInst[0].amount)}) + שיניים (${fmt(activeInst[1]?.amount||0)}) נגמרים באפריל! סה"כ <strong>₪${fmt(total)} ישוחרר</strong> בעוד ${days} ימים!</div>`;
+  }
+  // Urgent dates
+  CALC.countdowns.filter(c => c.type === 'danger' && c.days <= 14 && c.days > 0).forEach(c => {
+    html += `<div class="alert alert-red"><strong>דחוף:</strong> ${c.label} — בעוד ${c.days} ימים!</div>`;
+  });
+  // Birkhat HaZahav note
+  html += `<div class="alert"><strong>תזכורת:</strong> ברכת הזהב 1,449 חויב בדיינרס. בפעם הבאה לשלם עם MAX 1116!</div>`;
+  el.innerHTML = html;
+})();
+
+// KPIs
+(function() {
+  const kpis = [
+    { label: 'הכנסות (יעד)', value: `₪${fmt(CALC.incomeTarget)}`, cls: 'neutral', sub: 'חודש רגיל' },
+    { label: 'הוצאות (תקציב)', value: `₪${fmt(CALC.totalExpenses)}`, cls: 'neutral', sub: 'עסקי + אישי' },
+    { label: 'העברת עופר', value: `₪${fmt(DATA.oferTransfer)}`, cls: 'positive', sub: 'חודשי' },
+    { label: 'פער (עם עופר)', value: `₪${fmtSign(CALC.gap)}`, cls: CALC.gap >= 0 ? 'positive' : 'negative', sub: 'חודש רגיל' },
+    { label: 'מסגרת אשראי', value: `₪${fmt(DATA.banks.personal.limit)}`, cls: 'neutral', sub: `משולב כל הכרטיסים` },
+    { label: 'ניצול אשראי', value: `₪${fmt(DATA.banks.personal.used)}`, cls: 'neutral', sub: `${CALC.creditUsedPct}% מהמסגרת` },
+  ];
+  document.getElementById('kpis').innerHTML = kpis.map(k => `
+    <div class="kpi"><div class="label">${k.label}</div><div class="value ${k.cls}">${k.value}</div><div class="sub">${k.sub}</div></div>
+  `).join('');
+})();
+
+// Income table
+(function() {
+  const months = DATA.income.months;
+  let html = `<thead><tr><th>ערוץ</th>`;
+  months.forEach(m => html += `<th class="num">${m}</th>`);
+  html += `<th class="num">יעד</th></tr></thead><tbody>`;
+  const totals = new Array(months.length).fill(0);
+  let tTarget = 0;
+  for (const [name, ch] of Object.entries(DATA.income.channels)) {
+    html += `<tr><td>${name}</td>`;
+    ch.data.forEach((v,i) => { totals[i] += v; html += `<td class="num">${v ? fmt(v) : '—'}</td>`; });
+    tTarget += ch.target;
+    html += `<td class="num">${fmt(ch.target)}</td></tr>`;
+  }
+  html += `<tr class="total-row"><td>סה"כ</td>`;
+  totals.forEach(t => html += `<td class="num">${fmt(t)}</td>`);
+  html += `<td class="num">${fmt(tTarget)}</td></tr></tbody>`;
+  document.getElementById('incomeTable').innerHTML = html;
+})();
+
+// WOLT
+document.getElementById('woltGrocery').textContent = `~${fmt(DATA.wolt.grocery)}/חודש`;
+document.getElementById('woltRest').textContent = `~${fmt(DATA.wolt.restaurant)}/חודש`;
+document.getElementById('woltInfo').textContent = `ינואר: ${DATA.wolt.jan.orders} הזמנות ₪${fmt(DATA.wolt.jan.total)} | פברואר: ${DATA.wolt.feb.orders} הזמנות ₪${fmt(DATA.wolt.feb.total)} | פברואר (דיינרס): ${fmt(DATA.wolt.feb.diners)}`;
+
+// Bank cards
+(function() {
+  const b = DATA.banks;
+  document.getElementById('bankCards').innerHTML = `
+    <div class="bank-card" style="border-color:var(--bg-header)">
+      <div style="font-size:.7em;color:#fff;background:var(--bg-header);display:inline-block;padding:2px 10px;border-radius:10px;margin-bottom:8px">עסקי</div>
+      <div style="font-size:1.1em;font-weight:700">${b.business.name}</div>
+      <div style="font-size:.78em;color:var(--text-secondary)">סניף ${b.business.branch} | חשבון ${b.business.account}</div>
+      <div style="font-size:.78em;color:var(--text-secondary)">מסגרת: <strong>₪${fmt(b.business.limit)}</strong></div>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #eee">
+        <div class="cc-row" style="border:none;padding:4px 0">
+          <div class="cc-icon" style="background:var(--bg-header)">MAX</div>
+          <div class="cc-info"><div class="cc-name">${b.business.card}</div><div class="cc-detail">כרטיס עסקי</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="bank-card" style="border-color:var(--gold)">
+      <div style="font-size:.7em;color:#fff;background:var(--gold);display:inline-block;padding:2px 10px;border-radius:10px;margin-bottom:8px">אישי</div>
+      <div style="font-size:1.1em;font-weight:700">${b.personal.name}</div>
+      <div style="font-size:.78em;color:var(--text-secondary)">סניף ${b.personal.branch} | חשבון ${b.personal.account}</div>
+      <div style="font-size:.78em;color:var(--text-secondary)">מסגרת: <strong>₪${fmt(b.personal.limit)}</strong> | בשימוש: <strong>₪${fmt(b.personal.used)}</strong> (${CALC.creditUsedPct}%)</div>
+      <div style="font-size:.72em;color:var(--green);margin-top:2px">בתוקף עד ${b.personal.validUntil}</div>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #eee">
+        <div class="cc-row">
+          <div class="cc-icon" style="background:#1a5276">DIN</div>
+          <div class="cc-info"><div class="cc-name">${DATA.creditCards.diners.name}</div><div class="cc-detail">חיוב פבר: ${fmt(DATA.creditCards.diners.total)} | מועד: ${DATA.creditCards.diners.dueDate}</div></div>
+          <div class="cc-amount negative">${fmt(DATA.creditCards.diners.total)}</div>
+        </div>
+        <div class="cc-row" style="border:none">
+          <div class="cc-icon" style="background:#6c3483">VISA</div>
+          <div class="cc-info"><div class="cc-name">${DATA.creditCards.visa.name}</div><div class="cc-detail">חיוב פבר: ${fmt(DATA.creditCards.visa.total)} | מועד: ${DATA.creditCards.visa.dueDate}</div></div>
+          <div class="cc-amount">${fmt(DATA.creditCards.visa.total)}</div>
+        </div>
+      </div>
+    </div>
+  `;
+})();
+
+// Diners breakdown
+(function() {
+  document.getElementById('dinersTotal').textContent = `₪${fmt(DATA.creditCards.diners.total)}`;
+  const bd = DATA.creditCards.diners.breakdown;
+  let html = '<tbody>';
+  for (const [k,v] of Object.entries(bd)) {
+    const isWolt = k === 'WOLT';
+    html += `<tr><td>${k}</td><td class="num" style="${isWolt?'color:var(--red);font-weight:700':''}">${fmt(v)}</td></tr>`;
+  }
+  html += `<tr class="total-row"><td>סה"כ</td><td class="num">${fmt(DATA.creditCards.diners.total)}</td></tr></tbody>`;
+  document.getElementById('dinersTable').innerHTML = html;
+})();
+
+// Visa breakdown
+(function() {
+  document.getElementById('visaTotal').textContent = `₪${fmt(DATA.creditCards.visa.total)}`;
+  const bd = DATA.creditCards.visa.breakdown;
+  let html = '<thead><tr><th>קטגוריה</th><th class="num">סכום</th></tr></thead><tbody>';
+  for (const [k,v] of Object.entries(bd)) html += `<tr><td>${k}</td><td class="num">${fmt(v)}</td></tr>`;
+  html += `<tr class="total-row"><td>סה"כ</td><td class="num">${fmt(DATA.creditCards.visa.total)}</td></tr></tbody>`;
+  document.getElementById('visaTable').innerHTML = html;
+})();
+
+// Fixed tables
+function renderTable(data, elId) {
+  let total = 0, html = '<tbody>';
+  for (const [k,v] of Object.entries(data)) {
+    total += (typeof v === 'object' ? v.price : v);
+    const amount = typeof v === 'object' ? v.price : v;
+    const cancel = (typeof v === 'object' && v.cancel) ? ' <span class="tag tag-urgent">לבטל</span>' : '';
+    html += `<tr><td>${k}${cancel}</td><td class="num">₪${amount.toFixed(0)}</td></tr>`;
+  }
+  html += `<tr class="total-row"><td>סה"כ</td><td class="num">₪${fmt(total)}</td></tr></tbody>`;
+  document.getElementById(elId).innerHTML = html;
+}
+renderTable(DATA.fixedBusiness, 'fixedBizTable');
+renderTable(DATA.standingOrders, 'standingTable');
+
+// Subscriptions tabs
+(function() {
+  // USD
+  let html = '';
+  for (const [n,s] of Object.entries(DATA.subsUSD)) {
+    const c = s.cancel ? ' <span class="tag tag-urgent">לבטל</span>' : '';
+    html += `<div class="sub-row"><div><div class="sub-name">${n}${c}</div><div class="sub-card">${s.card}</div></div><div class="sub-price">$${s.price}/mo</div></div>`;
+  }
+  html += `<div class="sub-row sub-total"><div><strong>סה"כ USD</strong></div><div class="sub-price" style="font-size:1em">$${CALC.subsUSDTotal}/mo</div></div>`;
+  html += `<div style="font-size:.72em;color:var(--text-muted);margin-top:4px;text-align:left">≈ ₪${fmt(CALC.subsUSDinILS)} (שער ${DATA.usdRate})</div>`;
+  document.getElementById('tabUSD').innerHTML = html;
+
+  // ILS
+  html = '';
+  for (const [n,s] of Object.entries(DATA.subsILS)) {
+    const c = s.cancel ? ` <span class="tag ${s.cancelBy?'tag-april':'tag-urgent'}">${s.cancelBy||'לבטל'}</span>` : '';
+    html += `<div class="sub-row"><div><div class="sub-name">${n}${c}</div><div class="sub-card">${s.card}</div></div><div class="sub-price">₪${s.price}/mo</div></div>`;
+  }
+  html += `<div class="sub-row sub-total"><div><strong>סה"כ ILS</strong></div><div class="sub-price" style="font-size:1em">~₪${fmt(CALC.subsILSTotal)}/mo</div></div>`;
+  document.getElementById('tabILS').innerHTML = html;
+
+  // Standing
+  html = '<p style="font-size:.8em;color:var(--text-secondary);margin-bottom:8px">הוראות קבע מאומתות מדיינרס 0112 + בנק:</p>';
+  for (const [n,s] of Object.entries(DATA.standingOrders)) {
+    const c = s.cancel ? ' <span class="tag tag-urgent">לבטל</span>' : '';
+    html += `<div class="sub-row"><div><div class="sub-name">${n}${c}</div><div class="sub-card">${s.card}</div></div><div class="sub-price">₪${s.price.toFixed(s.price%1?2:0)}/mo</div></div>`;
+  }
+  html += `<div class="sub-row sub-total"><div><strong>סה"כ הוראות קבע</strong></div><div class="sub-price" style="font-size:1em">₪${fmt(CALC.standingTotal)}/mo</div></div>`;
+  document.getElementById('tabStanding').innerHTML = html;
+
+  // Pending
+  html = '';
+  const pending = [
+    ...Object.entries(DATA.subsUSD).filter(([,s])=>s.cancel).map(([n,s])=>({n,p:`$${s.price}/mo`,u:true})),
+    ...Object.entries(DATA.subsILS).filter(([,s])=>s.cancel).map(([n,s])=>({n:n+(s.cancelBy?` (עד ${s.cancelBy})`:''),p:`₪${s.price}/mo`,u:!s.cancelBy})),
+    ...Object.entries(DATA.standingOrders).filter(([,s])=>s.cancel).map(([n,s])=>({n,p:`₪${s.price}/mo`,u:true})),
+  ];
+  pending.forEach(p => {
+    html += `<div class="sub-row" style="background:${p.u?'var(--red-light)':'var(--amber-bg)'};border-radius:8px;padding:8px 12px;margin-bottom:4px"><div class="sub-name">${p.n} <span class="tag ${p.u?'tag-urgent':'tag-april'}">${p.u?'עכשיו':'בקרוב'}</span></div><div class="sub-price negative">${p.p}</div></div>`;
+  });
+  document.getElementById('tabPending').innerHTML = html;
+
+  // Cancelled
+  html = DATA.cancelled.map(n => `<div class="sub-row"><div class="sub-name" style="text-decoration:line-through;color:var(--text-muted)">${n}</div><div><span class="tag tag-cancelled">בוטל</span></div></div>`).join('');
+  document.getElementById('tabCancelled').innerHTML = html;
+})();
+
+// Installments
+(function() {
+  let html = '';
+  DATA.installments.forEach(inst => {
+    const done = inst.payment === 'done' || new Date(inst.endsDate) <= CALC.today;
+    const color = done ? 'var(--text-muted)' : 'var(--green)';
+    html += `<div style="border:2px solid ${color};border-radius:var(--radius);padding:16px;text-align:center;${done?'opacity:.5':''}">
+      <div style="font-size:.76em;color:${color};font-weight:600">${inst.name}</div>
+      <div style="font-family:var(--font-display);font-size:1.3em;font-weight:700;margin:4px 0">${fmt(inst.amount)}/חודש</div>
+      ${done ? '<div style="font-size:.85em">הושלם!</div>' : `<div style="font-size:.85em">תשלום <strong>${inst.payment}</strong></div>`}
+      ${!done ? `<div style="font-size:.92em;font-weight:700;color:var(--green);margin-top:4px">אחרון: אפריל!</div>` : ''}
+      <div class="progress-bar" style="margin-top:8px"><div class="progress-fill" style="width:${inst.pct}%;background:${color}"></div></div>
+      <div style="font-size:.7em;color:var(--text-muted);margin-top:2px">${inst.pct}% הושלם</div>
+    </div>`;
+  });
+  document.getElementById('installGrid').innerHTML = html;
+  const activeTotal = CALC.activeInstallments.reduce((a,i) => a+i.amount, 0);
+  document.getElementById('installSummary').textContent = activeTotal > 0 ? `שניהם נגמרים באפריל = ₪${fmt(activeTotal)}/חודש ישוחרר!` : 'כל הפריסות הושלמו!';
+})();
+
+// Savings
+(function() {
+  let html = '';
+  DATA.savingsActions.forEach(s => {
+    const cls = s.urgent ? 'tag-urgent' : 'tag-april';
+    const bg = s.urgent ? 'background:var(--red-light);' : '';
+    html += `<div class="action-item" style="${bg}padding:8px 10px;border-radius:8px;margin-bottom:4px"><div>${s.label} <span class="tag ${cls}">${s.tag}</span></div><div class="action-saving">${fmt(s.save)}/חודש</div></div>`;
+  });
+  html += `<div class="action-item" style="background:var(--gold-pale);padding:10px 12px;border-radius:8px;margin-top:6px"><div><strong>סה"כ חיסכון (קיצוצים + סיום פריסות)</strong></div><div class="action-saving" style="font-size:1.1em">${fmt(CALC.totalSavings)}/חודש</div></div>`;
+  document.getElementById('savingsList').innerHTML = html;
+})();
+
+// Balance path
+(function() {
+  const gap = CALC.gap;
+  const cuts = DATA.savingsActions.filter(s => !s.tag.includes('אפריל')).reduce((a,s) => a+s.save, 0);
+  const april = DATA.savingsActions.filter(s => s.tag.includes('אפריל') || s.tag.includes('04')).reduce((a,s) => a+s.save, 0) + CALC.installmentsTotal;
+
+  const steps = [
+    { label: 'פער נוכחי', value: gap, color: 'var(--red)' },
+    { label: `+ קיצוצים מיידיים (${fmt(cuts)})`, value: gap + cuts, color: gap+cuts >= 0 ? 'var(--green)' : '#ff9900' },
+    { label: `+ פריסות + קיצוצי אפריל (${fmt(april)})`, value: gap + cuts + april, color: 'var(--green)' },
+  ];
+
+  const min = steps[0].value;
+  const max = steps[steps.length-1].value;
+  const range = max - min || 1;
+
+  let html = steps.map((s,i) => {
+    const pct = i === 0 ? 0 : Math.round(((s.value - min) / range) * 100);
+    const cls = s.value >= 0 ? 'positive' : 'negative';
+    return `
+      <div style="display:flex;justify-content:space-between;font-size:.86em;margin-bottom:4px">
+        <span>${s.label}</span>
+        <span class="${cls}" style="font-family:var(--font-mono);font-weight:700">₪${fmtSign(s.value)}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${s.color}"></div></div>
+      <div style="height:10px"></div>
+    `;
+  }).join('');
+
+  const final = steps[steps.length-1].value;
+  html += `<p style="text-align:center;margin-top:14px;font-family:var(--font-display);font-size:1.15em;font-weight:700;color:${final >= 0 ? 'var(--green)' : 'var(--red)'}">
+    ${final >= 0 ? 'איזון מאפריל 2026!' : `עדיין בגירעון: ₪${fmt(final)}`}
+  </p>
+  ${final >= 0 ? '<p style="text-align:center;font-size:.82em;color:var(--gold)">(חודש אחד מוקדם מהתכנון המקורי!)</p>' : ''}`;
+
+  document.getElementById('balancePath').innerHTML = html;
+})();
+
+// Countdowns
+(function() {
+  document.getElementById('countdownList').innerHTML = CALC.countdowns.map(c => {
+    let cls = 'cd-ok', txt = `${c.days} ימים`;
+    if (c.days <= 0) { cls = 'cd-done'; txt = 'עבר'; }
+    else if (c.days <= 7) { cls = 'cd-urgent'; }
+    else if (c.days <= 21) { cls = 'cd-soon'; }
+    return `<div class="countdown-item"><div style="font-size:.85em">${c.label}</div><div class="cd-badge ${cls}">${txt}</div></div>`;
+  }).join('');
+})();
+
+// Credit inquiries
+(function() {
+  let html = '<thead><tr><th>תאריך</th><th>חברה</th><th>דרך</th><th>סטטוס</th></tr></thead><tbody>';
+  DATA.creditInquiries.forEach(ci => {
+    html += `<tr><td>${ci.date}</td><td>${ci.company}</td><td>${ci.via}</td><td><span class="tag tag-active">OK</span></td></tr>`;
+  });
+  html += '</tbody>';
+  document.getElementById('creditTable').innerHTML = html;
+})();
+
+// Scenarios
+(function() {
+  const s = DATA.shop;
+  document.getElementById('shopInfo').textContent = `חנות: בבעלות, ${s.size}, ${s.location}. שכירות משוערת ~₪${fmt(s.estRent)}. צריך סקר שוק.`;
+
+  const scenarios = [
+    { title: 'א. חנות כרגיל', income: 9775, expenses: 20796, best: false },
+    { title: 'ב. השכרה + אונליין', income: 11900, expenses: 19916, best: true },
+    { title: 'ג. היברידי', income: 11775, expenses: 20796, best: false },
+  ];
+  document.getElementById('scenarioGrid').innerHTML = scenarios.map(sc => {
+    const net = sc.income + DATA.oferTransfer - sc.expenses;
+    return `<div class="scenario-card" style="${sc.best?'border-color:var(--green)':''}">
+      <h3>${sc.title}</h3>
+      <div style="font-size:.75em;color:var(--text-secondary)">הכנסות ${fmt(sc.income)} | הוצאות ${fmt(sc.expenses)}</div>
+      <div class="big ${net>=0?'positive':'negative'}">₪${fmtSign(net)}</div>
+      <div class="sub">עם העברת עופר ₪${fmt(DATA.oferTransfer)}</div>
+    </div>`;
+  }).join('');
+})();
+
+// Last update
+document.getElementById('lastUpdate').textContent = 'עודכן: ' + new Date(DATA.lastUpdated).toLocaleDateString('he-IL',{day:'numeric',month:'long',year:'numeric'});
+
+// Tab switching
+function showTab(btn, id) {
+  const card = btn.closest('.section');
+  card.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  card.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Nav highlight
+const navObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+      const pill = document.querySelector(`.nav-pill[href="#${e.target.id}"]`);
+      if (pill) pill.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('section[id]').forEach(s => navObserver.observe(s));
+
+// ═══ CHARTS ═══
+Chart.defaults.color = '#999';
+Chart.defaults.borderColor = 'rgba(0,0,0,.05)';
+Chart.defaults.font.family = 'IBM Plex Sans Hebrew';
+const legendOpts = { position:'bottom', labels:{ color:'#666', font:{size:11}, padding:12, usePointStyle:true, pointStyle:'circle' } };
+
+// Income chart
+new Chart(document.getElementById('incomeChart'), {
+  type: 'bar',
+  data: {
+    labels: Object.values(DATA.income.channels).map(c => c.label),
+    datasets: [
+      ...DATA.income.months.map((m,i) => ({
+        label: m + (DATA.income.fairMonth[i] ? ' (יריד)' : ''),
+        data: Object.values(DATA.income.channels).map(c => c.data[i]),
+        backgroundColor: i===0 ? '#2E2623' : '#AF9C87',
+        borderRadius: 5, barPercentage: .7,
+      })),
+      { label: 'יעד', data: Object.values(DATA.income.channels).map(c => c.target), backgroundColor: '#D8C9B8', borderRadius: 5, barPercentage: .7 },
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false, plugins:{legend:legendOpts}, scales:{y:{beginAtZero:true}} }
+});
+
+// Expense doughnut
+new Chart(document.getElementById('expenseChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['עסקי קבוע', 'עסקי משתנה', 'אישי קבוע', 'אישי משתנה', 'פריסות', 'שנתיות'],
+    datasets: [{ data: [CALC.bizFixed, CALC.varBizBudget, CALC.personalFixed, CALC.varPersonalBudget, CALC.installmentsTotal, DATA.annualReserve],
+      backgroundColor: ['#2E2623','#AF9C87','#997C60','#D8C9B8','#E1D9D0','#f5f0eb'], borderWidth:2, borderColor:'#fff', hoverOffset:8 }]
+  },
+  options: { responsive:true, maintainAspectRatio:false, plugins:{legend:legendOpts}, cutout:'60%' }
+});
+
+// WOLT pie
+new Chart(document.getElementById('woltChart'), {
+  type: 'pie',
+  data: { labels:['סופר 76%','מסעדות 24%'], datasets:[{ data:[DATA.wolt.grocery, DATA.wolt.restaurant], backgroundColor:['#cc3333','#2d8a4e'] }] },
+  options: { responsive:true, maintainAspectRatio:false, plugins:{legend:legendOpts} }
+});
+
+// Diners chart
+const dinersLabels = Object.keys(DATA.creditCards.diners.breakdown);
+const dinersValues = Object.values(DATA.creditCards.diners.breakdown);
+const dinersColors = ['#2E2623','#cc3333','#6c3483','#E1D9D0','#d4a0c0','#AF9C87','#997C60','#88b88b','#5dade2','#f0b27a','#D8C9B8','#f5f0eb'];
+new Chart(document.getElementById('dinersChart'), {
+  type: 'bar',
+  data: { labels: dinersLabels, datasets: [{ label:'פבר (בפועל)', data: dinersValues, backgroundColor: dinersLabels.map((_,i) => dinersColors[i%dinersColors.length]), borderRadius:4, barPercentage:.65 }] },
+  options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true}} }
+});
+
+// Budget vs actual
+const bLabels = Object.keys(DATA.varPersonal);
+new Chart(document.getElementById('budgetChart'), {
+  type: 'bar',
+  data: {
+    labels: bLabels,
+    datasets: [
+      { label:'בפועל', data: bLabels.map(k => DATA.varPersonal[k].actual), backgroundColor:'rgba(204,51,51,.5)', borderRadius:4, barPercentage:.55 },
+      { label:'תקציב', data: bLabels.map(k => DATA.varPersonal[k].budget), backgroundColor:'rgba(45,138,78,.5)', borderRadius:4, barPercentage:.55 },
+    ]
+  },
+  options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:legendOpts}, scales:{x:{beginAtZero:true}} }
+});
 </script>
-</body></html>
+</body>
+</html>
