@@ -5,36 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>OTILYAS — Financial Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=IBM+Plex+Sans+Hebrew:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root {
-  --bg: #f5f0eb;
+  --bg: #f8f7fc;
   --bg-card: #ffffff;
-  --bg-hover: #faf7f4;
-  --bg-header: #2E2623;
-  --gold: #997C60;
-  --gold-light: #AF9C87;
-  --gold-pale: #E1D9D0;
-  --gold-bg: #D8C9B8;
-  --text: #2E2623;
-  --text-secondary: #666;
-  --text-muted: #999;
-  --green: #2d8a4e;
-  --green-bg: #d0f0d0;
-  --green-light: #f0fff0;
-  --red: #cc3333;
-  --red-bg: #ffe0e0;
-  --red-light: #fff0f0;
-  --amber: #996600;
-  --amber-bg: #fff3d0;
-  --blue: #3355cc;
-  --blue-bg: #e0e8ff;
-  --radius: 12px;
-  --shadow: 0 2px 8px rgba(0,0,0,.06);
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'IBM Plex Sans Hebrew', 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+  --bg-hover: #f3f1fa;
+  --bg-header: #6c5ce7;
+  --gold: #a29bfe;
+  --gold-light: #c8c3ff;
+  --gold-pale: #e8e5ff;
+  --gold-bg: #ddd8ff;
+  --text: #2d3436;
+  --text-secondary: #636e72;
+  --text-muted: #b2bec3;
+  --green: #00b894;
+  --green-bg: #defcf0;
+  --green-light: #edfff8;
+  --red: #e17055;
+  --red-bg: #ffeae3;
+  --red-light: #fff5f2;
+  --amber: #e17055;
+  --amber-bg: #ffecd2;
+  --blue: #74b9ff;
+  --blue-bg: #e3f2fd;
+  --radius: 16px;
+  --shadow: 0 2px 12px rgba(108,92,231,.08);
+  --font-display: 'Nunito', 'Rubik', sans-serif;
+  --font-body: 'Rubik', 'Segoe UI', sans-serif;
+  --font-mono: 'Space Grotesk', 'Consolas', monospace;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -47,7 +47,7 @@ body {
 
 /* Header */
 .header {
-  background: linear-gradient(135deg, var(--bg-header), #4a3f3a);
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
   color: #fff;
   padding: 16px 24px;
   display: flex;
@@ -56,7 +56,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 12px rgba(0,0,0,.15);
+  box-shadow: 0 2px 12px rgba(108,92,231,.2);
 }
 .header h1 {
   font-family: var(--font-display);
@@ -74,14 +74,14 @@ body {
 .live-dot {
   display: inline-block;
   width: 6px; height: 6px;
-  background: #2d8a4e;
+  background: #55efc4;
   border-radius: 50%;
   margin-left: 4px;
   animation: pulse 2s infinite;
 }
 @keyframes pulse {
-  0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(45,138,78,.4) }
-  50% { opacity:.5; box-shadow:0 0 0 5px rgba(45,138,78,0) }
+  0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(85,239,196,.4) }
+  50% { opacity:.5; box-shadow:0 0 0 5px rgba(85,239,196,0) }
 }
 
 /* Container */
@@ -179,7 +179,7 @@ body {
 
 /* Table */
 table { width: 100%; border-collapse: collapse; font-size: .85em; }
-th { background: var(--bg-header); color: #fff; padding: 8px 10px; text-align: right; font-weight: 500; font-size: .85em; }
+th { background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: #fff; padding: 9px 12px; text-align: right; font-weight: 600; font-size: .85em; border-radius: 2px; }
 td { padding: 7px 10px; border-bottom: 1px solid #f0ece8; }
 tr:hover { background: var(--bg-hover); }
 .total-row { background: var(--gold-pale); font-weight: 700; }
@@ -591,7 +591,7 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
 </section>
 
 <!-- Bank Snapshot - Mid Month -->
-<section class="section reveal" style="border-right:4px solid var(--gold)">
+<section class="section reveal" style="border-right:4px solid var(--bg-header)">
   <h2>מצב חשבונות — אמצע חודש <span class="updated">20/03/2026</span></h2>
   <div class="grid-2">
     <!-- Business -->
@@ -1105,7 +1105,7 @@ new Chart(document.getElementById('incomeChart'), {
       ...DATA.income.months.map((m,i) => ({
         label: m + (DATA.income.fairMonth[i] ? ' (יריד)' : ''),
         data: Object.values(DATA.income.channels).map(c => c.data[i]),
-        backgroundColor: i===0 ? '#2E2623' : '#AF9C87',
+        backgroundColor: i===0 ? '#6c5ce7' : '#a29bfe',
         borderRadius: 5, barPercentage: .7,
       })),
       { label: 'יעד', data: Object.values(DATA.income.channels).map(c => c.target), backgroundColor: '#D8C9B8', borderRadius: 5, barPercentage: .7 },
@@ -1120,7 +1120,7 @@ new Chart(document.getElementById('expenseChart'), {
   data: {
     labels: ['עסקי קבוע', 'עסקי משתנה', 'אישי קבוע', 'אישי משתנה', 'פריסות', 'שנתיות'],
     datasets: [{ data: [CALC.bizFixed, CALC.varBizBudget, CALC.personalFixed, CALC.varPersonalBudget, CALC.installmentsTotal, DATA.annualReserve],
-      backgroundColor: ['#2E2623','#AF9C87','#997C60','#D8C9B8','#E1D9D0','#f5f0eb'], borderWidth:2, borderColor:'#fff', hoverOffset:8 }]
+      backgroundColor: ['#6c5ce7','#a29bfe','#fd79a8','#ffeaa7','#55efc4','#dfe6e9'], borderWidth:2, borderColor:'#fff', hoverOffset:8 }]
   },
   options: { responsive:true, maintainAspectRatio:false, plugins:{legend:legendOpts}, cutout:'60%' }
 });
@@ -1128,14 +1128,14 @@ new Chart(document.getElementById('expenseChart'), {
 // WOLT pie
 new Chart(document.getElementById('woltChart'), {
   type: 'pie',
-  data: { labels:['סופר 76%','מסעדות 24%'], datasets:[{ data:[DATA.wolt.grocery, DATA.wolt.restaurant], backgroundColor:['#cc3333','#2d8a4e'] }] },
+  data: { labels:['סופר 76%','מסעדות 24%'], datasets:[{ data:[DATA.wolt.grocery, DATA.wolt.restaurant], backgroundColor:['#fd79a8','#55efc4'] }] },
   options: { responsive:true, maintainAspectRatio:false, plugins:{legend:legendOpts} }
 });
 
 // Diners chart
 const dinersLabels = Object.keys(DATA.creditCards.diners.breakdown);
 const dinersValues = Object.values(DATA.creditCards.diners.breakdown);
-const dinersColors = ['#2E2623','#cc3333','#6c3483','#E1D9D0','#d4a0c0','#AF9C87','#997C60','#88b88b','#5dade2','#f0b27a','#D8C9B8','#f5f0eb'];
+const dinersColors = ['#6c5ce7','#e17055','#a29bfe','#ffeaa7','#fd79a8','#81ecec','#fab1a0','#55efc4','#74b9ff','#fdcb6e','#dfe6e9','#b2bec3'];
 new Chart(document.getElementById('dinersChart'), {
   type: 'bar',
   data: { labels: dinersLabels, datasets: [{ label:'פבר (בפועל)', data: dinersValues, backgroundColor: dinersLabels.map((_,i) => dinersColors[i%dinersColors.length]), borderRadius:4, barPercentage:.65 }] },
