@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>כרמל — דשבורד פיננסי ורפואי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #f4f6f8;
+  --card: #ffffff;
+  --header-bg: #1a365d;
+  --header-accent: #2b6cb0;
+  --blue: #2b6cb0;
+  --blue-light: #ebf4ff;
+  --green: #276749;
+  --green-bg: #e6ffed;
+  --green-light: #c6f6d5;
+  --red: #c53030;
+  --red-bg: #fff5f5;
+  --red-light: #fed7d7;
+  --amber: #b7791f;
+  --amber-bg: #fefcbf;
+  --text: #1a202c;
+  --text-sec: #4a5568;
+  --text-muted: #a0aec0;
+  --border: #e2e8f0;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-lg: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04);
+  --font: 'Heebo', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); direction: rtl; }
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, var(--header-bg), var(--header-accent));
+  color: #fff;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,.2);
+}
+.header h1 { font-size: 1.3em; font-weight: 700; }
+.header-sub { font-size: .75em; opacity: .8; margin-top: 2px; }
+.header-right { text-align: left; }
+.header-right .time { font-family: var(--mono); font-size: .8em; }
+.live-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: .7em; font-weight: 600;
+  background: rgba(255,255,255,.15);
+  padding: 2px 8px; border-radius: 10px;
+  margin-top: 4px;
+}
+.live-dot { width: 6px; height: 6px; background: #68d391; border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(104,211,145,.4)} 50%{opacity:.5;box-shadow:0 0 0 5px rgba(104,211,145,0)} }
+
+/* Container */
+.container { max-width: 960px; margin: 0 auto; padding: 14px; }
+
+/* Nav */
+.nav { display: flex; gap: 4px; overflow-x: auto; padding: 4px 0 12px; scrollbar-width: none; }
+.nav::-webkit-scrollbar { display: none; }
+.nav a {
+  flex-shrink: 0; padding: 6px 14px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; font-size: .75em; font-weight: 600;
+  color: var(--text-sec); text-decoration: none;
+  transition: all .2s; white-space: nowrap;
+}
+.nav a:hover, .nav a.active { background: var(--header-bg); color: #fff; border-color: var(--header-bg); }
+
+/* KPI */
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+.kpi {
+  background: var(--card); border-radius: var(--radius);
+  padding: 16px 14px; text-align: center;
+  box-shadow: var(--shadow); transition: transform .2s;
+  border-top: 3px solid transparent;
+}
+.kpi:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.kpi.income { border-top-color: var(--green); }
+.kpi.expense { border-top-color: var(--red); }
+.kpi.net { border-top-color: var(--blue); }
+.kpi-label { font-size: .68em; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .3px; margin-bottom: 4px; }
+.kpi-value { font-family: var(--mono); font-size: 1.4em; font-weight: 700; line-height: 1.1; }
+.kpi-sub { font-size: .65em; color: var(--text-muted); margin-top: 3px; }
+.green { color: var(--green); }
+.red { color: var(--red); }
+.blue { color: var(--blue); }
+
+/* Alert */
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  font-size: .84em;
+  box-shadow: var(--shadow);
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.alert-info { background: var(--blue-light); border-right: 4px solid var(--blue); }
+.alert-warn { background: var(--amber-bg); border-right: 4px solid var(--amber); }
+.alert-good { background: var(--green-bg); border-right: 4px solid var(--green); }
+.alert-danger { background: var(--red-bg); border-right: 4px solid var(--red); }
+.alert-icon { font-size: 1.1em; flex-shrink: 0; }
+
+/* Card */
+.card {
+  background: var(--card); border-radius: var(--radius);
+  padding: 18px; margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.card-title {
+  font-size: 1em; font-weight: 700; color: var(--header-bg);
+  margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.card-title .badge {
+  font-size: .65em; font-weight: 600;
+  padding: 2px 8px; border-radius: 10px;
+  background: var(--blue-light); color: var(--blue);
+}
+
+/* Grid */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media(max-width:640px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Table */
+table { width: 100%; border-collapse: collapse; font-size: .82em; }
+th { background: var(--header-bg); color: #fff; padding: 8px 10px; text-align: right; font-weight: 500; font-size: .85em; }
+td { padding: 7px 10px; border-bottom: 1px solid var(--border); }
+tr:hover { background: #f7fafc; }
+.total-row { background: #edf2f7; font-weight: 700; }
+.num { text-align: left; font-family: var(--mono); font-size: .92em; }
+
+/* Chart */
+.chart-wrap { position: relative; height: 260px; }
+@media(max-width:640px) { .chart-wrap { height: 220px; } }
+
+/* Loan card */
+.loan-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px; text-align: center;
+  transition: all .2s;
+}
+.loan-card:hover { border-color: var(--blue); box-shadow: var(--shadow-lg); }
+.loan-num { font-family: var(--mono); font-size: .7em; color: var(--text-muted); margin-bottom: 4px; }
+.loan-amount { font-family: var(--mono); font-size: 1.2em; font-weight: 700; color: var(--red); }
+.loan-payment { font-size: .82em; color: var(--text-sec); margin: 4px 0; }
+.loan-remaining { font-size: .78em; }
+.loan-end { font-size: .82em; font-weight: 700; color: var(--green); margin-top: 4px; }
+
+/* Progress */
+.progress { height: 6px; background: #edf2f7; border-radius: 3px; overflow: hidden; margin-top: 6px; }
+.progress-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+
+/* Tag */
+.tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .68em; font-weight: 600; }
+.tag-active { background: var(--green-bg); color: var(--green); }
+.tag-closed { background: #edf2f7; color: var(--text-muted); text-decoration: line-through; }
+.tag-pending { background: var(--amber-bg); color: var(--amber); }
+.tag-done { background: var(--green-bg); color: var(--green); }
+.tag-urgent { background: var(--red-bg); color: var(--red); }
+
+/* Medical section */
+.med-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.med-card .med-title { font-weight: 700; font-size: .92em; margin-bottom: 4px; }
+.med-card .med-detail { font-size: .78em; color: var(--text-sec); line-height: 1.5; }
+
+/* Timeline */
+.timeline-item {
+  position: relative;
+  padding: 10px 0 10px 22px;
+  border-right: 3px solid var(--border);
+  margin-right: 8px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  right: -8px; top: 14px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--blue);
+  border: 2px solid #fff;
+}
+.timeline-item.done::before { background: var(--green); }
+.timeline-item.warn::before { background: var(--amber); }
+.tl-date { font-size: .75em; color: var(--blue); font-weight: 600; }
+.tl-text { font-size: .85em; font-weight: 600; margin: 2px 0; }
+.tl-sub { font-size: .75em; color: var(--text-sec); }
+
+/* Task list */
+.task { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: .84em; }
+.task:last-child { border-bottom: none; }
+.task-check { flex-shrink: 0; width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: .7em; margin-top: 1px; }
+.task-check.done { background: var(--green); border-color: var(--green); color: #fff; }
+.task-check.pending { border-color: var(--amber); }
+
+/* Countdown */
+.cd-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.cd-item:last-child { border-bottom: none; }
+.cd-badge { font-family: var(--mono); font-size: .72em; font-weight: 600; padding: 3px 10px; border-radius: 6px; }
+
+/* Footer */
+.footer { text-align: center; padding: 20px; font-size: .72em; color: var(--text-muted); }
+
+/* Reveal */
+.reveal { opacity: 0; transform: translateY(12px); transition: all .5s; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Insurance summary */
+.ins-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: .84em; }
+.ins-row:last-child { border-bottom: none; }
+.ins-price { font-family: var(--mono); font-weight: 600; min-width: 80px; text-align: left; }
+</style>
+</head>
+<body>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA — Edit here to update the dashboard
+// ═══════════════════════════════════════════
+const D = {
+  lastUpdated: '2026-03-20',
+
+  // Income
+  income: {
+    'משרד הביטחון': 20700.56,
+    'עובד מדינה': 7958,
+    'ביטוח לאומי (1)': 2757,
+    'ביטוח לאומי (2)': 2417,
+    'כלל פנסיה': 1916.06,
+  },
+  incomeFromBank: 36632, // verified from bank statements
+
+  // Loans — Discount Bank
+  loans: [
+    { id: '243667', original: 91000, balance: 91129, payment: 1851.72, paid: 0, total: 60, endDate: '2031-03-15', note: 'חדשה 03/2026' },
+    { id: '240285', original: 60000, balance: 58481, payment: 1196.48, paid: 2, total: 60, endDate: '2030-12-15', note: 'חדשה 12/2025' },
+    { id: '230905', original: 150000, balance: 130748, payment: 2356.33, paid: 13, total: 80, endDate: '2031-10-15', note: 'הארוכה ביותר' },
+    { id: '183265', original: 100000, balance: 35321, payment: 1718.41, paid: 50, total: 72, endDate: '2028-01-15', note: 'נגמרת ראשונה!' },
+  ],
+
+  // Mortgage
+  mortgage: { payment: 5557, label: 'משכנתא (טפחות)' },
+
+  // Other loans
+  otherLoans: [
+    { name: 'הלוואה נוספת', payment: 1689.89, note: 'קרן ₪107,700' },
+    { name: 'בנק יהב', payment: 889, note: 'הלוואות ישנות' },
+    { name: 'פריטים נוספים', payment: 1690.15, note: '₪356.18 + ₪1,333.97' },
+  ],
+
+  // Standing orders
+  standingOrders: {
+    'שריר יעקב': 462.65,
+    'דמי כרטיס': 18,
+  },
+
+  // Credit cards — HISTORICAL averages (old cards closed)
+  oldCards: {
+    'ויזה 4629': { avg: 7905, status: 'cancelled' },
+    'ויזה 8309': { avg: 6403, status: 'closed', closedDate: '11.03.2026' },
+    'כ.א.ל': { avg: 1827, status: 'unknown' },
+    'ישראכרט': { avg: 2080, status: 'unknown' },
+    'יהב ישראכרט': { avg: 448, status: 'unknown' },
+  },
+
+  // New active cards
+  newCards: ['2818', '2917'],
+
+  // Bank accounts
+  accounts: {
+    account1: { id: '1615', type: 'עו"ש יומיומי', balance: 66.61 },
+    account2: { id: '1616', type: 'הלוואות/פנסיה', balance: 185603 },
+  },
+
+  // Insurance
+  insurance: [
+    { name: 'סיעוד בסיס (הראל/נכי צה"ל)', policy: '88999269-8', premium: 97.35, cover: 4737, note: 'חצי משהב"ט' },
+    { name: 'סיעוד יח\' ברירה (כרמל+צלילה)', policy: '880519122', premium: 1075.37, cover: null, note: 'כרמל ₪296 + צלילה ₪779' },
+    { name: 'בריאות קבוצתית (הראל/משהב"ט)', policy: '50825414-1', premium: 0, cover: null, note: 'ניתוחים+השתלות+תרופות' },
+    { name: 'הראל חיים חדשים מורחב', policy: '005966120', premium: 308.03, cover: null, note: 'כרמל+צלילה+ברק' },
+    { name: 'איילון בריאות', policy: '15526621', premium: 899.30, cover: null, note: 'כרמל ₪430 + צלילה ₪470' },
+  ],
+
+  // Medical
+  medical: {
+    conditions: [
+      'PTSD (נכה צה"ל)',
+      'עמוד שדרה — Ankylosing Spondylitis, DISH, היצרות L4-5',
+      'החלפת מפרק ירך שמאל (2023)',
+      'בלוטות לימפה — ריאקטיבי (ביופסיה 2019+2026)',
+      'סוכרת / טרום-סוכרת',
+      'יתר לחץ דם',
+      'חשד גלאוקומה',
+      'אבנים בכליות',
+    ],
+    pendingMRI: true,
+    mriStatus: 'ממתין לאישור טופס 17',
+    pendingAppeals: [
+      { id: '82058388', subject: 'הפניות לטיפול — שוחרר מבני ציון' },
+      { id: '82058408', subject: 'עובדת שיקום לא הגיעה לביקור בית' },
+      { id: null, subject: 'פניית הציבור — ניתוק המערכת מאז המלחמה' },
+    ],
+    contacts: [
+      { name: 'ד"ר אלרון משה', role: 'אגף שיקום טבריה' },
+      { name: 'גב\' בן אברהם מאירה', role: 'מרפאה' },
+      { name: 'ד"ר קרסניאנסקי', role: 'אורתופד' },
+    ],
+    meds: ['BIMATOPROST (עיניים)', 'CARGILOC 1.25mg (לב)', 'ROWATINEX (כליות)'],
+  },
+
+  // Tasks
+  tasks: [
+    { text: 'מיפוי הכנסות — 5 מקורות', done: true },
+    { text: 'מיפוי הלוואות — 4 + משכנתא + נוספות', done: true },
+    { text: 'ניתוח דפי בנק (חצי שנה)', done: true },
+    { text: 'בירור שריר, דניאלה, שיק, 4629, מזומן', done: true },
+    { text: 'MAX — חסימה שוחררה', done: true },
+    { text: 'כללית קופ"ח — הועבר לכרטיס 2818', done: true },
+    { text: 'לברר סטטוס כ.א.ל, ישראכרט, יהב-ישראכרט', done: false },
+    { text: 'לעקוב הוצאות כרטיסים חדשים (2818, 2917)', done: false },
+    { text: 'לברר הקשר 3 הלוואות מעבר ↔ 4 באפליקציה', done: false },
+    { text: 'לברר פירוט הלוואה נוספת + 2 פריטים', done: false },
+    { text: 'למפות הוצאות קבועות למחיה (ארנונה, חשמל, מים, אוכל)', done: false },
+    { text: 'MRI בהרדמה — ממתין לטופס 17', done: false },
+    { text: 'מעקב פניות משהב"ט (3 פניות)', done: false },
+  ],
+};
+
+// ═══════════════════════════════════════════
+// CALCULATIONS
+// ═══════════════════════════════════════════
+const C = {};
+const today = new Date();
+
+// Income
+C.totalIncome = Object.values(D.income).reduce((a,b) => a+b, 0);
+
+// Loans
+C.totalLoanPayment = D.loans.reduce((a,l) => a+l.payment, 0);
+C.totalLoanBalance = D.loans.reduce((a,l) => a+l.balance, 0);
+C.totalOriginal = D.loans.reduce((a,l) => a+l.original, 0);
+
+// Other loans
+C.totalOtherLoans = D.otherLoans.reduce((a,l) => a+l.payment, 0);
+
+// Standing
+C.totalStanding = Object.values(D.standingOrders).reduce((a,b) => a+b, 0);
+
+// Verified expenses
+C.verifiedExpenses = C.totalLoanPayment + D.mortgage.payment + C.totalOtherLoans + C.totalStanding;
+
+// Net for living
+C.netForLiving = C.totalIncome - C.verifiedExpenses;
+
+// Credit card spending (historical, excl cancelled 4629)
+C.cardSpending = D.oldCards['ויזה 8309'].avg + D.oldCards['כ.א.ל'].avg + D.oldCards['ישראכרט'].avg;
+
+// True net
+C.trueNet = C.netForLiving - C.cardSpending;
+
+// Total debt
+C.totalDebt = C.totalLoanBalance;
+
+// Insurance premiums
+C.totalInsurance = D.insurance.reduce((a,i) => a+i.premium, 0);
+
+// Loan ends
+C.loanTimeline = D.loans.map(l => ({
+  ...l,
+  remaining: l.total - l.paid,
+  pctDone: Math.round((l.paid / l.total) * 100),
+  endDate: new Date(l.endDate),
+  daysLeft: Math.ceil((new Date(l.endDate) - today) / 86400000),
+})).sort((a,b) => a.endDate - b.endDate);
+
+// Tasks stats
+C.tasksDone = D.tasks.filter(t => t.done).length;
+C.tasksTotal = D.tasks.length;
+
+function fmt(n) { return Math.abs(Math.round(n)).toLocaleString('en-US'); }
+function fmtSign(n) { return (n>=0?'+':'-') + '₪' + fmt(n); }
+</script>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <h1>כרמל — דשבורד</h1>
+    <div class="header-sub">ניהול פיננסי ורפואי</div>
+  </div>
+  <div class="header-right">
+    <div class="time" id="clock"></div>
+    <div class="live-badge"><span class="live-dot"></span> LIVE</div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- Nav -->
+<nav class="nav">
+  <a href="#overview" class="active">סקירה</a>
+  <a href="#income">הכנסות</a>
+  <a href="#loans">הלוואות</a>
+  <a href="#cards">כרטיסים</a>
+  <a href="#insurance">ביטוחים</a>
+  <a href="#medical">רפואי</a>
+  <a href="#tasks">משימות</a>
+</nav>
+
+<!-- Alerts -->
+<div id="alerts"></div>
+
+<!-- KPIs -->
+<section id="overview">
+<div class="kpi-grid" id="kpis"></div>
+</section>
+
+<!-- Charts -->
+<div class="grid-2 reveal">
+  <div class="card">
+    <div class="card-title">הכנסות לפי מקור</div>
+    <div class="chart-wrap"><canvas id="incomeChart"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title">תזרים חודשי</div>
+    <div class="chart-wrap"><canvas id="flowChart"></canvas></div>
+  </div>
+</div>
+
+<!-- Income detail -->
+<section id="income" class="card reveal">
+  <div class="card-title">פירוט הכנסות <span class="badge">₪<span id="incTotal"></span>/חודש</span></div>
+  <table id="incomeTable"></table>
+</section>
+
+<!-- Loans -->
+<section id="loans" class="reveal">
+  <div class="card">
+    <div class="card-title">4 הלוואות בדיסקונט <span class="badge">חוב: ₪<span id="debtTotal"></span></span></div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px" id="loanGrid"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">ציר זמן — מתי נגמרות?</div>
+    <div class="chart-wrap" style="height:200px"><canvas id="loanTimeline"></canvas></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">משכנתא + הלוואות נוספות</div>
+      <table id="otherLoansTable"></table>
+    </div>
+    <div class="card">
+      <div class="card-title">הוראות קבע</div>
+      <table id="standingTable"></table>
+    </div>
+  </div>
+</section>
+
+<!-- Credit Cards -->
+<section id="cards" class="card reveal">
+  <div class="card-title">כרטיסי אשראי</div>
+  <h3 style="font-size:.88em;color:var(--red);margin-bottom:8px">כרטיסים ישנים (ממוצע חצי שנה)</h3>
+  <table id="oldCardsTable"></table>
+  <div style="margin-top:14px;padding:12px;background:var(--blue-light);border-radius:var(--radius)">
+    <div style="font-size:.88em;font-weight:700;color:var(--blue)">כרטיסים חדשים פעילים</div>
+    <div style="font-size:.82em;color:var(--text-sec);margin-top:4px" id="newCards"></div>
+  </div>
+</section>
+
+<!-- Bank Accounts -->
+<section class="card reveal">
+  <div class="card-title">חשבונות בנק — דיסקונט</div>
+  <div class="grid-2" id="bankCards"></div>
+</section>
+
+<!-- Insurance -->
+<section id="insurance" class="card reveal">
+  <div class="card-title">ביטוחים <span class="badge">₪<span id="insTotal"></span>/חודש</span></div>
+  <div id="insuranceList"></div>
+</section>
+
+<!-- Medical -->
+<section id="medical" class="reveal">
+  <div class="card">
+    <div class="card-title">מצב רפואי</div>
+    <div class="grid-2">
+      <div>
+        <h3 style="font-size:.88em;color:var(--header-bg);margin-bottom:8px">מצבים כרוניים</h3>
+        <div id="conditions"></div>
+      </div>
+      <div>
+        <h3 style="font-size:.88em;color:var(--header-bg);margin-bottom:8px">תרופות</h3>
+        <div id="meds"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">MRI בהרדמה <span class="badge" style="background:var(--amber-bg);color:var(--amber)" id="mriStatus"></span></div>
+    <div id="mriTimeline"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">פניות למשהב"ט — אגף שיקום</div>
+    <div id="appealsList"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">אנשי קשר רפואיים</div>
+    <div id="contactsList"></div>
+  </div>
+</section>
+
+<!-- Tasks -->
+<section id="tasks" class="card reveal">
+  <div class="card-title">משימות <span class="badge" id="taskBadge"></span></div>
+  <div id="tasksList"></div>
+</section>
+
+<div class="footer">
+  כרמל דשבורד | מיהב Agent | <span id="lastUpdate"></span>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     RENDER
+     ═══════════════════════════════════════ -->
+<script>
+// Clock
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}) + ' · ' +
+    now.toLocaleDateString('he-IL',{day:'numeric',month:'short',year:'numeric'});
+}
+updateClock(); setInterval(updateClock, 30000);
+
+// Alerts
+(function(){
+  let html = '';
+  // Loan #4 ending
+  const l4 = C.loanTimeline.find(l => l.id === '183265');
+  if (l4) html += `<div class="alert alert-info"><span class="alert-icon">📌</span>הלוואה #4 נגמרת בעוד ~${Math.round(l4.daysLeft/30)} חודשים (ינואר 2028). ישתחררו ₪${fmt(l4.payment)}/חודש!</div>`;
+  // Old cards closed
+  html += `<div class="alert alert-warn"><span class="alert-icon">⚠️</span>כרטיסים ישנים (8563, 8309) נסגרו. כרטיסים חדשים (2818, 2917) פעילים. צריך לחכות חודש-חודשיים לנתונים.</div>`;
+  // MRI
+  if (D.medical.pendingMRI) html += `<div class="alert alert-danger"><span class="alert-icon">🏥</span>MRI בהרדמה: ${D.medical.mriStatus}. צריך מעקב!</div>`;
+  // Card 2818 issue
+  html += `<div class="alert alert-info"><span class="alert-icon">💳</span>כרטיס 2818: אם עדיין לא עובר מעל ₪300, לפנות למקס (חברת האשראי).</div>`;
+  document.getElementById('alerts').innerHTML = html;
+})();
+
+// KPIs
+(function(){
+  const kpis = [
+    { label: 'הכנסות', value: `₪${fmt(C.totalIncome)}`, cls: 'income green', sub: '5 מקורות קבועים' },
+    { label: 'התחייבויות מאומתות', value: `₪${fmt(C.verifiedExpenses)}`, cls: 'expense red', sub: 'הלוואות + משכנתא + הו"ק' },
+    { label: 'נשאר למחיה', value: `₪${fmt(C.netForLiving)}`, cls: 'net blue', sub: 'לפני כרטיסי אשראי' },
+    { label: 'הוצאות כרטיסים (הישנים)', value: `₪${fmt(C.cardSpending)}`, cls: 'expense red', sub: '8309+כאל+ישראכרט (ממוצע)' },
+    { label: 'נטו בפועל (משוער)', value: `₪${fmt(C.trueNet)}`, cls: 'net', sub: 'אחרי הכל' },
+    { label: 'סה"כ חוב הלוואות', value: `₪${fmt(C.totalDebt)}`, cls: 'expense red', sub: '4 הלוואות דיסקונט' },
+  ];
+  document.getElementById('kpis').innerHTML = kpis.map(k => `
+    <div class="kpi ${k.cls.split(' ')[0]}"><div class="kpi-label">${k.label}</div>
+    <div class="kpi-value ${k.cls.split(' ')[1]||''}">${k.value}</div>
+    <div class="kpi-sub">${k.sub}</div></div>
+  `).join('');
+})();
+
+// Income table
+(function(){
+  document.getElementById('incTotal').textContent = fmt(C.totalIncome);
+  let html = '<thead><tr><th>מקור</th><th class="num">סכום חודשי</th></tr></thead><tbody>';
+  for (const [k,v] of Object.entries(D.income)) html += `<tr><td>${k}</td><td class="num green">₪${fmt(v)}</td></tr>`;
+  html += `<tr class="total-row"><td>סה"כ</td><td class="num green">₪${fmt(C.totalIncome)}</td></tr>`;
+  html += `<tr><td style="color:var(--text-muted)">אומת מהבנק (ממוצע 6 חודשים)</td><td class="num" style="color:var(--text-muted)">~₪${fmt(D.incomeFromBank)}</td></tr>`;
+  html += '</tbody>';
+  document.getElementById('incomeTable').innerHTML = html;
+})();
+
+// Loan cards
+(function(){
+  document.getElementById('debtTotal').textContent = fmt(C.totalDebt);
+  document.getElementById('loanGrid').innerHTML = C.loanTimeline.map(l => {
+    const isFirst = l.id === '183265';
+    return `<div class="loan-card" style="${isFirst?'border-color:var(--green);background:var(--green-bg)':''}">
+      <div class="loan-num">#${l.id}</div>
+      <div class="loan-amount">₪${fmt(l.balance)}</div>
+      <div class="loan-payment">₪${fmt(l.payment)}/חודש</div>
+      <div class="loan-remaining">תשלום ${l.paid}/${l.total} (נותרו ${l.remaining})</div>
+      <div class="progress"><div class="progress-fill" style="width:${l.pctDone}%;background:${isFirst?'var(--green)':'var(--blue)'}"></div></div>
+      <div style="font-size:.68em;color:var(--text-muted);margin-top:2px">${l.pctDone}% הושלם</div>
+      <div class="loan-end">${l.note}</div>
+    </div>`;
+  }).join('');
+})();
+
+// Other loans table
+(function(){
+  let html = '<tbody>';
+  html += `<tr><td>${D.mortgage.label}</td><td class="num red">₪${fmt(D.mortgage.payment)}</td></tr>`;
+  D.otherLoans.forEach(l => html += `<tr><td>${l.name} <span style="font-size:.72em;color:var(--text-muted)">${l.note}</span></td><td class="num red">₪${fmt(l.payment)}</td></tr>`);
+  const total = D.mortgage.payment + C.totalOtherLoans;
+  html += `<tr class="total-row"><td>סה"כ</td><td class="num red">₪${fmt(total)}</td></tr></tbody>`;
+  document.getElementById('otherLoansTable').innerHTML = html;
+})();
+
+// Standing orders
+(function(){
+  let html = '<tbody>';
+  for (const [k,v] of Object.entries(D.standingOrders)) html += `<tr><td>${k}</td><td class="num">₪${fmt(v)}</td></tr>`;
+  html += `<tr class="total-row"><td>סה"כ</td><td class="num">₪${fmt(C.totalStanding)}</td></tr></tbody>`;
+  document.getElementById('standingTable').innerHTML = html;
+})();
+
+// Old cards table
+(function(){
+  let html = '<thead><tr><th>כרטיס</th><th class="num">ממוצע חודשי</th><th>סטטוס</th></tr></thead><tbody>';
+  for (const [k,v] of Object.entries(D.oldCards)) {
+    const st = v.status === 'cancelled' ? '<span class="tag tag-closed">מבוטל</span>'
+      : v.status === 'closed' ? `<span class="tag tag-closed">נסגר ${v.closedDate}</span>`
+      : '<span class="tag tag-pending">לברר</span>';
+    html += `<tr><td>${k}</td><td class="num">₪${fmt(v.avg)}</td><td>${st}</td></tr>`;
+  }
+  html += '</tbody>';
+  document.getElementById('oldCardsTable').innerHTML = html;
+  document.getElementById('newCards').textContent = `כרטיסים ${D.newCards.join(', ')} — פעילים. אין עדיין נתוני הוצאות (צריך לחכות חודש-חודשיים).`;
+})();
+
+// Bank accounts
+(function(){
+  document.getElementById('bankCards').innerHTML = `
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center">
+      <div style="font-size:.72em;background:var(--amber-bg);color:var(--amber);display:inline-block;padding:2px 8px;border-radius:10px;margin-bottom:6px">חשבון ${D.accounts.account1.id}</div>
+      <div style="font-weight:700">${D.accounts.account1.type}</div>
+      <div style="font-family:var(--mono);font-size:1.3em;font-weight:700;margin:6px 0;color:${D.accounts.account1.balance<0?'var(--red)':'var(--green)'}">₪${fmt(D.accounts.account1.balance)}</div>
+      <div style="font-size:.72em;color:var(--text-muted)">לרוב במינוס — הוצאות יומיומיות</div>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center">
+      <div style="font-size:.72em;background:var(--blue-light);color:var(--blue);display:inline-block;padding:2px 8px;border-radius:10px;margin-bottom:6px">חשבון ${D.accounts.account2.id}</div>
+      <div style="font-weight:700">${D.accounts.account2.type}</div>
+      <div style="font-family:var(--mono);font-size:1.3em;font-weight:700;margin:6px 0;color:var(--green)">₪${fmt(D.accounts.account2.balance)}</div>
+      <div style="font-size:.72em;color:var(--text-muted)">הכנסות נכנסות, הלוואות יוצאות</div>
+    </div>
+  `;
+})();
+
+// Insurance
+(function(){
+  document.getElementById('insTotal').textContent = fmt(C.totalInsurance);
+  let html = D.insurance.map(i => `
+    <div class="ins-row">
+      <div><div style="font-weight:600;font-size:.88em">${i.name}</div>
+      <div style="font-size:.72em;color:var(--text-muted)">${i.policy} · ${i.note}</div></div>
+      <div class="ins-price ${i.premium > 0 ? 'red' : 'green'}">${i.premium > 0 ? '₪'+fmt(i.premium) : 'ללא תשלום'}</div>
+    </div>
+  `).join('');
+  html += `<div class="ins-row" style="background:var(--blue-light);border-radius:8px;padding:10px;margin-top:6px"><div style="font-weight:700">סה"כ פרמיות</div><div class="ins-price" style="color:var(--red);font-size:1em">₪${fmt(C.totalInsurance)}/חודש</div></div>`;
+  document.getElementById('insuranceList').innerHTML = html;
+})();
+
+// Medical
+(function(){
+  document.getElementById('conditions').innerHTML = D.medical.conditions.map(c => `<div style="font-size:.82em;padding:4px 0;border-bottom:1px solid var(--border)">• ${c}</div>`).join('');
+  document.getElementById('meds').innerHTML = D.medical.meds.map(m => `<div style="font-size:.82em;padding:4px 0;border-bottom:1px solid var(--border)">💊 ${m}</div>`).join('');
+
+  // MRI
+  document.getElementById('mriStatus').textContent = D.medical.mriStatus;
+  const mriSteps = [
+    { text: 'אישור פסיכיאטרית — נשלח למרפאה', done: true },
+    { text: 'הרופאה צירפה הפניה רפואית', done: true },
+    { text: 'הוגשה בקשה לטופס 17', done: true },
+    { text: 'המתנה לאישור טופס 17', done: false },
+    { text: 'קביעת תור ברמב"ם עם הפניה + טופס 17', done: false },
+  ];
+  document.getElementById('mriTimeline').innerHTML = mriSteps.map(s => `
+    <div class="timeline-item ${s.done?'done':'warn'}">
+      <div class="tl-text" style="${s.done?'text-decoration:line-through;color:var(--text-muted)':''}">${s.text}</div>
+    </div>
+  `).join('');
+
+  // Appeals
+  document.getElementById('appealsList').innerHTML = D.medical.pendingAppeals.map(a => `
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:.84em">
+      <div>${a.subject}</div>
+      <div><span class="tag tag-pending">${a.id || 'פניית הציבור'}</span></div>
+    </div>
+  `).join('');
+
+  // Contacts
+  document.getElementById('contactsList').innerHTML = D.medical.contacts.map(c => `
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:.84em">
+      <div style="font-weight:600">${c.name}</div>
+      <div style="color:var(--text-sec)">${c.role}</div>
+    </div>
+  `).join('');
+})();
+
+// Tasks
+(function(){
+  document.getElementById('taskBadge').textContent = `${C.tasksDone}/${C.tasksTotal} הושלמו`;
+  document.getElementById('tasksList').innerHTML = D.tasks.map(t => `
+    <div class="task">
+      <div class="task-check ${t.done?'done':'pending'}">${t.done?'✓':''}</div>
+      <div style="${t.done?'color:var(--text-muted);text-decoration:line-through':''}">${t.text}</div>
+    </div>
+  `).join('');
+})();
+
+// Last update
+document.getElementById('lastUpdate').textContent = 'עודכן ' + new Date(D.lastUpdated).toLocaleDateString('he-IL',{day:'numeric',month:'long',year:'numeric'});
+
+// Scroll reveal
+const obs = new IntersectionObserver(e => e.forEach(en => { if(en.isIntersecting) en.target.classList.add('visible') }), {threshold:.08});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Nav highlight
+const navObs = new IntersectionObserver(e => e.forEach(en => {
+  if(en.isIntersecting) {
+    document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+    const a = document.querySelector(`.nav a[href="#${en.target.id}"]`);
+    if(a) a.classList.add('active');
+  }
+}), {threshold:.3});
+document.querySelectorAll('section[id]').forEach(s => navObs.observe(s));
+
+// ═══ CHARTS ═══
+Chart.defaults.color = '#a0aec0';
+Chart.defaults.borderColor = 'rgba(0,0,0,.04)';
+Chart.defaults.font.family = 'Heebo';
+
+// Income pie
+new Chart(document.getElementById('incomeChart'), {
+  type: 'doughnut',
+  data: {
+    labels: Object.keys(D.income),
+    datasets: [{ data: Object.values(D.income), backgroundColor: ['#1a365d','#2b6cb0','#4299e1','#63b3ed','#90cdf4'], borderWidth: 2, borderColor: '#fff', hoverOffset: 8 }]
+  },
+  options: { responsive:true, maintainAspectRatio:false, cutout:'58%', plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10,usePointStyle:true,pointStyle:'circle'}}} }
+});
+
+// Flow chart
+new Chart(document.getElementById('flowChart'), {
+  type: 'bar',
+  data: {
+    labels: ['הכנסות', 'הלוואות\nדיסקונט', 'משכנתא', 'הלוואות\nנוספות', 'הו"קים', 'כרטיסים\n(ממוצע)', 'נטו'],
+    datasets: [{
+      data: [C.totalIncome, -C.totalLoanPayment, -D.mortgage.payment, -C.totalOtherLoans, -C.totalStanding, -C.cardSpending, C.trueNet],
+      backgroundColor: [
+        '#276749', '#c53030', '#c53030', '#c53030', '#c53030', '#e53e3e',
+        C.trueNet >= 0 ? '#276749' : '#c53030'
+      ],
+      borderRadius: 5,
+    }]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{y:{beginAtZero:false,ticks:{callback:v=>'₪'+Math.abs(v/1000).toFixed(0)+'K'}},x:{ticks:{font:{size:10}}}}
+  }
+});
+
+// Loan timeline
+new Chart(document.getElementById('loanTimeline'), {
+  type: 'bar',
+  data: {
+    labels: C.loanTimeline.map(l => '#'+l.id.slice(-4)),
+    datasets: [
+      { label: 'שולם', data: C.loanTimeline.map(l => l.paid), backgroundColor: '#276749', borderRadius: 4 },
+      { label: 'נותר', data: C.loanTimeline.map(l => l.remaining), backgroundColor: '#e2e8f0', borderRadius: 4 },
+    ]
+  },
+  options: {
+    indexAxis: 'y', responsive:true, maintainAspectRatio:false,
+    scales:{x:{stacked:true,display:false},y:{stacked:true}},
+    plugins:{legend:{position:'bottom',labels:{font:{size:11},usePointStyle:true,pointStyle:'circle'}}}
+  }
+});
+</script>
+</body>
+</html>
