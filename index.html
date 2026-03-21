@@ -412,7 +412,7 @@ const DATA = {
     business: {
       balance: 742,
       withdrawable: 10742,
-      pendingOut: 3425, // MAX credit card
+      pendingOut: 3425,
       pendingIn: 827,
       projected: -1856,
     },
@@ -420,10 +420,10 @@ const DATA = {
       balance: -16147,
       limit: 15000,
       overLimit: 1147,
-      pendingIn: 7000, // Tali transfer
+      pendingIn: 7000,
       oferApril: 10000,
-      cardsApril: 3288, // 15/04 charge
-      projected: [-9147, 853, -2435], // after Tali, after Ofer, after cards
+      cardsApril: 3288,
+      projected: [-9147, 853, -2435],
     },
     recentTransactions: [
       { date: '16/03', desc: 'ביטוח לאומי ילדים', amount: 115, type: 'in' },
@@ -434,6 +434,31 @@ const DATA = {
       { date: '04/03', desc: 'העברה מעופר', amount: 10000, type: 'in' },
       { date: '02/03', desc: 'חיוב ויזה 8953', amount: -1172, type: 'out' },
       { date: '01/03', desc: 'עמותת ותיק', amount: -338, type: 'out' },
+    ],
+    // Cash flow forecast — Discount (personal)
+    forecastPersonal: [
+      { date: '20/03', label: 'יתרה נוכחית', amount: 0, balance: -16147, icon: '📍' },
+      { date: '23/03', label: 'העברה שלך', amount: 7000, balance: -9147, icon: '💰' },
+      { date: '31/03', label: 'הוצאות שוטפות (שאר מרץ)', amount: -800, balance: -9947, icon: '🛒' },
+      { date: '01/04', label: 'עמותת ותיק', amount: -239, balance: -10186, icon: '📄' },
+      { date: '02/04', label: 'חיוב ויזה 8953', amount: -1172, balance: -11358, icon: '💳' },
+      { date: '04/04', label: 'העברת עופר', amount: 10000, balance: -1358, icon: '💚' },
+      { date: '10/04', label: 'הוראות קבע (ביטוח+בריאות)', amount: -400, balance: -1758, icon: '🏥' },
+      { date: '15/04', label: 'חיוב דיינרס 0112 (אחרון!)', amount: -3288, balance: -5046, icon: '💳' },
+      { date: '16/04', label: 'ביטוח לאומי ילדים', amount: 115, balance: -4931, icon: '👶' },
+      { date: '23/04', label: 'העברה שלך', amount: 7000, balance: 2069, icon: '💰' },
+    ],
+    // Cash flow forecast — International (business)
+    forecastBusiness: [
+      { date: '20/03', label: 'יתרה נוכחית', amount: 0, balance: 742, icon: '📍' },
+      { date: '25/03', label: 'סליקת הייפ (הערכה)', amount: 1500, balance: 2242, icon: '💳' },
+      { date: '31/03', label: 'הוצאות שוטפות עסקי', amount: -800, balance: 1442, icon: '🏪' },
+      { date: '01/04', label: 'חיוב MAX (שקלים)', amount: -3425, balance: -1983, icon: '💳' },
+      { date: '01/04', label: 'חיובי USD מיידיים (הערכה)', amount: -820, balance: -2803, icon: '💵' },
+      { date: '05/04', label: 'סליקת הייפ אפריל', amount: 1500, balance: -1303, icon: '💳' },
+      { date: '10/04', label: 'ארנונה + חשמל', amount: -676, balance: -1979, icon: '🏪' },
+      { date: '15/04', label: 'רו"ח + ביט"ל + הייפ', amount: -882, balance: -2861, icon: '📄' },
+      { date: '25/04', label: 'סליקת הייפ', amount: 1500, balance: -1361, icon: '💳' },
     ],
   },
 
@@ -776,6 +801,23 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
       <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--gold-pale)"><span>02/03 חיוב ויזה 8953</span><span style="color:var(--red);font-weight:700">-₪1,172</span></div>
       <div style="display:flex;justify-content:space-between;padding:6px 0"><span>01/03 עמותת ותיק</span><span style="color:var(--red);font-weight:700">-₪338</span></div>
     </div>
+  </div>
+</section>
+
+<!-- Cash Flow Forecast -->
+<section class="section reveal" style="border-right:4px solid var(--green)">
+  <h2>צפי תזרים מזומנים <span class="updated">20/03 → סוף אפריל</span></h2>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab(this,'forecastPers')">דיסקונט (אישי)</button>
+    <button class="tab" onclick="showTab(this,'forecastBiz')">בינלאומי (עסקי)</button>
+  </div>
+  <div id="forecastPers" class="tab-content active">
+    <div class="chart-container" style="height:280px"><canvas id="forecastChartPers"></canvas></div>
+    <div id="forecastTablePers" style="margin-top:12px"></div>
+  </div>
+  <div id="forecastBiz" class="tab-content">
+    <div class="chart-container" style="height:280px"><canvas id="forecastChartBiz"></canvas></div>
+    <div id="forecastTableBiz" style="margin-top:12px"></div>
   </div>
 </section>
 
@@ -1356,6 +1398,68 @@ new Chart(document.getElementById('dinersChart'), {
   data: { labels: dinersLabels, datasets: [{ label:'פבר (בפועל)', data: dinersValues, backgroundColor: dinersLabels.map((_,i) => dinersColors[i%dinersColors.length]), borderRadius:4, barPercentage:.65 }] },
   options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true}} }
 });
+
+// ═══ CASH FLOW FORECAST ═══
+function renderForecast(forecastData, chartId, tableId, limitAmount) {
+  const labels = forecastData.map(f => f.date);
+  const balances = forecastData.map(f => f.balance);
+  const colors = balances.map(b => b >= 0 ? 'rgba(0,184,148,.6)' : (b < -limitAmount ? 'rgba(225,112,85,.9)' : 'rgba(225,112,85,.5)'));
+
+  new Chart(document.getElementById(chartId), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'יתרה צפויה',
+        data: balances,
+        backgroundColor: colors,
+        borderRadius: 6,
+        barPercentage: .65,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `₪${fmt(ctx.raw)}` } }
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+          grid: { color: 'rgba(0,0,0,.05)' },
+          ticks: { callback: v => '₪'+fmt(v) }
+        },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // Table
+  let html = '<div style="font-size:.82em">';
+  forecastData.forEach((f, i) => {
+    const isFirst = i === 0;
+    const balColor = f.balance >= 0 ? 'var(--green)' : (f.balance < -limitAmount ? 'var(--red)' : 'var(--amber)');
+    const amtColor = f.amount > 0 ? 'var(--green)' : (f.amount < 0 ? 'var(--red)' : 'var(--text)');
+    const amtText = isFirst ? '—' : (f.amount > 0 ? '+₪'+fmt(f.amount) : '-₪'+fmt(Math.abs(f.amount)));
+    const overLimit = f.balance < -limitAmount;
+    html += `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f0ece8;${overLimit?'background:var(--red-light);margin:0 -8px;padding-right:8px;padding-left:8px;border-radius:4px':''}">
+      <span style="min-width:18px">${f.icon}</span>
+      <span style="min-width:42px;font-family:var(--font-mono);font-size:.85em;color:var(--text-muted)">${f.date}</span>
+      <span style="flex:1">${f.label}</span>
+      <span style="min-width:70px;text-align:left;font-family:var(--font-mono);font-weight:600;color:${amtColor}">${amtText}</span>
+      <span style="min-width:80px;text-align:left;font-family:var(--font-mono);font-weight:700;color:${balColor}">₪${fmt(f.balance)}</span>
+    </div>`;
+  });
+  const lastBalance = forecastData[forecastData.length-1].balance;
+  const emoji = lastBalance >= 0 ? '✅' : '⚠️';
+  html += `<div style="text-align:center;padding:12px;margin-top:8px;background:${lastBalance>=0?'var(--green-bg)':'var(--amber-bg)'};border-radius:8px;font-weight:700">
+    ${emoji} יתרה צפויה סוף אפריל: <span style="font-family:var(--font-mono);color:${lastBalance>=0?'var(--green)':'var(--red)'}">₪${fmt(lastBalance)}</span>
+  </div>`;
+  html += '</div>';
+  document.getElementById(tableId).innerHTML = html;
+}
+renderForecast(DATA.bankSnapshot.forecastPersonal, 'forecastChartPers', 'forecastTablePers', 15000);
+renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecastTableBiz', 10000);
 
 // ═══ INSURANCE ═══
 (function() {
