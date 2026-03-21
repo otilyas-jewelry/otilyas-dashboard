@@ -236,7 +236,7 @@ tr:hover { background: #f7fafc; }
 // DATA — Edit here to update the dashboard
 // ═══════════════════════════════════════════
 const D = {
-  lastUpdated: '2026-03-20',
+  lastUpdated: '2026-03-21',
 
   // Income
   income: {
@@ -314,15 +314,32 @@ const D = {
     pendingMRI: true,
     mriStatus: 'ממתין לאישור טופס 17',
     pendingAppeals: [
-      { id: '82058388', subject: 'הפניות לטיפול — שוחרר מבני ציון' },
-      { id: '82058408', subject: 'עובדת שיקום לא הגיעה לביקור בית' },
-      { id: null, subject: 'פניית הציבור — ניתוק המערכת מאז המלחמה' },
+      { id: '82058388', subject: 'שוחרר מבני ציון באמצע בירורים', type: 'תלונה' },
+      { id: '82058408', subject: 'עובדת שיקום לא הגיעה לביקור בית', type: 'בקשה' },
+      { id: '82058428', subject: 'צירוף מסמכים רפואיים מבני ציון', type: 'בקשה' },
+      { id: '82058474', subject: 'תלונה על העו"ס סוקולובסקי', type: 'תלונה' },
+      { id: '82058526', subject: 'משוב חיובי — גב\' בן אברהם מאירה', type: 'משוב', done: true },
+      { id: '82058540', subject: 'משוב חיובי — ד"ר אלרון משה', type: 'משוב', done: true },
+      { id: '82059326', subject: 'דוח פתולוגי 2019 לתיעוד באגף', type: 'בקשה' },
+      { id: '82059616', subject: 'מכתב שחרור בני ציון — כאבי גב חמורים', type: 'בקשה' },
+      { id: '82059631', subject: '4 מסמכים רפואיים בני ציון + אורתופד', type: 'בקשה' },
+      { id: '82060756', subject: 'פנייה לד"ר אלרון — פניות חשובות', type: 'בקשה' },
+      { id: '82060771', subject: 'שיפוץ והתאמת דירה — דרישה לנציג', type: 'בקשה' },
+      { id: null, subject: 'פניית הציבור — ניתוק המערכת מאז המלחמה', type: 'תלונה' },
+    ],
+    prescription: { status: 'בהמתנה לטיפול', date: '19/03/2026', note: 'בקרוב נכניס את ההזמנה לטיפול באגף' },
+    appointments: [
+      { doctor: 'ד"ר דראושה ח\'ליל', specialty: 'נוירולוגיה', clinic: 'חצור הגלילית', phone: '04-6869222', date: '23/03/2026', time: '11:24' },
+      { doctor: 'ד"ר לביא ארנון', specialty: 'אורולוגיה', clinic: 'רמת ישי', phone: '04-9038200', date: '24/04/2026', time: '11:49' },
     ],
     contacts: [
       { name: 'ד"ר אלרון משה', role: 'אגף שיקום טבריה' },
       { name: 'גב\' בן אברהם מאירה', role: 'מרפאה' },
       { name: 'ד"ר קרסניאנסקי', role: 'אורתופד' },
-      { name: 'ד"ר סבסטלנה גרישין', role: 'פסיכיאטרית — שלו+, שד ההסתדרות 55' },
+      { name: 'ד"ר סבסטלנה גרישין', role: 'פסיכיאטרית — שלו+' },
+      { name: 'סוקולובסקי', role: 'עו"ס — תלונה פעילה' },
+      { name: 'ד"ר דראושה ח\'ליל', role: 'נוירולוגיה — חצור הגלילית' },
+      { name: 'ד"ר לביא ארנון', role: 'אורולוגיה — רמת ישי' },
     ],
     meds: ['Seroquel 25mg/d (PTSD)', 'Lyrica (כאב עצבי)', 'קנאביס רפואי (PTSD)', 'BIMATOPROST (עיניים)', 'CARGILOC 1.25mg (לב)', 'ROWATINEX (כליות)'],
   },
@@ -445,8 +462,9 @@ function fmtSign(n) { return (n>=0?'+':'-') + '₪' + fmt(n); }
   <a href="#cards">כרטיסים</a>
   <a href="#insurance">ביטוחים</a>
   <a href="#medical">רפואי</a>
+  <a href="#shikum">אגף שיקום</a>
+  <a href="#appointments">תורים</a>
   <a href="#tasks">משימות</a>
-  <a href="shikum.html" style="background:var(--amber-bg);color:var(--amber);border-color:var(--amber)">אגף שיקום ➜</a>
 </nav>
 
 <!-- Alerts -->
@@ -540,13 +558,28 @@ function fmtSign(n) { return (n>=0?'+':'-') + '₪' + fmt(n); }
     <div id="mriTimeline"></div>
   </div>
   <div class="card">
-    <div class="card-title">פניות למשהב"ט — אגף שיקום</div>
-    <div id="appealsList"></div>
-  </div>
-  <div class="card">
     <div class="card-title">אנשי קשר רפואיים</div>
     <div id="contactsList"></div>
   </div>
+</section>
+
+<!-- אגף שיקום -->
+<section id="shikum" class="reveal">
+  <div class="card">
+    <div class="card-title">פניות למשהב"ט — אגף שיקום <span class="badge" style="background:var(--amber-bg);color:var(--amber)" id="appealsCount"></span></div>
+    <div id="rxCard" style="background:linear-gradient(135deg,#ebf4ff,#f0f5ff);border:1px solid #bee3f8;border-radius:var(--radius);padding:12px;margin-bottom:12px">
+      <div style="display:inline-flex;align-items:center;gap:6px;font-size:.82em;font-weight:600;color:var(--amber);background:#fff;padding:3px 10px;border-radius:8px;margin-bottom:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block"></span> <span id="rxStatus"></span></div>
+      <div style="font-weight:700;font-size:.88em">מרשם / הפניה</div>
+      <div style="font-size:.78em;color:var(--text-sec)" id="rxNote"></div>
+    </div>
+    <div id="appealsList"></div>
+  </div>
+</section>
+
+<!-- תורים -->
+<section id="appointments" class="card reveal">
+  <div class="card-title">תורים קרובים <span class="badge" style="background:var(--red-bg);color:var(--red)" id="apptBadge"></span></div>
+  <div id="apptList"></div>
 </section>
 
 <!-- Tasks -->
@@ -556,7 +589,7 @@ function fmtSign(n) { return (n>=0?'+':'-') + '₪' + fmt(n); }
 </section>
 
 <div class="footer">
-  כרמל דשבורד | מיהב Agent | <span id="lastUpdate"></span>
+  כרמל דשבורד | דביר Agent | <span id="lastUpdate"></span>
 </div>
 </div>
 
@@ -717,11 +750,29 @@ updateClock(); setInterval(updateClock, 30000);
     </div>
   `).join('');
 
-  // Appeals
-  document.getElementById('appealsList').innerHTML = D.medical.pendingAppeals.map(a => `
-    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:.84em">
-      <div>${a.subject}</div>
-      <div><span class="tag tag-pending">${a.id || 'פניית הציבור'}</span></div>
+  // Appeals - full list
+  const waitingCount = D.medical.pendingAppeals.filter(a => !a.done).length;
+  document.getElementById('appealsCount').textContent = waitingCount + ' ממתינות מתוך ' + D.medical.pendingAppeals.length;
+
+  // Prescription
+  document.getElementById('rxStatus').textContent = D.medical.prescription.status;
+  document.getElementById('rxNote').textContent = D.medical.prescription.note + ' (' + D.medical.prescription.date + ')';
+
+  document.getElementById('appealsList').innerHTML = D.medical.pendingAppeals.map(a => {
+    const tagClass = a.done ? 'tag-done' : (a.type === 'תלונה' ? 'tag-urgent' : 'tag-pending');
+    const statusText = a.done ? 'נשלח' : 'ממתין';
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:.84em${a.done?';opacity:.6':''}">
+      <div style="${a.done?'text-decoration:line-through':''}"><span style="font-weight:600">${a.subject}</span><br><span style="font-size:.72em;color:var(--text-muted)">${a.type}</span></div>
+      <div style="text-align:left;min-width:90px"><span class="tag ${tagClass}">${a.id || 'פניית הציבור'}</span><br><span style="font-size:.65em;color:var(--text-muted)">${statusText}</span></div>
+    </div>`;
+  }).join('');
+
+  // Appointments
+  document.getElementById('apptBadge').textContent = D.medical.appointments.length + ' תורים';
+  document.getElementById('apptList').innerHTML = D.medical.appointments.map(a => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:.84em">
+      <div><span style="font-weight:700">${a.doctor}</span><br><span style="font-size:.75em;color:var(--text-sec)">${a.specialty} | ${a.clinic} | ${a.phone}</span></div>
+      <div style="text-align:left"><div style="font-family:var(--mono);font-weight:700;color:var(--red)">${a.date}</div><div style="font-family:var(--mono);font-size:.78em;color:var(--text-sec)">${a.time}</div></div>
     </div>
   `).join('');
 
