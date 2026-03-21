@@ -467,6 +467,7 @@ const DATA = {
     grocery: 1230, restaurant: 380,
     jan: { orders: 11, total: 2105 },
     feb: { orders: 8, total: 2003, diners: 1610 },
+    mar: { orders: 1, total: 294.18, note: 'וולט מרקט — טופ דן, 21/03' },
   },
 
   // Key dates
@@ -722,11 +723,16 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
 
 <!-- WOLT -->
 <section class="section reveal">
-  <h2>ניתוח WOLT <span class="updated">from Diners 03/26</span></h2>
+  <h2>ניתוח WOLT <span class="updated">מרץ מעקב חי</span></h2>
   <div class="grid-2">
     <div>
-      <p style="font-size:1em;margin-bottom:8px;font-weight:700">WOLT פברואר: ₪1,610 (7 עסקאות)</p>
+      <p style="font-size:1em;margin-bottom:8px;font-weight:700">WOLT פברואר: ₪1,610 (8 עסקאות)</p>
       <p style="font-size:.82em;color:var(--text-secondary);margin-bottom:12px" id="woltInfo"></p>
+      <div id="woltMarBox" style="background:var(--amber-bg);border-radius:var(--radius);padding:10px 14px;margin-bottom:12px;border-right:3px solid var(--amber)">
+        <div style="font-size:.76em;font-weight:700;color:var(--amber)">מרץ 2026 — עד כה</div>
+        <div style="font-family:var(--font-display);font-size:1.5em;font-weight:700" id="woltMarTotal"></div>
+        <div style="font-size:.7em;color:var(--text-secondary)" id="woltMarNote"></div>
+      </div>
       <div style="display:flex;gap:10px">
         <div style="flex:1;text-align:center;padding:14px;background:var(--red-bg);border-radius:var(--radius)">
           <div style="font-size:.76em;color:var(--red)">סופר דרך WOLT</div>
@@ -1256,6 +1262,8 @@ updateClock(); setInterval(updateClock, 30000);
 document.getElementById('woltGrocery').textContent = `~${fmt(DATA.wolt.grocery)}/חודש`;
 document.getElementById('woltRest').textContent = `~${fmt(DATA.wolt.restaurant)}/חודש`;
 document.getElementById('woltInfo').textContent = `ינואר: ${DATA.wolt.jan.orders} הזמנות ₪${fmt(DATA.wolt.jan.total)} | פברואר: ${DATA.wolt.feb.orders} הזמנות ₪${fmt(DATA.wolt.feb.total)} | פברואר (דיינרס): ${fmt(DATA.wolt.feb.diners)}`;
+document.getElementById('woltMarTotal').textContent = `₪${DATA.wolt.mar.total.toFixed(2)} (${DATA.wolt.mar.orders} הזמנות)`;
+document.getElementById('woltMarNote').textContent = DATA.wolt.mar.note + ' | Diners 0112 | הוצאה אישית משתנה';
 
 // Bank cards
 (function() {
