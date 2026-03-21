@@ -236,7 +236,7 @@ tr:hover { background: #f7fafc; }
 // DATA — Edit here to update the dashboard
 // ═══════════════════════════════════════════
 const D = {
-  lastUpdated: '2026-03-21',
+  lastUpdated: '2026-03-21T3',
 
   // Income
   income: {
@@ -310,6 +310,7 @@ const D = {
       'יתר לחץ דם',
       'חשד גלאוקומה',
       'אבנים בכליות',
+      'Anxiety Disorder + Mild Depression (ד"ר גולדרינג) — המלצה ל-EMDR',
     ],
     pendingMRI: true,
     mriStatus: 'ממתין לאישור טופס 17',
@@ -341,8 +342,9 @@ const D = {
       { name: 'סוקולובסקי', role: 'עו"ס — תלונה פעילה' },
       { name: 'ד"ר דראושה ח\'ליל', role: 'נוירולוגיה — חצור הגלילית' },
       { name: 'ד"ר לביא ארנון', role: 'אורולוגיה — רמת ישי' },
+      { name: 'ד"ר לילאנה גולדרינג', role: 'פסיכיאטרית — כפר תבור, 052-8489249' },
     ],
-    meds: ['Seroquel 25mg/d (PTSD)', 'Lyrica (כאב עצבי)', 'קנאביס רפואי (PTSD)', 'BIMATOPROST (עיניים)', 'CARGILOC 1.25mg (לב)', 'ROWATINEX (כליות)'],
+    meds: ['Seroquel 25mg/d (PTSD)', 'Lyrica (כאב עצבי)', 'קנאביס רפואי (PTSD)', 'BIMATOPROST (עיניים)', 'CARGILOC 1.25mg (לב)', 'ROWATINEX (כליות)', 'EMDR — מומלץ (ד"ר גולדרינג)'],
   },
 
   // Tasks
@@ -387,7 +389,46 @@ const D = {
     { text: 'הפניה אורטופדית 250007779827 — תוקף פג 25/06/2025! לברר אם בוצע', done: false },
     { text: 'ישראכרט — הרשאת שינוי חשבון לכרטיסים 6921, 4685, 8545 (מעבר בנקאי!)', done: false },
     { text: 'חוב כללית בי"ח העמק — ₪1,222 מ-10/2025, תזכורת שנייה! לברר/טופס 17', done: false },
+    { text: 'יוניברסל מוטורס — אישור שהרכב בתקן (פנייה 20/05/2025), לברר סטטוס', done: false },
+    { text: 'ד"ר גולדרינג המליצה EMDR — לברר עם כרמל אם מעוניין/טופל', done: false },
+    { text: 'הפניה אורטופדית חדשה — לבקש באזור האישי למרפאה/מכון פרטי', done: false },
+    { text: 'אחריות מאוורר פסיפיק (10 שנים) + פמי פרמיום (2017) — לשמור', done: true },
+    // צלילה שיניים — סקציה ייעודית למעלה
   ],
+
+  // Family Projects
+  familyProjects: [
+    {
+      name: 'החזר הוצאות שיניים — צלילה',
+      status: 'טיוטת מייל נשמרה',
+      clinic: 'מרפאת עפולה כללית סמייל',
+      phone: '04-6428000',
+      contact: 'סימי בנימין (simib@clalit.org.il)',
+      driveFolder: 'https://drive.google.com/drive/folders/1UhaAAM_ssd6gJcySQoL7vjE7ZvT5WH3R',
+      note: '6 חשבוניות, סה"כ ₪5,962. סיכום חשבון מרפאה: ₪6,779. טיוטת מייל ב-Gmail.',
+      invoices: [
+        { num: 'IN244174058168', date: '02/07/2024', amount: 20 },
+        { num: 'IN244174052057', date: '15/07/2024', amount: 80 },
+        { num: 'IN244174113810', date: '31/12/2024', amount: 70 },
+        { num: 'IN254174013199', date: '11/02/2025', amount: 2708 },
+        { num: 'IN254174075346', date: '14/09/2025', amount: 3050 },
+        { num: 'IN254174075351', date: '14/09/2025', amount: 34 },
+      ],
+      totalInvoices: 5962,
+      totalClinic: 6779,
+      patient: 'צלילה שפריצר',
+      patientEmail: 'zelilashp541@gmail.com',
+    },
+  ],
+
+  // Google Drive
+  driveFolder: {
+    name: 'כרמל אבא 2026 כל הקבצים',
+    url: 'https://drive.google.com/drive/folders/1dt9Bcc8fqPKembkUW5MENUI_XglwW6d2',
+    totalFiles: 28,
+    uniqueFiles: 16,
+    duplicates: 12,
+  },
 };
 
 // ═══════════════════════════════════════════
@@ -585,6 +626,22 @@ function fmtSign(n) { return (n>=0?'+':'-') + '₪' + fmt(n); }
 <section id="appointments" class="card reveal">
   <div class="card-title">תורים קרובים <span class="badge" style="background:var(--red-bg);color:var(--red)" id="apptBadge"></span></div>
   <div id="apptList"></div>
+</section>
+
+<!-- צלילה — החזר שיניים -->
+<section id="tzilaTeeth" class="reveal">
+  <div class="card">
+    <div class="card-title">🦷 צלילה — החזר הוצאות שיניים <span class="badge" style="background:var(--amber-bg);color:var(--amber)" id="tzilaBadge"></span></div>
+    <div id="tzilaInfo"></div>
+    <div id="tzilaInvoices"></div>
+    <div id="tzilaActions" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<!-- Google Drive -->
+<section id="driveSection" class="card reveal">
+  <div class="card-title">Google Drive <span class="badge" style="background:var(--amber-bg);color:var(--amber)" id="driveBadge"></span></div>
+  <div id="driveInfo"></div>
 </section>
 
 <!-- Tasks -->
@@ -788,6 +845,90 @@ updateClock(); setInterval(updateClock, 30000);
       <div style="color:var(--text-sec)">${c.role}</div>
     </div>
   `).join('');
+})();
+
+// צלילה — שיניים
+(function(){
+  const p = D.familyProjects[0];
+  document.getElementById('tzilaBadge').textContent = p.status;
+
+  // Info card
+  document.getElementById('tzilaInfo').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div style="background:var(--red-bg);border-radius:var(--radius);padding:12px;text-align:center">
+        <div style="font-family:var(--mono);font-size:1.4em;font-weight:700;color:var(--red)">₪${p.totalInvoices.toLocaleString()}</div>
+        <div style="font-size:.72em;color:var(--text-muted)">סה"כ חשבוניות</div>
+      </div>
+      <div style="background:#fff3e0;border-radius:var(--radius);padding:12px;text-align:center">
+        <div style="font-family:var(--mono);font-size:1.4em;font-weight:700;color:var(--amber)">₪${p.totalClinic.toLocaleString()}</div>
+        <div style="font-size:.72em;color:var(--text-muted)">סיכום חשבון מרפאה</div>
+      </div>
+    </div>
+    <div style="font-size:.82em;color:var(--text-sec);line-height:1.8;padding:8px 0;border-bottom:1px solid var(--border)">
+      👤 <b>${p.patient}</b> (${p.patientEmail})<br>
+      🏥 ${p.clinic}<br>
+      📞 ${p.phone} — ${p.contact}
+    </div>
+  `;
+
+  // Invoice table
+  const rows = p.invoices.map((inv,i) => `
+    <tr style="font-size:.8em;border-bottom:1px solid var(--border)">
+      <td style="padding:6px 8px">${i+1}</td>
+      <td style="padding:6px 8px;font-family:var(--mono);font-size:.85em">${inv.num}</td>
+      <td style="padding:6px 8px">${inv.date}</td>
+      <td style="padding:6px 8px;text-align:left;font-family:var(--mono);font-weight:600">₪${inv.amount.toLocaleString()}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('tzilaInvoices').innerHTML = `
+    <div style="margin-top:10px;border:1px solid var(--border);border-radius:8px;overflow:hidden">
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr style="background:var(--header-bg);color:white;font-size:.75em;font-weight:700">
+          <th style="padding:8px">#</th><th style="padding:8px">מס׳ חשבונית</th><th style="padding:8px">תאריך</th><th style="padding:8px;text-align:left">סכום</th>
+        </tr></thead>
+        <tbody>${rows}
+          <tr style="background:var(--green-bg);font-weight:700;font-size:.84em">
+            <td colspan="3" style="padding:8px;text-align:center">סה"כ לתביעה</td>
+            <td style="padding:8px;text-align:left;font-family:var(--mono);color:var(--red)">₪${p.totalInvoices.toLocaleString()}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  // Action buttons
+  document.getElementById('tzilaActions').innerHTML = `
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <a href="${p.driveFolder}" target="_blank" style="flex:1;text-align:center;font-size:.82em;background:var(--blue-light);color:var(--blue);padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:600">📁 מסמכים ב-Drive</a>
+      <a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" style="flex:1;text-align:center;font-size:.82em;background:var(--amber-bg);color:var(--amber);padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:600">✉️ טיוטת מייל</a>
+    </div>
+    <div style="margin-top:8px;font-size:.75em;color:var(--text-muted);background:var(--red-bg);padding:8px;border-radius:6px">
+      ⚠️ <b>לפני שליחה:</b> להשלים מספר טלפון + לוודא ת.ז. צלילה + לצרף תמונות חשבוניות
+    </div>
+  `;
+})();
+
+// Google Drive
+(function(){
+  document.getElementById('driveBadge').textContent = D.driveFolder.duplicates + ' כפילויות למחיקה';
+  document.getElementById('driveInfo').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">
+      <div style="text-align:center;padding:10px;background:var(--blue-light);border-radius:var(--radius)">
+        <div style="font-family:var(--mono);font-size:1.3em;font-weight:700;color:var(--blue)">${D.driveFolder.totalFiles}</div>
+        <div style="font-size:.72em;color:var(--text-muted)">סה"כ קבצים</div>
+      </div>
+      <div style="text-align:center;padding:10px;background:var(--green-bg);border-radius:var(--radius)">
+        <div style="font-family:var(--mono);font-size:1.3em;font-weight:700;color:var(--green)">${D.driveFolder.uniqueFiles}</div>
+        <div style="font-size:.72em;color:var(--text-muted)">ייחודיים</div>
+      </div>
+      <div style="text-align:center;padding:10px;background:var(--red-bg);border-radius:var(--radius)">
+        <div style="font-family:var(--mono);font-size:1.3em;font-weight:700;color:var(--red)">${D.driveFolder.duplicates}</div>
+        <div style="font-size:.72em;color:var(--text-muted)">כפילויות</div>
+      </div>
+    </div>
+    <a href="${D.driveFolder.url}" target="_blank" style="display:block;text-align:center;background:var(--header-bg);color:white;padding:10px;border-radius:var(--radius);text-decoration:none;font-weight:600;font-size:.88em">📁 ${D.driveFolder.name} — פתח ב-Drive</a>
+  `;
 })();
 
 // Tasks
