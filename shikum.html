@@ -224,7 +224,7 @@ tr:hover { background: #f7fafc; }
 
 <script>
 const D = {
-  lastUpdated: '2026-03-20',
+  lastUpdated: '2026-03-21',
 
   person: {
     name: 'כרמל שפריצר',
@@ -297,6 +297,48 @@ const D = {
       detail: 'פנייה על כך שמאז פרוץ המלחמה נזרק מבית חולים בני ציון באמצע בדיקות חשובות. סובל מגירוי עצבי מהגב, נפל פיזית ונפשית. עובדת שיקום לא הגיעה לביקור בית כפי שהובטח. תלונה על ניתוק המערכת ואי-טיפול בתקופה שמצבו מדרדר.',
       status: 'ממתין לתשובה',
     },
+    {
+      id: '82059616',
+      date: '21/03/2026',
+      category: 'טיפול רפואי ובדיקות > הפניות לטיפול רפואי',
+      type: 'בקשה',
+      subject: 'מכתב שחרור בני ציון — אשפוז פנימית 3, כאבי גב חמורים',
+      detail: 'מצורף מכתב שחרור מבית חולים בני ציון (פברואר 2026). אושפז במחלקה פנימית 3 בשל כאבי גב חמורים. קובץ: ALIO OCLU 2 1.pdf',
+      status: 'ממתין לתשובה',
+    },
+    {
+      id: '82059631',
+      date: '21/03/2026',
+      category: 'טיפול רפואי ובדיקות > הפניות לטיפול רפואי',
+      type: 'בקשה',
+      subject: '4 מסמכים רפואיים — בני ציון + אורתופד מומחה',
+      detail: 'מצורפים 4 מסמכים רפואיים מבית חולים בני ציון ומאורתופד מומחה (ינואר-פברואר 2026). קובץ: cc roll 1 1.pdf',
+      status: 'ממתין לתשובה',
+    },
+    {
+      id: '82060756',
+      date: '21/03/2026',
+      category: 'מרפאה > הפניות לטיפול רפואי',
+      type: 'בקשה',
+      subject: 'פנייה לד"ר אלרון — פניות חשובות אחרי תקופה ארוכה',
+      detail: 'ד"ר אלרון היקר, לאחרונה העברתי מספר פניות שמבחינתי הן חשובות מאוד לאחר תקופה שבה לא יכולתי. קובץ: ALIO OCLU 2 1.pdf',
+      status: 'ממתין לתשובה',
+    },
+    {
+      id: '82060771',
+      date: '21/03/2026',
+      category: 'דיור ומגורים > שיפוץ והתאמת דירה',
+      type: 'בקשה',
+      subject: 'דרישה לנציג שיבקר בבית ויראה את המצב',
+      detail: 'פונה ודורש שנציג מטעם אגף השיקום יגיע לבקר ולראות את מצבו. נושא: שיפוץ והתאמת דירה.',
+      status: 'ממתין לתשובה',
+    },
+  ],
+
+  // Doctor appointments
+  appointments: [
+    { doctor: 'ד"ר דראושה ח\'ליל', specialty: 'נוירולוגיה', clinic: 'חצור הגלילית, בן גוריון 7', phone: '04-6869222', date: '23/03/2026', time: '11:24' },
+    { doctor: 'ד"ר לביא ארנון', specialty: 'אורולוגיה', clinic: 'רמת ישי, מעלה הרדוף 32', phone: '04-9038200', date: '24/04/2026', time: '11:49' },
   ],
 
   // Prescription / referral status
@@ -333,6 +375,9 @@ const D = {
     { name: 'סוקולובסקי', role: 'עובדת סוציאלית', note: 'תלונה — מנוטרלת מלטפל' },
     { name: 'ד"ר קרסניאנסקי סמיון', role: 'אורתופד מומחה (25128)', note: 'אישור 01/2026' },
     { name: 'ד"ר פרנסס דאור', role: 'פנימית, בני ציון (30898)', note: 'שחרור 02/2026' },
+    { name: 'ד"ר סבסטלנה גרישין', role: 'פסיכיאטרית — שלו+, שד ההסתדרות 55', note: 'סיכום 12/03/2026' },
+    { name: 'ד"ר דראושה ח\'ליל', role: 'נוירולוגיה — חצור הגלילית', note: 'תור 23/03/2026' },
+    { name: 'ד"ר לביא ארנון', role: 'אורולוגיה — רמת ישי', note: 'תור 24/04/2026' },
   ],
 
   // All tasks related to שיקום
@@ -349,6 +394,12 @@ const D = {
     { text: 'הפניה רפואית — הוגשה', done: true, urgent: false },
     { text: 'אישור פסיכיאטרית — נשלח', done: true, urgent: false },
     { text: 'בקשה לטופס 17 — הוגשה', done: true, urgent: false },
+    { text: 'מעקב תשובה — פנייה 82059616 (מכתב שחרור בני ציון)', done: false, urgent: true },
+    { text: 'מעקב תשובה — פנייה 82059631 (4 מסמכים רפואיים)', done: false, urgent: true },
+    { text: 'מעקב תשובה — פנייה 82060756 (פנייה לד"ר אלרון)', done: false, urgent: false },
+    { text: 'מעקב תשובה — פנייה 82060771 (שיפוץ והתאמת דירה)', done: false, urgent: true },
+    { text: 'תור נוירולוגיה — ד"ר דראושה, 23/03/2026 11:24', done: false, urgent: true },
+    { text: 'תור אורולוגיה — ד"ר לביא, 24/04/2026 11:49', done: false, urgent: false },
     { text: 'משוב חיובי — גב\' בן אברהם מאירה', done: true, urgent: false },
     { text: 'משוב חיובי — ד"ר אלרון משה', done: true, urgent: false },
   ],
@@ -382,6 +433,7 @@ const urgentTasks = D.tasks.filter(t => !t.done && t.urgent).length;
   <a href="#appeals">פניות</a>
   <a href="#mri">MRI</a>
   <a href="#rx">מרשם</a>
+  <a href="#appointments">תורים</a>
   <a href="#contacts">אנשי קשר</a>
   <a href="#all-tasks">כל המשימות</a>
 </nav>
@@ -454,6 +506,12 @@ const urgentTasks = D.tasks.filter(t => !t.done && t.urgent).length;
   <div style="margin-top:12px;padding:10px;background:#f7fafc;border-radius:8px;font-size:.78em;color:var(--text-sec)">
     <strong>הערות לתיאום:</strong> שליחת הפניה + התחייבות כספית למייל/פקס | צום לפני הבדיקה (הרדמה) | להישאר ~1.5 שעות אחרי להתעוררות
   </div>
+</section>
+
+<!-- Appointments -->
+<section id="appointments" class="card reveal">
+  <div class="card-title">תורים קרובים <span class="badge" style="background:var(--red-bg);color:var(--red)" id="apptBadge"></span></div>
+  <div id="apptList"></div>
 </section>
 
 <!-- Contacts -->
@@ -550,6 +608,24 @@ document.getElementById('rxDate').textContent = 'תאריך: ' + D.prescription.
       <td>${i.clalit}</td>
       <td style="font-size:.78em;color:var(--text-sec)">${i.notes}</td>
     </tr>
+  `).join('');
+})();
+
+// Appointments
+(function(){
+  document.getElementById('apptBadge').textContent = D.appointments.length + ' תורים';
+  document.getElementById('apptList').innerHTML = D.appointments.map(a => `
+    <div class="contact-row" style="padding:12px 0">
+      <div>
+        <span style="font-weight:700;font-size:.92em">${a.doctor}</span><br>
+        <span style="font-size:.78em;color:var(--text-sec)">${a.specialty} | ${a.clinic}</span><br>
+        <span style="font-size:.72em;color:var(--text-muted)">${a.phone}</span>
+      </div>
+      <div style="text-align:left">
+        <div style="font-family:var(--mono);font-size:.88em;font-weight:700;color:var(--red)">${a.date}</div>
+        <div style="font-family:var(--mono);font-size:.78em;color:var(--text-sec)">${a.time}</div>
+      </div>
+    </div>
   `).join('');
 })();
 
