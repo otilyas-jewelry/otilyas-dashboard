@@ -514,34 +514,34 @@ const DATA = {
       {
         name: 'בריאות', icon: '🏥', monthly: 790, yearly: 9480,
         policies: [
-          { company: 'כללית', name: 'מושלם פלטינום (שב"ן)', monthly: 104, status: 'active', ends: null },
-          { company: 'הראל', name: 'סיעודי (קבוצתי קופ"ח)', monthly: 128, status: 'active', policy: '300994208', ends: null },
-          { company: 'מגדל', name: 'מחלות קשות (אישי)', monthly: 127, status: 'warning', policy: '22945374', ends: '2026-06-01', note: 'מסתיים! לחדש' },
-          { company: 'הראל', name: 'שיניים (ותיקי אל על)', monthly: 170, status: 'active', policy: '507551298', ends: '2030-01', note: 'טלי+יובל+גיא' },
-          { company: 'הפניקס', name: 'שיניים (קבוצתי)', monthly: 75, status: 'duplicate', policy: '310351743397', ends: '2028-02', note: 'כפל ביטוח!' },
-          { company: 'הפניקס', name: 'חבילת כיסויים (קבוצתי)', monthly: 186, status: 'warning', policy: '2651100089', ends: '2026-09', note: 'מסתיים 9/2026' },
+          { company: 'כללית', name: 'מושלם פלטינום (שב"ן)', monthly: 104, status: 'active', ends: null, portal: 'https://www.clalit.co.il/he/Pages/default.aspx' },
+          { company: 'הראל', name: 'סיעודי (קבוצתי קופ"ח)', monthly: 128, status: 'active', policy: '300994208', ends: null, portal: 'https://www.harel-group.co.il/personal-info/my-harel/Pages/client-view.aspx' },
+          { company: 'מגדל', name: 'מחלות קשות (אישי)', monthly: 127, status: 'warning', policy: '22945374', ends: '2026-06-01', note: 'מסתיים! לחדש', portal: 'https://my.migdal.co.il/mymigdal/process/login' },
+          { company: 'הראל', name: 'שיניים (ותיקי אל על)', monthly: 170, status: 'active', policy: '507551298', ends: '2030-01', note: 'טלי+יובל+גיא', portal: 'https://www.harel-group.co.il/personal-info/my-harel/Pages/client-view.aspx' },
+          { company: 'הפניקס', name: 'שיניים (קבוצתי)', monthly: 75, status: 'duplicate', policy: '310351743397', ends: '2028-02', note: 'כפל ביטוח!', portal: 'https://my.fnx.co.il/' },
+          { company: 'הפניקס', name: 'חבילת כיסויים (קבוצתי)', monthly: 186, status: 'warning', policy: '2651100089', ends: '2026-09', note: 'מסתיים 9/2026', portal: 'https://my.fnx.co.il/' },
         ],
         alerts: ['כפל שיניים משולש: ₪387/חודש מ-3 מקורות!', 'כללית סמייל (₪142) נגמר יוני — לא לחדש']
       },
       {
         name: 'רכב', icon: '🚗', monthly: 639, yearly: 7667,
         policies: [
-          { company: 'AIG', name: 'מאזדה CX-5 (חובה+מקיף)', monthly: 366, status: 'active', policy: '1681471725', ends: '2026-11-30', note: 'עופר נהג עיקרי' },
-          { company: 'הראל', name: 'קיה סול 2011 (חובה+מקיף)', monthly: 273, status: 'active', policy: '8038115940', ends: '2026-08-31', note: 'טלי נהגת' },
+          { company: 'AIG', name: 'מאזדה CX-5 (חובה+מקיף)', monthly: 366, status: 'active', policy: '1681471725', ends: '2026-11-30', note: 'עופר נהג עיקרי', portal: 'https://services.aig.co.il/PersonalServices/#/policydetails/1681471725/send-doc' },
+          { company: 'הראל', name: 'קיה סול 2011 (חובה+מקיף)', monthly: 273, status: 'active', policy: '8038115940', ends: '2026-08-31', note: 'טלי נהגת', portal: 'https://www.harel-group.co.il/personal-info/my-harel/Pages/client-view.aspx' },
         ],
         alerts: ['תביעה אחת (01/2026): ₪10,628 — סגורה']
       },
       {
         name: 'חנות (שינקין)', icon: '🏪', monthly: 49, yearly: 586,
         policies: [
-          { company: 'הפניקס', name: 'מבנה — חנות שינקין', monthly: 49, status: 'danger', policy: '250961711664874', ends: '2026-03-31', note: 'מסתיים בעוד 9 ימים! לחדש דחוף!' },
+          { company: 'הפניקס', name: 'מבנה — חנות שינקין', monthly: 49, status: 'danger', policy: '250961711664874', ends: '2026-03-31', note: 'מסתיים בעוד 9 ימים! לחדש דחוף!', portal: 'https://my.fnx.co.il/' },
         ],
         alerts: ['מס רכוש (מלחמה): ₪493 חד פעמי שולם']
       },
       {
         name: 'עסק', icon: '💼', monthly: 111, yearly: 1331,
         policies: [
-          { company: 'כלל', name: 'מקיף לבית עסק', monthly: 111, status: 'active', policy: '644830746', ends: '2026-12-31', note: 'סוכנת: יעל לוי' },
+          { company: 'כלל', name: 'מקיף לבית עסק', monthly: 111, status: 'active', policy: '644830746', ends: '2026-12-31', note: 'סוכנת: יעל לוי 074-7505151', portal: 'https://www.clalins.co.il/personal/' },
         ],
         alerts: []
       },
@@ -1492,14 +1492,16 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
       else statusTag = '<span class="tag tag-active">פעיל</span>';
 
       const endsText = p.ends ? ` · עד ${p.ends}` : '';
+      const portalBtn = p.portal ? `<a href="${p.portal}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:3px;font-size:.72em;padding:3px 8px;border-radius:6px;background:var(--gold-pale);color:var(--gold);text-decoration:none;font-weight:600;white-space:nowrap" title="פורטל ${p.company}">🔗 כניסה</a>` : '';
       html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0ece8;font-size:.84em">
         <div>
           <div style="font-weight:600">${p.company} — ${p.name}</div>
-          <div style="font-size:.78em;color:var(--text-muted)">${p.note || ''}${endsText}</div>
+          <div style="font-size:.78em;color:var(--text-muted)">${p.note || ''}${endsText}${p.policy ? ' · פוליסה: '+p.policy : ''}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end">
           <span style="font-family:var(--font-mono);font-weight:600">₪${p.monthly}</span>
           ${statusTag}
+          ${portalBtn}
         </div>
       </div>`;
     });
