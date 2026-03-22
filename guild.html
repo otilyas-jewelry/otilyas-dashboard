@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>איגוד המעצבים — מאגר חברים וספקים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF7F4;
+    --card: #FFFFFF;
+    --text: #2C2A28;
+    --muted: #8A8480;
+    --border: #EDE9E4;
+    --rose: #F4B8C1;
+    --sky: #C8D8E8;
+    --sage: #B8D8C0;
+    --wheat: #F0D8B0;
+    --lavender: #D8C8E8;
+    --peach: #F0E0C8;
+    --teal: #C8E8E0;
+    --terra: #E8D0C8;
+    --amber: #F0D8B0;
+    --gold: #D4A843;
+    --gold-light: #FAF0DC;
+    --shadow: 0 2px 12px rgba(44,42,40,0.07);
+    --shadow-hover: 0 6px 24px rgba(44,42,40,0.13);
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: linear-gradient(135deg, #FAF7F4 0%, #F5F0EC 50%, #FAF3F8 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px 0;
+    backdrop-filter: blur(8px);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .logo-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .logo-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .logo-title span {
+    color: var(--gold);
+  }
+
+  .logo-subtitle {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 24px;
+    margin-right: auto;
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 6px 16px;
+    min-width: 70px;
+  }
+
+  .stat-num {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  /* ─── TABS ─── */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--border);
+    margin-top: 8px;
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    padding: 12px 28px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+
+  .tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    right: 0;
+    left: 0;
+    height: 2px;
+    background: var(--text);
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+  }
+
+  .tab-btn.active {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .tab-btn.active::after {
+    transform: scaleX(1);
+  }
+
+  .tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--border);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 1px 7px;
+    margin-right: 6px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .tab-btn.active .tab-count {
+    background: var(--text);
+    color: white;
+  }
+
+  /* ─── CONTROLS ─── */
+  .controls {
+    padding: 20px 32px 0;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+    max-width: 380px;
+  }
+
+  .search-icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 16px;
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 10px 42px 10px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 50px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 14px;
+    background: white;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .search-input:focus {
+    border-color: #C8B8D8;
+    box-shadow: 0 0 0 3px rgba(200,184,216,0.2);
+  }
+
+  .search-input::placeholder { color: var(--muted); }
+
+  /* ─── FILTER PILLS ─── */
+  .filters {
+    padding: 14px 32px 20px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+
+  .pill {
+    padding: 5px 14px;
+    border-radius: 50px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-family: 'Heebo', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .pill:hover {
+    border-color: #C8B8D8;
+    color: var(--text);
+  }
+
+  .pill.active {
+    background: var(--text);
+    border-color: var(--text);
+    color: white;
+    font-weight: 600;
+  }
+
+  /* ─── CONTENT AREA ─── */
+  .content {
+    padding: 24px 32px 48px;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ─── RESULT COUNT ─── */
+  .result-info {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+
+  /* ─── MEMBERS GRID ─── */
+  .members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  /* ─── MEMBER CARD ─── */
+  .member-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: fadeIn 0.35s ease both;
+  }
+
+  .member-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .card-top-strip {
+    height: 4px;
+    width: 100%;
+  }
+
+  .card-body {
+    padding: 18px 20px 14px;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .card-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .card-studio {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .card-name {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+
+  .card-details {
+    font-size: 12px;
+    color: #6A6460;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    font-weight: 300;
+  }
+
+  .card-address {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .card-address::before {
+    content: '📍';
+    font-size: 10px;
+  }
+
+  /* Card action links */
+  .card-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .action-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .action-link:hover {
+    background: var(--text);
+    color: white;
+    border-color: var(--text);
+  }
+
+  /* OTILYAS special */
+  .member-card.is-mine {
+    border: 2px solid var(--gold);
+    box-shadow: 0 4px 20px rgba(212,168,67,0.2);
+  }
+
+  .member-card.is-mine:hover {
+    box-shadow: 0 8px 32px rgba(212,168,67,0.3);
+  }
+
+  .mine-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--gold);
+    background: var(--gold-light);
+    border: 1px solid #E8C860;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 6px;
+  }
+
+  /* ─── SUPPLIERS LIST ─── */
+  .suppliers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .supplier-row {
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 4px 16px;
+    align-items: start;
+    transition: transform 0.15s, box-shadow 0.15s;
+    animation: fadeIn 0.3s ease both;
+  }
+
+  .supplier-row:hover {
+    transform: translateX(-2px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .sup-badge {
+    grid-row: 1;
+    grid-column: 1;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    align-self: center;
+    max-width: 130px;
+    text-align: center;
+  }
+
+  .sup-main {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .sup-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .sup-details {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .sup-contact {
+    grid-row: 1;
+    grid-column: 3;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    align-items: flex-end;
+  }
+
+  .sup-phone {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    direction: ltr;
+    white-space: nowrap;
+  }
+
+  .sup-recommender {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .sup-notes {
+    grid-row: 2;
+    grid-column: 1 / 4;
+    font-size: 12px;
+    color: #6A6460;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .star-icon {
+    color: var(--gold);
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .warning-icon {
+    color: #C0785A;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .notes-text.positive {
+    color: #5A7A60;
+    font-weight: 500;
+  }
+
+  .notes-text.negative {
+    color: #C0785A;
+    font-weight: 500;
+  }
+
+  /* Address in supplier */
+  .sup-address {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state .empty-icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 16px;
+    opacity: 0.4;
+  }
+
+  .empty-state p {
+    font-size: 16px;
+    font-weight: 300;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Stagger */
+  .member-card:nth-child(1) { animation-delay: 0.03s; }
+  .member-card:nth-child(2) { animation-delay: 0.06s; }
+  .member-card:nth-child(3) { animation-delay: 0.09s; }
+  .member-card:nth-child(4) { animation-delay: 0.12s; }
+  .member-card:nth-child(5) { animation-delay: 0.15s; }
+  .member-card:nth-child(6) { animation-delay: 0.18s; }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 640px) {
+    .header { padding: 16px 16px 0; }
+    .controls, .filters { padding-left: 16px; padding-right: 16px; }
+    .content { padding: 16px 16px 40px; }
+    .logo-title { font-size: 22px; }
+    .header-stats { gap: 10px; }
+    .stat-pill { padding: 5px 10px; min-width: 55px; }
+    .stat-num { font-size: 17px; }
+    .members-grid { grid-template-columns: 1fr; gap: 14px; }
+    .supplier-row { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto; }
+    .sup-badge { grid-row: 1; grid-column: 1; }
+    .sup-main { grid-row: 2; grid-column: 1 / 3; }
+    .sup-contact { grid-row: 1; grid-column: 2; }
+    .sup-notes { grid-row: 3; grid-column: 1 / 3; }
+    .tab-btn { padding: 10px 16px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="header">
+  <div class="header-top">
+    <div class="logo-block">
+      <div class="logo-title">איגוד <span>המעצבים</span></div>
+      <div class="logo-subtitle">Designers Guild — Members & Suppliers</div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-pill">
+        <span class="stat-num" id="stat-members">38</span>
+        <span class="stat-label">חברים</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-num" id="stat-suppliers">111</span>
+        <span class="stat-label">ספקים</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-num" id="stat-categories">—</span>
+        <span class="stat-label">קטגוריות</span>
+      </div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="members">
+      חברי האיגוד <span class="tab-count" id="count-members">38</span>
+    </button>
+    <button class="tab-btn" data-tab="suppliers">
+      מאגר ספקים <span class="tab-count" id="count-suppliers">111</span>
+    </button>
+  </div>
+</header>
+
+<!-- ═══ CONTROLS ═══ -->
+<div class="controls">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" id="search-input" placeholder="חיפוש לפי שם, סטודיו, קטגוריה...">
+  </div>
+</div>
+
+<!-- ═══ FILTER PILLS ═══ -->
+<div class="filters" id="filter-row">
+  <span class="filter-label">קטגוריה:</span>
+  <!-- Pills injected by JS -->
+</div>
+
+<!-- ═══ CONTENT ═══ -->
+<div class="content">
+
+  <!-- Members Tab -->
+  <div class="tab-panel active" id="panel-members">
+    <div class="result-info" id="result-members"></div>
+    <div class="members-grid" id="members-grid"></div>
+  </div>
+
+  <!-- Suppliers Tab -->
+  <div class="tab-panel" id="panel-suppliers">
+    <div class="result-info" id="result-suppliers"></div>
+    <div class="suppliers-list" id="suppliers-list"></div>
+  </div>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════ */
+const members = [
+  {studio:"סטודיו NACHSHON",name:"תומר ואדוה",category:"רהיטים",details:"סטודיו ישראלי לעיצוב ולייצור רהיטים - פריטים קטלוגיים ופריטים קאסטום מיד",phone:"054-2548691 / 054-7299288",email:"studio@nachshonstudio.com",address:'גלריה: ברזילי 12, ת"א',instagram:"nachshonstudio",website:"nachshonstudio.com"},
+  {studio:"סטודיו YARNATAK",name:"גאיה ומריה",category:"שטיחים וטקסטיל",details:"עיצוב וייצור שטיחים לקיר ולרצפה בעבודת יד, סדנאות",phone:"052-3757464",email:"yarnatak@gmail.com",address:"שרה 5, חיפה",instagram:"yarnatak",website:"yarnatak.com"},
+  {studio:"סטודיו גיא משעלי",name:"גיא ורחלי",category:"תאורה",details:"עיצוב וייצור גופי תאורה",phone:"054-5646260 / 054-4706449",email:"guymishalydesign@gmail.com",address:"ישראל מסלנט 35, תל אביב",instagram:"GUY MISHALY DESIGN STUDIO",website:"guymishaly.design"},
+  {studio:"סטודיו Perpel",name:"פרח פיטרסה",category:"קרמיקה והדפסות",details:"קרמיקה והדפסות תלת מימד",phone:"058-6660242",email:"studioperpel@gmail.com",address:"יצחק שדה 32",instagram:"studio.perpel",website:"studioperpel.com"},
+  {studio:"שים אדרי",name:"שים",category:"רהיטים ואביזרים",details:'מעצב רהיטים לבית טקסטיל',phone:"054-7334344",email:"Shimedri@gmail.com",address:'הרצל 49 ת"א',instagram:"Shim edri",website:"Shimedri.co.il"},
+  {studio:"סטודיו NoRo",name:"נעם רוזנברג",category:"קרמיקה",details:"פריטי קרמיקה דקורטיבית ושימושית, סדנאות",phone:"051-5791357",email:"Noamrosenberg@gmail.com",address:"היצירה 16, מתחם הבורסה, רמת גן",instagram:"noamrosenberg.art",website:"NoRo-art.com"},
+  {studio:"HERBET",name:"עידן הרבט",category:"אלמנטים אדריכליים",details:"Custom Made, תאורה וריהוט",phone:"052-6348948",email:"Idan@studioherbet.com",address:"היצירה 7, רחובות",instagram:"studio_herbet",website:"studioherbet.com"},
+  {studio:"HOS'A",name:"עידן הרבט",category:"ריהוט לבעלי חיים",details:"מותג Pet Living",phone:"052-6348948",email:"Info@hosa-design.com",address:"גולדה מאיר 3, נס ציונה",instagram:"hosa_petfurniture",website:"hosa-design.com"},
+  {studio:"סטודיו ZALKIND",name:"חן זלקינד",category:"תאורה וריהוט",details:"עיצוב ויצור ריהוט ותאורה",phone:"050-6998635",email:"Zalkindesign@gmail.com",address:"קבוצת יבנה",instagram:"chen_zalkind",website:"zalkind-design.com"},
+  {studio:"א.ב.ש חפצים / ABS Objects",name:"אבי בן שושן",category:"עיצוב קרמי",details:"עיצוב קרמי, אריחים, פרויקטים",phone:"050-8111699",email:"info@absobjects.com",address:"דרך בגין 14, תל אביב",instagram:"",website:"absobjects.com"},
+  {studio:"Rack and Tack",name:"מיה ויובל טל",category:"ריהוט ואביזרים",details:"סביבת המשרד",phone:"03-5604940 / 050-5544504",email:"maya@rackandtack.com",address:"שונצינו 2, תל אביב",instagram:"rackandtack",website:"rackandtack.com"},
+  {studio:"סטודיו Yarden Amir",name:"ירדן עמיר",category:"עיצוב רהיטים",details:"קראפט, חקר חומרים, פבריקציה דיגיטלית",phone:"052-4251299",email:"studio@yardenamir.com",address:"תל אביב",instagram:"yardenamirstudio",website:"yardenamir.com"},
+  {studio:"OTILYAS",name:"טלי שפריצר דלל",category:"תכשיטי אמנות לבישה",details:"תכשיטי אמנות לבישה",phone:"054-7829289",email:"otilyas@gmail.com",address:"שינקין 17 תל אביב",instagram:"otilyas_jewelry",website:"www.otilyas.com",isMine:true},
+  {studio:"סטודיו צ'חה",name:"איה ברין",category:"גופי תאורה",details:"RETAIL וקאסטום מייד",phone:"054-5596700",email:"aya@studiocheha.com",address:"המייסדים 10, מושב מזור",instagram:"studio_cheha",website:"studiocheha.co.il"},
+  {studio:"it's Glass!",name:"הודיה בן אליהו",category:"פיסול זכוכית",details:"צמחים, מסגרות, חרקים, מיניאטורות",phone:"052-4740899",email:"sshhooxx@walla.com",address:"דרך חברון 12, ירושלים",instagram:"hodaya_ben_eliahu",website:"hodaya-glass.com"},
+  {studio:"OME",name:"מיכל בר-נס",category:"עיצוב לבית",details:"רקמות קול, חיתוך לייזר, הדפסת 3D",phone:"054-4519804",email:"michalbarness@gmail.com",address:"עצמון 33 רמת השרון",instagram:"ome.michalbn",website:"ome-art.co.il"},
+  {studio:"נעה למדן הקיני",name:"נעה למדן הקיני",category:"פיסול זכוכית",details:"כלים ותאורה, סדרות קטנות או one of a kind",phone:"050-3929050",email:"noa.lamdan.hakeiny@gmail.com",address:"בזל, תל אביב",instagram:"noa_lamdan_glass",website:""},
+  {studio:"SILVER SPOON STUDIO",name:"אור דגן",category:"תכשיטים ואביזרים",details:"תכשיטי כסף, אבנים, נרות, פמוטים",phone:"052-8417678",email:"orr@orrdagan.com",address:"ברנר 2 תל אביב",instagram:"silver_spoon_studio",website:"silverspoonstudio.shop"},
+  {studio:"TAO studio",name:"טל יגודובסקי ועדי טובלי",category:"קרמיקה ותאורה",details:"עיצוב בטכניקת יציקות, גם לימוד",phone:"053-2100005",email:"Tao2022studio@gmail.com",address:'סמטת הש"ך 5, תל אביב',instagram:"tao_designstudio",website:""},
+  {studio:"יובל בוכשטב",name:"יובל בוכשטב",category:"עיצוב מעץ",details:"חריטה וגילוף, פריטים דקורטיביים ושימושיים",phone:"054-3514077",email:"1buchshtab@gmail.com",address:"דרך מול הים 4 כפר ויתקין",instagram:"yuval_buchshtab",website:""},
+  {studio:"VELVART סטודיו",name:"קרן ולורט",category:"תאורה ומוצרים לבית",details:"טקסטורות בהשראת הטבע",phone:"052-6655391",email:"info@velvartt.com",address:"פתח תקווה",instagram:"velvart_",website:"velvartt.com"},
+  {studio:"סטודיו Tone",name:"נטע אוסישקין וסתיו פרג'י",category:"הדפסת תלת מימד",details:"כלים מותאמים אישית בצבע/צורה/טקסטורה",phone:"054-8190197",email:"hello@studiotonedesigns.com",address:"תל אביב",instagram:"tone___studio",website:""},
+  {studio:"MELZER STUDIO",name:"יהונתן מלצר",category:"גופי תאורה",details:"הדפסה 3D מחומרים קרמיים",phone:"050-6208237",email:"Jonathan@melzerstudio.com",address:"מושב פתחיה",instagram:"melzer.studio",website:"melzerstudio.com"},
+  {studio:"יערה רבינוביץ",name:"יערה רבינוביץ",category:"עבודות קיר ותאורה",details:"שפה מינימליסטית, חימר ובזלת",phone:"054-5912922",email:"rabinovitch.yaara@gmail.com",address:"קיבוץ עמיר, הגליל העליון",instagram:"yaara.rabinovitch",website:"yaararabinovitch.com"},
+  {studio:"מור נוב",name:"מור נוב",category:"תכשיטים ואופנה",details:"כסף ופליז עם ציפויי זהב, עיצוב 3D",phone:"054-7939777",email:"mornovdesign@gmail.com",address:"רמת גן",instagram:"mornov.jewelry",website:"mornov.com"},
+  {studio:"AMOYO STUDIO",name:"אביב מור יוסף",category:"הדפסות תלת מימד",details:"גופי תאורה, אומנות קיר, פריטים דקורטיביים",phone:"054-6603253",email:"avivmy1026@gmail.com",address:"תל אביב",instagram:"amoyo.design",website:""},
+  {studio:"Studio Dafi Reis Doron",name:"דפי רייס דורון",category:"גופי תאורה",details:"גופי תאורה מזכוכית, לימוד פיתוח מוצרים",phone:"052-5582223",email:"info@dafireisdoron.com",address:"רחובות",instagram:"dafireisdoron_studio",website:"dafireisdoron.com"},
+  {studio:"סטודיו מבוע",name:"אפרת ואביעד",category:"גופי תאורה",details:"עיצוד וייצור גופי תאורה",phone:"054-7850880",email:"",address:"",instagram:"",website:""},
+  {studio:"studio reish",name:"רחלי שרפשטיין",category:"עיצוב אובייקטים",details:"עיצוב אובייקטים ומראות",phone:"052-6446080",email:"racheli@reish.co",address:"תל אביב",instagram:"studio_reish",website:"reish.co"},
+  {studio:"O peel",name:"יולי מרוז",category:"עיצוב מוצר",details:'פירוק חומרים "חיים" כמו קליפות פרי',phone:"050-9503976",email:"merozyuli@gmail.com",address:"תל אביב/עמק חפר",instagram:"yulimeroz",website:""},
+  {studio:"סטודיו MYO",name:"מור אמגר, יצחק וקנין, עמרי ניסים",category:"קרמיקה",details:"קראפט מסורתי + טכנולוגיות דיגיטליות",phone:"054-4490359",email:"moramgar2@gmail.com",address:"ירושלים",instagram:"myo.______",website:""},
+  {studio:"MORGEN",name:"מור גפן",category:"קרמיקה",details:"לחיצה לתבניות, טקסטורות ייחודיות",phone:"054-6218810",email:"morgeffen@gmail.com",address:"פרדס חנה",instagram:"morgen_design",website:"morgenceramics.com"},
+  {studio:"BARBURA",name:"ענבר זר",category:"אובייקטים קינטיים",details:"פליז וקרמיקה",phone:"052-3666021",email:"inbar.zer@gmail.com",address:"מושב ביצרון",instagram:"barbura.kinetic.art",website:"barburastudio.com"},
+  {studio:"EKA",name:"קטי קנבסקי פרוסו",category:"עיצוב משטחים",details:"site specific, הזמנה אישית, ייעוץ",phone:"054-4768347",email:"ketty@ekastudio.co",address:"תל אביב",instagram:"ekastudio.co",website:"ekastudio.co"},
+  {studio:"N Studio",name:"אן שטרית",category:"טקסטיל וגרפיקה",details:"אריגת שטיחים, מיתוג, באנרים",phone:"054-2298092",email:"Annshitrit@gmail.com",address:"תל אביב",instagram:"annshitrit",website:""},
+  {studio:"סטודיו GULveDEK",name:"גל קופליק",category:"עיצוב קרמי",details:"כלים שימושיים, יציקות, קורסים",phone:"054-3117097",email:"info@gulvedek.com",address:"מולדת 3, תל אביב",instagram:"gulvedek",website:"gulvedek.com"},
+  {studio:"Studio Samuel",name:"דביר סמואל",category:"קרמיקה",details:"כלי קרמיקה לבית בהדפסה תלת ממדית",phone:"050-3161527",email:"dvir@studiosamuel.design",address:"הנגב 8 תל אביב",instagram:"dvirsamuel",website:"studiosamuel.design"},
+  {studio:"סטודיו נוב / StudioKnob",name:"עדי עזר ויותם שפרוני",category:"תאורה ועיצוב אמנותי",details:"התאמה אישית, טכניקות ייחודיות, סדנאות",phone:"054-7916216",email:"knobmail@gmail.com",address:"מצפה 2, שוהם",instagram:"studio_knob",website:"studioknob.com"}
+];
+
+const suppliers = [
+  {category:"תכנון - ביצוע",details:"ליווי הפקת פרויקטים",name:"HERBET",address:"היצירה 7 רחובות",phone:"052-6348948",recommender:"עידן",notes:"עוזר ליזמים ומעצבים לתכנן ולהוציא לפועל"},
+  {category:"CNC",details:"עץ",name:"אורן",address:"",phone:"054-726-7126",recommender:"בעלות מלאכה",notes:""},
+  {category:"CNC",details:"עץ",name:"אביב, מעיין צבי",address:"",phone:"054-5900287",recommender:"איילת הוכהויזר",notes:""},
+  {category:"CNC",details:"עץ",name:"דיוק - מריה",address:"",phone:"052-8611356",recommender:"נטע טסלר",notes:""},
+  {category:"CNC",details:"עץ",name:"עידן",address:"בת ים",phone:"052-6348948",recommender:"",notes:""},
+  {category:"הדמיות",details:"תלת ממד, הדמיה",name:"עומרי לב",address:"",phone:"054-301-3073",recommender:"לב אברהם, אן שטרית",notes:"אן - ממליצה מאוד!"},
+  {category:"הדפסה / דפוס",details:"דפוס על מסקנטיפ",name:"pix",address:"",phone:"",recommender:"גיא משעלי",notes:""},
+  {category:"הדפסה / דפוס",details:"דפוס על מסקנטיפ",name:'ש.ארמה',address:"",phone:"",recommender:"מיי קאהן",notes:""},
+  {category:"הדפסה / דפוס",details:"הדפסה וחיתוך טקסט",name:"קובי רן",address:"בורסה, רמת גן",phone:"",recommender:"קרן ולורט",notes:"מקצועיים, מחירים גבוהים"},
+  {category:"הדפסה / דפוס",details:"הדפסה וחיתוך טקסט",name:"וואלי מדבקות",address:"",phone:"052-2594313",recommender:"דורית פרוביזור",notes:"מקצועיים ונעימים, מחירים סבבה"},
+  {category:"הדפסה / דפוס",details:"תלת ממד",name:"לירון מידני",address:"",phone:"054-5932544",recommender:"לירון מידני",notes:"מעצב תעשייתי בעצמו"},
+  {category:"התזת חול",details:"",name:"רון קנדל",address:"",phone:"052-256-3055",recommender:"דפי רייס דורון",notes:"לא זול"},
+  {category:"זכוכית",details:"זגג",name:"האחים לוי",address:'דרך יפו ת"א',phone:"",recommender:"כרם קמינסקי",notes:""},
+  {category:"זכוכית",details:"זגג",name:"גרין גלאס",address:"",phone:"",recommender:"כרם קמינסקי",notes:""},
+  {category:"זכוכית",details:"זגג",name:"שלמה מראות",address:'בר יוחאי, ת"א',phone:"052-340-6017",recommender:"דפי רייס דורון",notes:""},
+  {category:"חומרי אריזה",details:"קרטונים",name:"מרכז הקופסאות",address:"",phone:"",recommender:"נעמה בן משה",notes:""},
+  {category:"חומרי אריזה",details:"קרטונים",name:"אופיר ספקים",address:"כפר קאסם",phone:"",recommender:"דנה לוי",notes:""},
+  {category:"חומרי אריזה",details:"קרטונים",name:"אלירן קרטונים",address:"",phone:"054-487-4776",recommender:"מעיין בן יונה",notes:""},
+  {category:"חומרי אריזה",details:"קרטונים",name:'קרטוני בע"מ - גייטיק',address:"",phone:"08-9153395",recommender:"כרם קמינסקי, נטע טסלר",notes:"הזמנה אישית, לא ביוקר"},
+  {category:"חומרי אריזה",details:"קרטונים",name:"סטוקרטון",address:"",phone:"",recommender:"שאול כהן",notes:"מגוון עצום, לא מספקים מהיום להיום"},
+  {category:"חומרי אריזה",details:"שקיות",name:"ארז שקיות",address:"",phone:"",recommender:"נטע טסלר",notes:""},
+  {category:"חומרי אריזה",details:"קרטונים",name:"מורפק",address:"ראשון לציון",phone:"",recommender:"דנה לוי",notes:""},
+  {category:"חומרי אריזה",details:"קרטונים",name:'ש.ש אריזות',address:"חולון",phone:"052-5503466",recommender:"אסף וינברום",notes:"לא זולים אבל מייצרים לפי מידה"},
+  {category:"חומרי אריזה",details:"קרטונים",name:"כל קרטון",address:"הסנהדרין 34 יבנה",phone:"052-6000373",recommender:"כרם קמינסקי",notes:""},
+  {category:"חומרי אריזה",details:"קרטונים",name:"ענק הארזים",address:"יבנה",phone:"",recommender:"חן זלקינד",notes:"קטלוג מידות קבועות"},
+  {category:"חומרי אריזה",details:"קרטונים",name:"די סי פאק",address:"",phone:"",recommender:"דפי רייס דורון",notes:""},
+  {category:"חומרי אריזה",details:"קרטונים",name:"הכל למוביל",address:"",phone:"",recommender:"דפי רייס דורון",notes:""},
+  {category:"חומרי אריזה",details:"קרטונים",name:"גיל אריזות",address:"היצירה, רמת גן",phone:"",recommender:"אורי שיפרין",notes:""},
+  {category:"חומרי גלם",details:"רוכסנים",name:"סטאר רוכסנים",address:"",phone:"",recommender:"דורון בעלות מלאכה",notes:""},
+  {category:"חומרי גלם",details:"ברגים / בורג",name:"כל תבריג",address:"",phone:"",recommender:"תמרה אפרת",notes:""},
+  {category:"חומרי גלם",details:"ברגים / בורג",name:"מיר בית הבורג",address:"",phone:"",recommender:"ראק אנד טאק",notes:""},
+  {category:"חומרי גלם",details:"ברגים / בורג",name:"קינג בורג",address:"",phone:"",recommender:"ראק אנד טאק",notes:""},
+  {category:"חומרי גלם",details:"מגנט",name:"אור פרו",address:"הר ציון 104, תל אביב",phone:"",recommender:"רחלי סטודיו Reish",notes:""},
+  {category:"חומרי גלם",details:"מוטות אלומיניום",name:"ארד מתכות",address:"",phone:"",recommender:"גיא משעלי",notes:""},
+  {category:"חיתוך לייזר",details:"פליז",name:"לייזרקאט4",address:"",phone:"058-766-1110",recommender:"רחלי סטודיו Reish",notes:"נחמדים ומקצועיים"},
+  {category:"חיתוך לייזר",details:"פליז",name:"ג'ט לייזר",address:"",phone:"",recommender:"כרם קמינסקי",notes:""},
+  {category:"חיתוך לייזר",details:"מתכות + כיפוף",name:"יואל שרפמן",address:"ראשון לציון",phone:"052-243-9751",recommender:"איוטה, דולי רחמים",notes:"הדעות חלוקות, אבל עושה הכל"},
+  {category:"חיתוך לייזר",details:"מתכות",name:"דקוטק",address:"געש",phone:"054-577-7188",recommender:"חן תעוז, סטודיו נחשון",notes:"אור מקסים"},
+  {category:"חיתוך לייזר",details:"",name:"PAPER CUT",address:"",phone:"03-6007997",recommender:"שים אדרי",notes:"מעולים"},
+  {category:"חיתוך לייזר",details:"",name:"אלמוג פרספקס",address:"",phone:"054-8056657",recommender:"דפי רייס דורון",notes:""},
+  {category:"חיתוך לייזר",details:"",name:"עידן",address:"בת ים",phone:"052-6348948",recommender:"",notes:""},
+  {category:"ייעוץ עסקי",details:"",name:"טלי לבינגר",address:"",phone:"052-521-6216",recommender:"תמרה אפרת, נטע טסלר, מור תמיר",notes:""},
+  {category:"ייעוץ עסקי",details:"",name:"תמר פרידמן",address:"",phone:"",recommender:"מאי בר לבב, דפי רייס דורון",notes:""},
+  {category:"ייעוץ עסקי",details:"",name:"קרן ארזי",address:"",phone:"",recommender:"יערה נוסבוים",notes:""},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות בארץ",name:"גל שליחויות",address:"",phone:"050-555-9923",recommender:"דויד ODAKA",notes:'יותר יקרים (50 כולל מע"מ), אבל שירותיים'},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות בארץ",name:"אייל הובלות",address:"",phone:"052-877-7016",recommender:"אסף וינברום",notes:"יכול להעמיס קורות עץ, קרמיקה, בדים"},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות בארץ",name:"אברהם מסיקה",address:"",phone:"050-743-3936",recommender:"גיא מגידס",notes:"בנאדם נחמד"},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות בארץ",name:"עודד",address:"",phone:"052-5255758",recommender:"נחשון",notes:"מומלץ"},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות בארץ",name:"אייל הובלה",address:"",phone:"052-479-9801",recommender:"שאול כהן",notes:""},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות בארץ",name:"סרגיי",address:"",phone:"054-423-0753",recommender:"מעיין בן יונה",notes:""},
+  {category:"משלוח / שילוח / הובלה",details:"הובלה + הרכבה",name:"שי חדד",address:"",phone:"050-6578886",recommender:"דורון בעלות מלאכה",notes:"מומלץ מאוד"},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות קטנות - טוסטוס",name:"יוני שליחויות",address:"",phone:"050-7926639",recommender:"אמיר קמרי",notes:""},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות בארץ",name:"אייל טקסי",address:"",phone:"052-8777016",recommender:"אסף וינברום, נטע טסלר",notes:""},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות פנים ארצית",name:"GETPACKAGE",address:"",phone:"",recommender:"טלי שפריצר",notes:'ללא מינימום, 35 ש"ח בטווח 20 ק"מ'},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות פנים ארצית",name:"HFD",address:"",phone:"",recommender:"דנה לוי, ליאור שחר, סטודיו דווקא",notes:"ממש מליצה"},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות פנים ארצית",name:"מילר",address:"",phone:"",recommender:"סטודיו ירנטק, נעמי יוגב",notes:'2026: לא ממליצות! שירות לקוחות מזעזע. 37 ש"ח לכל הארץ'},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות פנים ארצית",name:"איזישיפ",address:"",phone:"",recommender:"דורית פרוביזור",notes:"ללא התחייבות, משלוח לנקודת חלופה או עד הבית"},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות בארץ",name:"קובי הובלות קטנות",address:"",phone:"050-72861680",recommender:"גילה בביץ",notes:"הובלות קטנות"},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות בארץ",name:"אלי",address:"",phone:"052-5255298",recommender:"IOTA",notes:"דרום הארץ"},
+  {category:"משלוח / שילוח / הובלה",details:"שליחויות בארץ",name:"אלכס",address:"",phone:"052-320-5128",recommender:"IOTA",notes:""},
+  {category:"משלוח / שילוח / הובלה",details:'אריזה ושילוח לחו"ל',name:"אורי עובדיה",address:"",phone:"050-5778282",recommender:"אדם שלוי",notes:"ארז כלים לשילוח"},
+  {category:"מתכות",details:"השחרת פליז",name:"אהרון",address:"",phone:"054-5727207",recommender:"דפי רייס דורון",notes:""},
+  {category:"מתכות",details:"ערגול",name:"יוסי ארט מפעלי מתכת",address:"",phone:"054-735-4128",recommender:"חן תעוז",notes:""},
+  {category:"מתכות",details:"עיבוד שבבי",name:"אלי שלמה",address:"",phone:"054-5312847",recommender:"דפי רייס דורון",notes:"מקצועי, לא זול"},
+  {category:"מתכות",details:"עיבוד שבבי",name:"יהודה",address:"",phone:"054-4762376",recommender:"אסף וינברום",notes:""},
+  {category:"מתכות",details:"עיבוד שבבי",name:"משה",address:"",phone:"050-7233224",recommender:"אסף וינברום",notes:""},
+  {category:"מתכות",details:"פחח כיפוף מתכות",name:"מעוז",address:"",phone:"054-5465522",recommender:"סטודיו נוב",notes:""},
+  {category:"נגר",details:"פודיום / פודיומים",name:"עומר צימרמן",address:"",phone:"050-644-0225",recommender:"אסף וינברום",notes:""},
+  {category:"סוכן ביטוח",details:"ביטוחים",name:"אורן איילון",address:"",phone:"054-773-0969",recommender:"יערה נוסבוים, נטע טסלר",notes:"שתיהן ממליצות"},
+  {category:"סוכן ביטוח",details:"ביטוחים",name:"אתי אייזנברג",address:"",phone:"050-533-4423",recommender:"טלי שפריצר",notes:"נתנה הצעה הוגנת"},
+  {category:"סוכן ביטוח",details:"ביטוחים",name:"סוכנות אבידן",address:"",phone:"052-524-7119",recommender:"טלי שפריצר",notes:""},
+  {category:'עו"ד',details:"מדיניות מוצרים",name:"רחלי",address:"",phone:"rachel@rzslaw.com",recommender:"מור נוב, יערה נוסבוים, שאול כהן",notes:"הכי טובה בפער לפי יערה"},
+  {category:'עו"ד',details:"מדיניות מוצרים",name:"זיו אנג'ל",address:"",phone:"054-446-6863",recommender:"חן תעוז",notes:"מומלץ בחום"},
+  {category:"עץ",details:"חיתוך לפי מידה",name:"דקור עץ",address:'שוקן, ת"א',phone:"",recommender:"ירדן עמיר",notes:""},
+  {category:"עץ",details:"חיתוך לפי מידה",name:"במידה",address:"",phone:"",recommender:"דורון בעלות מלאכה",notes:"חותכים לפי תוכניות"},
+  {category:"פרספקס",details:"קופסאות לתצוגה",name:"אקרילית",address:"",phone:"054-7733316",recommender:"שאול כהן",notes:""},
+  {category:"פרספקס",details:"קופסאות לתצוגה",name:"אורן עבודות פרספקס",address:"",phone:"055-5581545",recommender:"לב אברהם",notes:""},
+  {category:"פרספקס",details:"קופסאות לתצוגה",name:"גלי פלסט",address:"",phone:"",recommender:"גיא משעלי",notes:""},
+  {category:"צביעה",details:"צביעה בתנור",name:"חביב",address:"הזורע 7, חולון",phone:"050-455-6015",recommender:"אסף וינברום",notes:"עובד של חיים לוי שסגר"},
+  {category:"צביעה",details:"צביעה מתכות",name:"קובי ברטון",address:"",phone:"050-6933544",recommender:"סטודיו נוב",notes:"זול משמעותית"},
+  {category:"צביעה",details:"צביעה מתכות",name:"דניאל",address:"",phone:"03-6829965",recommender:"IOTA",notes:"עבודה טובה"},
+  {category:"צביעה",details:"צביעה מתכות",name:"יניב",address:"חולון",phone:"052-2673662",recommender:"גיא משעלי",notes:""},
+  {category:"צביעה",details:"צביעה מתכות",name:"מאיר",address:"הפלדה 13, בת ים",phone:"052-2539471",recommender:"חן תעוז",notes:""},
+  {category:"צביעה",details:"צביעה מתכות",name:"ששון",address:"הכישור 2, חולון",phone:"052-2584886",recommender:"ראק אנד טאק, חן זלקינד",notes:"צובע בכמויות קטנות, מגוון צבעים, לא זול אבל איכותי"},
+  {category:"צלם / צילומים",details:"צלמים",name:"איה",address:"",phone:"052-5323617",recommender:"ראק אנד טאק",notes:""},
+  {category:"צלם / צילומים",details:"צלמים",name:"מיידן גיל",address:"",phone:"050-2578517",recommender:"סטודיו נוב",notes:""},
+  {category:"צלם / צילומים",details:"צלמים",name:"איליה",address:"",phone:"050-3625669",recommender:"שים אדרי, חן זלקינד, דולי רחמים",notes:"עובד עם שים עשור, מעולה"},
+  {category:"צלם / צילומים",details:"צלמים",name:"נדב",address:"",phone:"054-5932866",recommender:"לינור ברנר",notes:"בתחילת הדרך, אלוף ונדיב"},
+  {category:"צלם / צילומים",details:"צלמים",name:"נדב גורן",address:"",phone:"050-8804704",recommender:"שאול כהן",notes:""},
+  {category:"צלם / צילומים",details:"צלמים",name:"יואב גורין",address:"",phone:"",recommender:"אריאל צוקרמן",notes:""},
+  {category:"צלם / צילומים",details:"צלמים",name:"דניאל אהרון",address:"",phone:"",recommender:"אביאור עמר",notes:""},
+  {category:"צלם / צילומים",details:"צלמים",name:"רועי מזרחי",address:"",phone:"054-791-6945",recommender:"תמר ברניצקי",notes:"הצלם שלי 12 שנים"},
+  {category:"צלם / צילומים",details:"צלמות",name:"אלי כהן",address:"",phone:"054-4334487",recommender:"דפי רייס דורון",notes:"צלמת מדהימה, גם טובה בקונספט"},
+  {category:"צלם / צילומים",details:"צלמים",name:"אלכס פרלמן",address:"",phone:"054-7267680",recommender:"יהונתן מלצר",notes:"מהקריות, נוסע לימי צילום, מומלץ בחום"},
+  {category:"רואה חשבון",details:'רו"ח',name:"אלעד",address:"",phone:"050-7755028",recommender:"נטע טסלר",notes:"נעים, אכפתי וסבלני"},
+  {category:"רואה חשבון",details:'רו"ח',name:"אריה גואטה",address:"",phone:"03-5755189",recommender:"נחשון",notes:"משרד גדול, מומלץ, זמינות גבוה"},
+  {category:"רואה חשבון",details:'רו"ח',name:"עדי שפירא",address:"",phone:"054-5403921",recommender:"חן תעוז",notes:"מחיר מטורף ושירות משעשע"},
+  {category:"רואה חשבון",details:'רו"ח',name:"סמדר מוזס קפלן",address:"",phone:"054-465-5431",recommender:"יערה נוסבוים",notes:""},
+  {category:"רואה חשבון",details:'רו"ח',name:"רפי יום טוב",address:"",phone:"052-679-2808",recommender:"להלי פרילינג",notes:"ממליצה מאוד"},
+  {category:"רואה חשבון",details:'רו"ח',name:"יניב קרן",address:"",phone:"050-549-7444",recommender:"מור נוב",notes:""},
+  {category:"רפד",details:"רפדייה",name:"צורי אושר",address:"",phone:"050-783454",recommender:"נעמה בן משה",notes:"ממש ממליצה"},
+  {category:"רפד",details:"רפדייה",name:"סרגיי בראון",address:"",phone:"052-5871023",recommender:"חן זלקינד",notes:"אחלה"},
+  {category:"רתך",details:"עבודות ריתוך",name:"גל חדד",address:"",phone:"054-832-1489",recommender:"מור MYO",notes:""},
+  {category:"רתך",details:"עבודות ריתוך",name:"מארק",address:"",phone:"050-768-3632",recommender:"אסף וינברום",notes:"אלוף"},
+  {category:"שיווק ופרסום",details:"רשתות חברתיות",name:"דנה",address:"",phone:"054-9944058",recommender:"דנה לוי",notes:"אלופת עולם"},
+  {category:"שיווק ופרסום",details:"רשתות חברתיות",name:"מישל בראל",address:"",phone:"050-471-7004",recommender:"תמר ברניצקי",notes:"ממליצה, גם בהקשר Shopify"},
+  {category:"שיווק ופרסום",details:"רשתות חברתיות",name:"נדב טלאור",address:"",phone:"050-883-9006",recommender:"עידן הרבט",notes:""},
+  {category:"תופרת",details:"בדים",name:"אירינה",address:"דיזינגוף 128, תל אביב",phone:"",recommender:"עדי אבידני",notes:""},
+  {category:"תלייה",details:"הנדימן, תלייה על קיר",name:"רומן",address:"",phone:"050-305-8686",recommender:"יערה רבינוביץ",notes:""},
+  {category:"תלייה",details:"הנדימן, תלייה על קיר",name:"שי פרי",address:"",phone:"054-454-1441",recommender:"גילי סטודיו דווקא, תמר ברניצקי",notes:"מעצב בעצמו, מקצוען ונעים"},
+  {category:"תלייה",details:"הנדימן, תלייה על קיר",name:"דין",address:"",phone:"052-631-3266",recommender:"דורית פרוביזור",notes:"מומלץ מאוד! תולה עבודות קיר"}
+];
+
+/* ═══════════════════════════════════════════
+   COLOR MAPS
+═══════════════════════════════════════════ */
+function getMemberColor(category) {
+  const c = category.toLowerCase();
+  if (c.includes('רהיטים') || c.includes('ריהוט')) return '#F4B8C1';
+  if (c.includes('תאורה')) return '#F0D8B0';
+  if (c.includes('קרמיקה') || c.includes('קרמי')) return '#B8D8C0';
+  if (c.includes('תכשיטים') || c.includes('תכשיטי')) return '#F0E0C8';
+  if (c.includes('זכוכית')) return '#C8E8E0';
+  if (c.includes('הדפסת תלת') || c.includes('הדפסות תלת')) return '#D8C8E8';
+  if (c.includes('שטיחים') || c.includes('טקסטיל')) return '#C8D8E8';
+  if (c.includes('עיצוב מוצר') || c.includes('עיצוב אובייקטים') || c.includes('עיצוב לבית') || c.includes('עיצוב מעץ') || c.includes('עיצוב משטחים')) return '#E8D0C8';
+  return '#D8C8E8';
+}
+
+const supplierColorMap = {};
+const supPalette = ['#F4B8C1','#C8D8E8','#B8D8C0','#F0D8B0','#D8C8E8','#F0E0C8','#C8E8E0','#E8D0C8','#C8E0D8','#E8C8D8','#D0E8C8','#C8D0E8'];
+function getSupplierColor(category) {
+  if (!supplierColorMap[category]) {
+    const keys = Object.keys(supplierColorMap);
+    supplierColorMap[category] = supPalette[keys.length % supPalette.length];
+  }
+  return supplierColorMap[category];
+}
+
+/* Pre-seed supplier colors in consistent order */
+[...new Set(suppliers.map(s => s.category))].forEach(cat => getSupplierColor(cat));
+
+/* ═══════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════ */
+let activeTab = 'members';
+let activeCategory = 'all';
+let searchQuery = '';
+
+/* ═══════════════════════════════════════════
+   RENDER MEMBERS
+═══════════════════════════════════════════ */
+function renderMembers() {
+  const grid = document.getElementById('members-grid');
+  const query = searchQuery.toLowerCase();
+  let filtered = members.filter(m => {
+    const matchSearch = !query ||
+      m.studio.toLowerCase().includes(query) ||
+      m.name.toLowerCase().includes(query) ||
+      m.category.toLowerCase().includes(query) ||
+      m.details.toLowerCase().includes(query) ||
+      (m.address && m.address.toLowerCase().includes(query));
+    const matchCat = activeCategory === 'all' || m.category === activeCategory;
+    return matchSearch && matchCat;
+  });
+
+  document.getElementById('result-members').textContent =
+    filtered.length === members.length
+      ? `מציג ${filtered.length} חברים`
+      : `מציג ${filtered.length} מתוך ${members.length} חברים`;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><span class="empty-icon">🔍</span><p>לא נמצאו תוצאות</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(m => {
+    const color = getMemberColor(m.category);
+    const links = [];
+    if (m.phone) links.push(`<a href="tel:${m.phone.split('/')[0].trim()}" class="action-link">📞 ${m.phone}</a>`);
+    if (m.email) links.push(`<a href="mailto:${m.email}" class="action-link">✉️ מייל</a>`);
+    if (m.instagram) links.push(`<a href="https://instagram.com/${m.instagram}" target="_blank" class="action-link">📸 אינסטגרם</a>`);
+    if (m.website) links.push(`<a href="https://${m.website.replace(/^https?:\/\//,'')}" target="_blank" class="action-link">🌐 אתר</a>`);
+
+    return `
+    <div class="member-card${m.isMine ? ' is-mine' : ''}">
+      <div class="card-top-strip" style="background:${color}"></div>
+      <div class="card-body">
+        ${m.isMine ? '<div class="mine-badge">✨ OTILYAS — שלי</div>' : ''}
+        <div class="card-header">
+          <div>
+            <div class="card-studio">${m.studio}</div>
+          </div>
+          <div class="card-badge" style="background:${color}20;color:${shadeColor(color,-60)}">${m.category}</div>
+        </div>
+        <div class="card-name">${m.name}</div>
+        <div class="card-details">${m.details}</div>
+        ${m.address ? `<div class="card-address">${m.address}</div>` : ''}
+        <div class="card-actions">${links.join('') || '<span style="font-size:12px;color:var(--muted)">אין פרטי קשר</span>'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════
+   RENDER SUPPLIERS
+═══════════════════════════════════════════ */
+function isHighlyRecommended(notes) {
+  const positiveWords = ['מאוד','מעולה','אלוף','מומלץ מאוד','מליצה','ממש ממליצ','ממליצה מאוד','ממליצות','הכי טובה','מדהימ','מקסים'];
+  return positiveWords.some(w => notes.includes(w));
+}
+
+function isNegative(notes) {
+  const negWords = ['לא ממליצ','לא זול','מזעזע','מחיר מטורף'];
+  return negWords.some(w => notes.includes(w));
+}
+
+function renderSuppliers() {
+  const list = document.getElementById('suppliers-list');
+  const query = searchQuery.toLowerCase();
+  let filtered = suppliers.filter(s => {
+    const matchSearch = !query ||
+      s.name.toLowerCase().includes(query) ||
+      s.category.toLowerCase().includes(query) ||
+      s.details.toLowerCase().includes(query) ||
+      (s.recommender && s.recommender.toLowerCase().includes(query)) ||
+      (s.notes && s.notes.toLowerCase().includes(query)) ||
+      (s.address && s.address.toLowerCase().includes(query));
+    const matchCat = activeCategory === 'all' || s.category === activeCategory;
+    return matchSearch && matchCat;
+  });
+
+  document.getElementById('result-suppliers').textContent =
+    filtered.length === suppliers.length
+      ? `מציג ${filtered.length} ספקים`
+      : `מציג ${filtered.length} מתוך ${suppliers.length} ספקים`;
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state"><span class="empty-icon">🔍</span><p>לא נמצאו תוצאות</p></div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map((s, i) => {
+    const color = getSupplierColor(s.category);
+    const notesHtml = s.notes ? (() => {
+      const positive = isHighlyRecommended(s.notes);
+      const negative = isNegative(s.notes);
+      const icon = positive ? '<span class="star-icon">★</span>' : negative ? '<span class="warning-icon">⚠</span>' : '<span style="color:var(--muted);font-size:11px">→</span>';
+      const cls = positive ? 'positive' : negative ? 'negative' : '';
+      return `<div class="sup-notes">${icon}<span class="notes-text ${cls}">${s.notes}</span></div>`;
+    })() : '';
+
+    const detailsFull = [s.details, s.address].filter(Boolean).join(' · ');
+
+    return `
+    <div class="supplier-row" style="animation-delay:${Math.min(i*0.015,0.3)}s">
+      <div class="sup-badge" style="background:${color}30;color:${shadeColor(color,-70)}">${s.category}</div>
+      <div class="sup-main">
+        <div class="sup-name">${s.name}</div>
+        ${detailsFull ? `<div class="sup-details">${detailsFull}</div>` : ''}
+      </div>
+      <div class="sup-contact">
+        ${s.phone ? `<div class="sup-phone" dir="ltr">${s.phone}</div>` : ''}
+        ${s.recommender ? `<div class="sup-recommender">המליץ: ${s.recommender}</div>` : ''}
+      </div>
+      ${notesHtml}
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════
+   FILTER PILLS BUILDER
+═══════════════════════════════════════════ */
+function buildFilters() {
+  const filterRow = document.getElementById('filter-row');
+  const labelEl = filterRow.querySelector('.filter-label');
+
+  let categories;
+  if (activeTab === 'members') {
+    categories = [...new Set(members.map(m => m.category))].sort((a,b) => a.localeCompare(b,'he'));
+  } else {
+    categories = [...new Set(suppliers.map(s => s.category))].sort((a,b) => a.localeCompare(b,'he'));
+  }
+
+  // Clear old pills
+  filterRow.innerHTML = '';
+  filterRow.appendChild(labelEl);
+
+  // All pill
+  const allPill = document.createElement('button');
+  allPill.className = 'pill' + (activeCategory === 'all' ? ' active' : '');
+  allPill.textContent = 'הכל';
+  allPill.addEventListener('click', () => { activeCategory = 'all'; buildFilters(); renderCurrent(); });
+  filterRow.appendChild(allPill);
+
+  categories.forEach(cat => {
+    const pill = document.createElement('button');
+    pill.className = 'pill' + (activeCategory === cat ? ' active' : '');
+    pill.textContent = cat;
+    pill.addEventListener('click', () => { activeCategory = cat; buildFilters(); renderCurrent(); });
+    filterRow.appendChild(pill);
+  });
+}
+
+function renderCurrent() {
+  if (activeTab === 'members') renderMembers();
+  else renderSuppliers();
+}
+
+/* ═══════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    activeTab = btn.dataset.tab;
+    document.getElementById('panel-' + activeTab).classList.add('active');
+    activeCategory = 'all';
+    buildFilters();
+    renderCurrent();
+  });
+});
+
+/* ═══════════════════════════════════════════
+   SEARCH
+═══════════════════════════════════════════ */
+let searchTimer;
+document.getElementById('search-input').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    searchQuery = e.target.value;
+    renderCurrent();
+  }, 180);
+});
+
+/* ═══════════════════════════════════════════
+   UTILITY: shade a hex color
+═══════════════════════════════════════════ */
+function shadeColor(hex, amt) {
+  let r = parseInt(hex.slice(1,3),16);
+  let g = parseInt(hex.slice(3,5),16);
+  let b = parseInt(hex.slice(5,7),16);
+  r = Math.max(0, Math.min(255, r + amt));
+  g = Math.max(0, Math.min(255, g + amt));
+  b = Math.max(0, Math.min(255, b + amt));
+  return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
+}
+
+/* ═══════════════════════════════════════════
+   STATS
+═══════════════════════════════════════════ */
+function updateStats() {
+  const memberCats = new Set(members.map(m => m.category)).size;
+  const supCats = new Set(suppliers.map(s => s.category)).size;
+  document.getElementById('stat-members').textContent = members.length;
+  document.getElementById('stat-suppliers').textContent = suppliers.length;
+  document.getElementById('stat-categories').textContent = memberCats + supCats;
+  document.getElementById('count-members').textContent = members.length;
+  document.getElementById('count-suppliers').textContent = suppliers.length;
+}
+
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
+updateStats();
+buildFilters();
+renderMembers();
+</script>
+</body>
+</html>
