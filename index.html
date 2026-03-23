@@ -408,24 +408,26 @@ const DATA = {
       overLimitNote: 'חריגה 19-23/03: ₪1,147 מעל מסגרת. עלות: ₪5 אגרה + ~₪2.50 ריבית = ~₪7.50 סה"כ. הוסדר 23/03.' },
   },
 
-  // Mid-month bank snapshot (20/03/2026)
+  // Bank snapshot — UPDATED 23/03/2026 (from app screenshots)
   bankSnapshot: {
-    date: '20/03/2026',
+    date: '23/03/2026',
     business: {
-      balance: 742,
-      withdrawable: 10742,
-      pendingOut: 3425,
-      pendingIn: 827,
-      projected: -1856,
+      balance: 2342,        // actual from app (בינלאומי 095-268372)
+      withdrawable: 12342,  // balance + ₪10,000 credit line
+      pendingOut: 3425,     // MAX credit card charge ~April 1
+      pendingIn: 5406,      // WIX ₪2,695 + MASKIT ₪1,240 + Museum ₪427 + MUZA ₪1,044
+      projected: 1323,      // 2342 + 5406 - 3425 - 1000 (ops) - 2000 (transfer gap)
     },
     personal: {
-      balance: -16147,
+      balance: -9152,       // actual from app
       limit: 15000,
-      overLimit: 1147,
-      pendingIn: 7000,
+      overLimit: 0,         // resolved 23/03 ✅
+      pendingCards: 5291,   // ⚠️ ACTUAL accumulated March cards (Diners+Visa) as of 23/03
+      customerPending: 3800,// ⏳ לקוחה — טרם הושלם
       oferApril: 10000,
-      cardsApril: 3288,
-      projected: [-9147, 853, -2435],
+      cardsApril: 5870,     // updated: ₪5,291 + ~₪580 (8 days remaining) = ~₪5,870
+      projected: [-9952, -11363, -1363, 2437, 2037, -2663, -2548, 4452],
+      targetGap: -5548,     // GAP to ₪10K target (₪10K - ₪4,452 projected end April)
     },
     recentTransactions: [
       { date: '23/03', desc: 'הפקדה — הסדרת חריגה', amount: 7000, type: 'in' },
@@ -439,30 +441,33 @@ const DATA = {
       { date: '02/03', desc: 'חיוב ויזה 8953', amount: -1172, type: 'out' },
       { date: '01/03', desc: 'עמותת ותיק', amount: -338, type: 'out' },
     ],
-    // Cash flow forecast — Discount (personal)
+    // Cash flow forecast — Discount (personal) — UPDATED 23/03/2026
     forecastPersonal: [
-      { date: '20/03', label: 'יתרה נוכחית', amount: 0, balance: -16147, icon: '📍' },
-      { date: '23/03', label: 'העברה שלך', amount: 7000, balance: -9147, icon: '💰' },
-      { date: '31/03', label: 'הוצאות שוטפות (שאר מרץ)', amount: -800, balance: -9947, icon: '🛒' },
-      { date: '01/04', label: 'עמותת ותיק', amount: -239, balance: -10186, icon: '📄' },
-      { date: '02/04', label: 'חיוב ויזה 8953', amount: -1172, balance: -11358, icon: '💳' },
-      { date: '04/04', label: 'העברת עופר', amount: 10000, balance: -1358, icon: '💚' },
-      { date: '10/04', label: 'הוראות קבע (ביטוח+בריאות)', amount: -400, balance: -1758, icon: '🏥' },
-      { date: '15/04', label: 'חיוב דיינרס 0112 (אחרון!)', amount: -3288, balance: -5046, icon: '💳' },
-      { date: '16/04', label: 'ביטוח לאומי ילדים', amount: 115, balance: -4931, icon: '👶' },
-      { date: '23/04', label: 'העברה שלך', amount: 7000, balance: 2069, icon: '💰' },
+      { date: '23/03', label: 'יתרה נוכחית (בפועל)', amount: 0, balance: -9152, icon: '📍' },
+      { date: '31/03', label: 'הוצאות שוטפות (שאר מרץ)', amount: -800, balance: -9952, icon: '🛒' },
+      { date: '01/04', label: 'עמותת ותיק', amount: -239, balance: -10191, icon: '📄' },
+      { date: '02/04', label: 'חיוב ויזה 8953 (מרץ)', amount: -1172, balance: -11363, icon: '💳' },
+      { date: '04/04', label: 'העברת עופר', amount: 10000, balance: -1363, icon: '💚' },
+      { date: '07/04', label: 'תשלום לקוחה ₪3,800 ⏳ (טרם הושלם!)', amount: 3800, balance: 2437, icon: '⏳' },
+      { date: '10/04', label: 'הוראות קבע (ביטוח+בריאות)', amount: -400, balance: 2037, icon: '🏥' },
+      { date: '15/04', label: '⚠️ חיוב דיינרס מרץ (מעודכן)', amount: -4700, balance: -2663, icon: '💳' },
+      { date: '16/04', label: 'ביטוח לאומי ילדים', amount: 115, balance: -2548, icon: '👶' },
+      { date: '23/04', label: 'העברה שלך (עסקי)', amount: 7000, balance: 4452, icon: '💰' },
+      { date: '30/04', label: '🎯 יעד: ₪10K | פער: -₪5,548', amount: 0, balance: 4452, icon: '🎯' },
     ],
-    // Cash flow forecast — International (business)
+    // Cash flow forecast — International (business) — UPDATED 23/03/2026
     forecastBusiness: [
-      { date: '20/03', label: 'יתרה נוכחית', amount: 0, balance: 742, icon: '📍' },
-      { date: '25/03', label: 'סליקת הייפ (הערכה)', amount: 1500, balance: 2242, icon: '💳' },
-      { date: '31/03', label: 'הוצאות שוטפות עסקי', amount: -800, balance: 1442, icon: '🏪' },
-      { date: '01/04', label: 'חיוב MAX (שקלים)', amount: -3425, balance: -1983, icon: '💳' },
-      { date: '01/04', label: 'חיובי USD מיידיים (הערכה)', amount: -820, balance: -2803, icon: '💵' },
-      { date: '05/04', label: 'סליקת הייפ אפריל', amount: 1500, balance: -1303, icon: '💳' },
-      { date: '10/04', label: 'ארנונה + חשמל', amount: -676, balance: -1979, icon: '🏪' },
-      { date: '15/04', label: 'רו"ח + ביט"ל + הייפ', amount: -882, balance: -2861, icon: '📄' },
-      { date: '25/04', label: 'סליקת הייפ', amount: 1500, balance: -1361, icon: '💳' },
+      { date: '23/03', label: 'יתרה נוכחית (בפועל)', amount: 0, balance: 2342, icon: '📍' },
+      { date: '27/03', label: 'WIX מרץ (ממתין)', amount: 2695, balance: 5037, icon: '⏳' },
+      { date: '28/03', label: 'MASKIT + מוזיאון (ממתין)', amount: 1667, balance: 6704, icon: '⏳' },
+      { date: '31/03', label: 'הוצאות שוטפות עסקי', amount: -800, balance: 5904, icon: '🏪' },
+      { date: '01/04', label: 'חיוב MAX (שקלים)', amount: -3425, balance: 2479, icon: '💳' },
+      { date: '01/04', label: 'חיובי USD (~$224)', amount: -820, balance: 1659, icon: '💵' },
+      { date: '05/04', label: 'לקוחה ₪3,800 ⏳ (אם לחשבון עסקי)', amount: 3800, balance: 5459, icon: '⏳' },
+      { date: '10/04', label: 'ארנונה + חשמל', amount: -676, balance: 4783, icon: '🏪' },
+      { date: '15/04', label: 'רו"ח + ביט"ל + הייפ', amount: -882, balance: 3901, icon: '📄' },
+      { date: '20/04', label: 'MUZA ₪1,044 (אם ישולם)', amount: 1044, balance: 4945, icon: '⏳' },
+      { date: '23/04', label: 'העברה לפרטי', amount: -7000, balance: -2055, icon: '💸' },
     ],
   },
 
@@ -590,6 +595,9 @@ const DATA = {
       { task: 'ברכת הזהב: בפעם הבאה MAX 1116!', priority: 'medium' },
       { task: 'הסכם בנק דיסקונט — ריבית חריגה: 19.75%/שנה מעל מסגרת. עלות מרץ: ₪7.50 (₪5 אגרה + ₪2.50 ריבית) ✅', priority: 'done' },
       { task: 'חריגת מסגרת דיסקונט מרץ — הוצאה לא צפויה ₪7.50 (תחויב בחיוב הבא)', priority: 'info' },
+      { task: '⚠️ כרטיסי אשראי מרץ: ₪5,291 כבר צבורים (23/03) — צפי סופי ~₪5,870. ההערכה הקודמת ₪3,288 הייתה נמוכה ב-₪2,600!', priority: 'critical' },
+      { task: '🎯 פער ל-10K: -₪5,548. צפי אפריל: +₪4,452 (עם לקוחה ₪3,800). ללא לקוחה: -₪1,096', priority: 'high' },
+      { task: 'בנק דיסקונט: הצעת הלוואה עד ₪19,000 (פופ-אפ באפליקציה). לא מומלץ לנקות — לבדוק רק אם אין ברירה', priority: 'info' },
     ],
     'ביטוחים (שירה)': [
       { task: 'הפניקס מבנה מסתיים 31/03! לחדש דחוף!', priority: 'critical' },
