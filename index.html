@@ -268,7 +268,7 @@ tr:hover { background: var(--bg-hover); }
      ═══════════════════════════════════════════ -->
 <script>
 const DATA = {
-  lastUpdated: '2026-03-22',
+  lastUpdated: '2026-03-23',
   usdRate: 3.65,
 
   // Income by channel
@@ -403,7 +403,9 @@ const DATA = {
   // Bank accounts
   banks: {
     business: { name: 'בינלאומי', branch: 105, account: '...31', limit: 10000, card: 'MAX 1116' },
-    personal: { name: 'דיסקונט', branch: 100, account: '...0739', limit: 56000, used: 12866, validUntil: '30/06/2026' },
+    personal: { name: 'דיסקונט', branch: 100, account: '...0739', limit: 15000, used: 12866, validUntil: '30/06/2026',
+      interestRates: { upTo7500: '9.8%', from7500: '10.6%', overLimit: '19.75%' },
+      overLimitNote: 'חריגה 19-23/03: ₪1,147 מעל מסגרת. עלות: ₪5 אגרה + ~₪2.50 ריבית = ~₪7.50 סה"כ. הוסדר 23/03.' },
   },
 
   // Mid-month bank snapshot (20/03/2026)
@@ -426,6 +428,8 @@ const DATA = {
       projected: [-9147, 853, -2435],
     },
     recentTransactions: [
+      { date: '23/03', desc: 'הפקדה — הסדרת חריגה', amount: 7000, type: 'in' },
+      { date: '20/03', desc: 'אגרת התראה חריגת מסגרת', amount: -5, type: 'out' },
       { date: '16/03', desc: 'ביטוח לאומי ילדים', amount: 115, type: 'in' },
       { date: '15/03', desc: 'חיוב דיינרס 0112', amount: -13708, type: 'out' },
       { date: '15/03', desc: 'הפקדה לפיקדון', amount: -100, type: 'out' },
@@ -534,7 +538,7 @@ const DATA = {
       {
         name: 'חנות (שינקין)', icon: '🏪', monthly: 49, yearly: 586,
         policies: [
-          { company: 'הפניקס', name: 'מבנה — חנות שינקין', monthly: 49, status: 'danger', policy: '250961711664874', ends: '2026-03-31', note: 'מסתיים בעוד 9 ימים! לחדש דחוף!', portal: 'https://my.fnx.co.il/' },
+          { company: 'הפניקס', name: 'מבנה — חנות שינקין', monthly: 49, status: 'danger', policy: '250961711664874', ends: '2026-03-31', note: 'מסתיים בעוד 8 ימים! לחדש דחוף! יעל לוי: 074-7505151', portal: 'https://my.fnx.co.il/' },
         ],
         alerts: ['מס רכוש (מלחמה): ₪493 חד פעמי שולם']
       },
@@ -575,7 +579,7 @@ const DATA = {
   openTasks: {
     'פיננסי (ריף)': [
       { task: 'לברר העברות 99400 — ₪8,163 ב-2 חודשים', priority: 'medium' },
-      { task: 'MUZA חוב 2025 ₪1,044 — חשבונית נשלחה 15/03. ממתין לתשלום (דדליין MUZA: 22/03)', priority: 'high' },
+      { task: 'MUZA חוב 2025 ₪1,044 — דדליין עיבוד עבר (22/03)! לעקוב עם אולגה: 03-7455727', priority: 'critical' },
       { task: 'דמי כרטיס ₪19.80 — לבטל', priority: 'high' },
       { task: 'דוח רו"ח עמית ינואר+פברואר — ממתין מטלי', priority: 'medium' },
       { task: 'לבטל GPT4 ($20/חודש)', priority: 'high' },
@@ -584,7 +588,8 @@ const DATA = {
       { task: 'לבטל Wolt+ (עד 16/04)', priority: 'medium' },
       { task: 'Google Workspace — לבדוק אם באמת צריך', priority: 'low' },
       { task: 'ברכת הזהב: בפעם הבאה MAX 1116!', priority: 'medium' },
-      { task: 'להראות הסכם בנק — ריבית על חריגה', priority: 'medium' },
+      { task: 'הסכם בנק דיסקונט — ריבית חריגה: 19.75%/שנה מעל מסגרת. עלות מרץ: ₪7.50 (₪5 אגרה + ₪2.50 ריבית) ✅', priority: 'done' },
+      { task: 'חריגת מסגרת דיסקונט מרץ — הוצאה לא צפויה ₪7.50 (תחויב בחיוב הבא)', priority: 'info' },
     ],
     'ביטוחים (שירה)': [
       { task: 'הפניקס מבנה מסתיים 31/03! לחדש דחוף!', priority: 'critical' },
