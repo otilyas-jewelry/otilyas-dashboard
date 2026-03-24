@@ -708,6 +708,7 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
   <a href="#cards" class="nav-pill">כרטיסים</a>
   <a href="#expenses" class="nav-pill">הוצאות</a>
   <a href="#subs" class="nav-pill">מנויים</a>
+  <a href="#emails" class="nav-pill">📧 מיילים</a>
   <a href="#savings" class="nav-pill">חיסכון</a>
   <a href="#insurance" class="nav-pill">ביטוחים</a>
   <a href="#tasks" class="nav-pill">משימות</a>
@@ -915,6 +916,77 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
   <div id="tabStanding" class="tab-content"></div>
   <div id="tabPending" class="tab-content"></div>
   <div id="tabCancelled" class="tab-content"></div>
+</section>
+
+<!-- Email Senders Reference -->
+<section id="emails" class="section reveal">
+  <h2>📧 שולחים חוזרים — מזהה מהיר <span class="updated">עדכון: 24/03/2026</span></h2>
+  <p style="font-size:.82em;color:var(--text-secondary);margin-bottom:16px">רשימת שולחים קבועים לזיהוי מהיר בעיבוד חשבוניות חודשי</p>
+
+  <!-- הוצאות -->
+  <div style="margin-bottom:20px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span style="background:var(--red-bg);color:var(--red);font-size:.75em;font-weight:700;padding:3px 10px;border-radius:20px">הוצאות</span>
+      <span style="font-size:.82em;color:var(--text-secondary)">חשבוניות PDF — לשמור ב-Drive</span>
+    </div>
+    <table>
+      <thead><tr>
+        <th>שולח</th>
+        <th>ספק</th>
+        <th>קטגוריה</th>
+        <th class="num">סכום משוער</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="font-family:var(--font-mono);font-size:.78em;direction:ltr;text-align:right">noreplys@iec.co.il</td><td>חברת חשמל</td><td>הוצאה קבועה</td><td class="num">₪200/חודש</td></tr>
+        <tr><td style="font-family:var(--font-mono);font-size:.78em;direction:ltr;text-align:right">noreply@ezcount.co.il</td><td>הייפ / EZcount</td><td>תוכנת קופה</td><td class="num">לפי חשבונית</td></tr>
+        <tr><td style="font-family:var(--font-mono);font-size:.78em;direction:ltr;text-align:right">microsoft-noreply@microsoft.com</td><td>Microsoft 365</td><td>מנוי שנתי</td><td class="num">₪430/שנה</td></tr>
+        <tr><td style="font-family:var(--font-mono);font-size:.78em;direction:ltr;text-align:right">No_Reply@suny-cc.co.il</td><td>סאני (Samsung)</td><td>אחריות סלולאר</td><td class="num">₪69.80/חודש</td></tr>
+        <tr><td style="font-family:var(--font-mono);font-size:.78em;direction:ltr;text-align:right">Caspit-invoice@caspitgroup.co.il</td><td>כספיט</td><td>תוכנת מכשיר סליקה</td><td class="num">₪106.40/חודש</td></tr>
+        <tr><td style="font-family:var(--font-mono);font-size:.78em;direction:ltr;text-align:right">billing@egg-app.co</td><td>EGG</td><td>נסיעות תחבורה ציבורית</td><td class="num">~₪242/חודש</td></tr>
+        <tr><td style="font-family:var(--font-mono);font-size:.78em;direction:ltr;text-align:right">no-reply@account.canva.com</td><td>Canva</td><td>מנוי קבוע</td><td class="num">$30/חודש</td></tr>
+        <tr><td style="font-family:var(--font-mono);font-size:.78em;direction:ltr;text-align:right">billing@shopify.com</td><td>Shopify</td><td>מנוי קבוע</td><td class="num">$43.95/חודש</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- הכנסות -->
+  <div style="margin-bottom:20px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span style="background:var(--green-bg);color:var(--green);font-size:.75em;font-weight:700;padding:3px 10px;border-radius:20px">הכנסות</span>
+      <span style="font-size:.82em;color:var(--text-secondary)">לרשום בקובץ הכנסות החודש</span>
+    </div>
+    <table>
+      <thead><tr>
+        <th>שולח</th>
+        <th>ערוץ</th>
+        <th>פעולה נדרשת</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="font-family:var(--font-mono);font-size:.78em;direction:ltr;text-align:right">purchase@imjshops.com</td><td>מוזיאון ישראל (IMJ)</td><td>לרשום בהכנסות החודש</td></tr>
+        <tr><td style="font-family:var(--font-mono);font-size:.78em;direction:ltr;text-align:right">efrat.maskit@gmail.com</td><td>משכית</td><td>לרשום בהכנסות החודש</td></tr>
+        <tr><td style="font-family:var(--font-mono);font-size:.78em;direction:ltr;text-align:right">michalit@wix.com</td><td>WIX</td><td>לוודא קבלה EZcount + לעדכן KPI</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- פירוטי אשראי -->
+  <div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span style="background:var(--blue-bg);color:var(--blue);font-size:.75em;font-weight:700;padding:3px 10px;border-radius:20px">פירוטי אשראי</span>
+      <span style="font-size:.82em;color:var(--text-secondary)">ניטור בלבד — לא לשמור כחשבונית</span>
+    </div>
+    <table>
+      <thead><tr>
+        <th>שולח</th>
+        <th>מנפיק</th>
+        <th>הערה</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="font-family:var(--font-mono);font-size:.78em;direction:ltr;text-align:right">info@max-finance.co.il</td><td>MAX</td><td>פירוט חיובים כרטיס עסקי</td></tr>
+        <tr><td style="font-family:var(--font-mono);font-size:.78em;direction:ltr;text-align:right">calmail@icc.co.il</td><td>ICC (דיינרס)</td><td>פירוט אשראי כרטיס אישי</td></tr>
+      </tbody>
+    </table>
+  </div>
 </section>
 
 <!-- Installments -->
