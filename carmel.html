@@ -236,7 +236,7 @@ tr:hover { background: #f7fafc; }
 // DATA — Edit here to update the dashboard
 // ═══════════════════════════════════════════
 const D = {
-  lastUpdated: '2026-03-21T3',
+  lastUpdated: '2026-03-24T12',
 
   // Income
   income: {
@@ -393,6 +393,7 @@ const D = {
     { text: 'ד"ר גולדרינג המליצה EMDR — לברר עם כרמל אם מעוניין/טופל', done: false },
     { text: 'הפניה אורטופדית חדשה — לבקש באזור האישי למרפאה/מכון פרטי', done: false },
     { text: 'אחריות מאוורר פסיפיק (10 שנים) + פמי פרמיום (2017) — לשמור', done: true },
+    { text: 'עו"ד עירית פריבר נשר — בירור רשלנות רפואית (EMG לא מטופל)', done: false, link: 'https://mail.google.com/mail/u/0/#drafts', linkLabel: 'טיוטת מייל' },
     // צלילה שיניים — סקציה ייעודית למעלה
   ],
 
@@ -938,7 +939,7 @@ updateClock(); setInterval(updateClock, 30000);
   document.getElementById('tasksList').innerHTML = D.tasks.map(t => `
     <div class="task">
       <div class="task-check ${t.done?'done':'pending'}">${t.done?'✓':''}</div>
-      <div style="${t.done?'color:var(--text-muted);text-decoration:line-through':''}">${t.text}</div>
+      <div style="${t.done?'color:var(--text-muted);text-decoration:line-through':''}">${t.text} ${t.link ? '<a href="'+"${t.link}"+'" target="_blank" style="margin-right:6px;font-size:.75em;background:var(--amber);color:#fff;padding:1px 7px;border-radius:10px;text-decoration:none">'+"${t.linkLabel||'🔗'}"+'</a>' : ''}</div>
     </div>
   `).join('');
 })();
