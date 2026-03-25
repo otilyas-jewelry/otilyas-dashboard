@@ -268,20 +268,21 @@ tr:hover { background: var(--bg-hover); }
      ═══════════════════════════════════════════ -->
 <script>
 const DATA = {
-  lastUpdated: '2026-03-25',
+  lastUpdated: '2026-03-26',
   usdRate: 3.65,
 
   // Income by channel
   income: {
-    months: ['ינואר', 'פברואר'],
+    months: ['ינואר', 'פברואר', 'מרץ'],
     channels: {
-      'הייפ (חנות+יריד)': { data: [18116, 4875], target: 5500, label: 'Hyp' },
-      'WIX':               { data: [3702, 2695],  target: 3000, label: 'WIX' },
-      'MASKIT':             { data: [1338, 1240],  target: 1300, label: 'MASKIT' },
-      'מוזיאון ישראל':     { data: [0, 427],      target: 400,  label: 'Museum' },
-      'MUZA':               { data: [0, 0],        target: 200,  label: 'MUZA' },
+      'הייפ (חנות+יריד)': { data: [18116, 4875, 0], target: 5500, label: 'Hyp' },
+      'WIX':               { data: [3702, 2695, 0],  target: 3000, label: 'WIX' },
+      'MASKIT':             { data: [1338, 1240, 0],  target: 1300, label: 'MASKIT' },
+      'מוזיאון ישראל':     { data: [0, 427, 0],      target: 400,  label: 'Museum' },
+      'MUZA':               { data: [0, 0, 0],        target: 200,  label: 'MUZA' },
     },
-    fairMonth: [true, false],
+    fairMonth: [true, false, false],
+    marchNote: '⚠️ מרץ 2026 — הכנסות ₪0 בשל המלחמה',
     targetRegular: 10400,
   },
 
@@ -424,7 +425,7 @@ const DATA = {
       limit: 15000,
       overLimit: 0,         // resolved 23/03 ✅
       pendingCards: 5291,   // ⚠️ ACTUAL accumulated March cards (Diners+Visa) as of 23/03
-      customerPending: 3800,// ⏳ לקוחה — טרם הושלם
+      customerPending: 3800,// ⏳ יסמין לוקאץ' — סחורה סוף פברואר, טרם שולם
       oferApril: 10000,
       cardsApril: 5870,     // updated: ₪5,291 + ~₪580 (8 days remaining) = ~₪5,870
       projected: [-9952, -11363, -1363, 2437, 2037, -2663, -2548, 4452],
@@ -464,7 +465,7 @@ const DATA = {
       { date: '01/04', label: 'חיובי USD (~$224)', amount: -820, balance: 5084, icon: '💵' },
       { date: '03/04', label: 'חיוב MAX 1116 (שקלים)', amount: -3425, balance: 1659, icon: '💳' },
       { date: '03/04', label: 'זיכוי עסקי (ממתין)', amount: 506, balance: 2165, icon: '💚' },
-      { date: '07/04', label: '⏳ לקוחה — ₪3,800 (טרם הושלם!)', amount: 3800, balance: 5965, icon: '⏳' },
+      { date: '07/04', label: '⏳ יסמין לוקאץ\' — ₪3,800 (סחורה סוף פבר׳, טרם שולם!)', amount: 3800, balance: 5965, icon: '⏳' },
       { date: '10/04', label: 'ארנונה + חשמל', amount: -676, balance: 5289, icon: '🏪' },
       { date: '15/04', label: 'רו"ח + ביט"ל + הייפ', amount: -882, balance: 4407, icon: '📄' },
       { date: '20/04', label: 'MUZA ₪1,044 (אם ישולם)', amount: 1044, balance: 5451, icon: '⏳' },
