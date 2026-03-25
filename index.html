@@ -1610,10 +1610,8 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
       const endsText = p.ends ? ` · עד ${p.ends}` : '';
       const portalBtn = p.portal ? `<a href="${p.portal}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:3px;font-size:.72em;padding:3px 8px;border-radius:6px;background:var(--gold-pale);color:var(--gold);text-decoration:none;font-weight:600;white-space:nowrap" title="פורטל ${p.company}">🔗 כניסה</a>` : '';
       const copyText = [p.company, p.name, p.policy ? 'פוליסה: '+p.policy : '', p.ends ? 'עד: '+p.ends : '', p.note || ''].filter(Boolean).join(' | ');
-      const copyId = 'cp_' + Math.random().toString(36).slice(2);
-      window._copyTexts = window._copyTexts || {};
-      window._copyTexts[copyId] = copyText;
-      const copyBtn = `<button id="${copyId}" onclick="var btn=document.getElementById('${copyId}');navigator.clipboard.writeText(window._copyTexts['${copyId}']).then(()=>{btn.textContent='✓ הועתק';setTimeout(()=>{btn.textContent='📋 העתק'},1500)})" style="display:inline-flex;align-items:center;gap:3px;font-size:.72em;padding:3px 8px;border-radius:6px;background:#f3f0ff;color:#7c5cbf;border:none;cursor:pointer;font-weight:600;white-space:nowrap">📋 העתק</button>`;
+      const safeText = copyText.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      const copyBtn = `<button data-copy="${safeText}" onclick="var t=this.getAttribute('data-copy');navigator.clipboard.writeText(t).then(()=>{this.textContent='✓ הועתק';var b=this;setTimeout(()=>b.textContent='📋 העתק',1500)}).catch(()=>alert(t))" style="display:inline-flex;align-items:center;gap:3px;font-size:.72em;padding:3px 8px;border-radius:6px;background:#f3f0ff;color:#7c5cbf;border:none;cursor:pointer;font-weight:600;white-space:nowrap">📋 העתק</button>`;
       html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0ece8;font-size:.84em">
         <div>
           <div style="font-weight:600">${p.company} — ${p.name}</div>
