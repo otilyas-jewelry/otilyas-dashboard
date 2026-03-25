@@ -236,7 +236,7 @@ tr:hover { background: #f7fafc; }
 // DATA — Edit here to update the dashboard
 // ═══════════════════════════════════════════
 const D = {
-  lastUpdated: '2026-03-25T15',
+  lastUpdated: '2026-03-25',
 
   // Income
   income: {
@@ -312,8 +312,8 @@ const D = {
       'אבנים בכליות',
       'Anxiety Disorder + Mild Depression (ד"ר גולדרינג) — המלצה ל-EMDR',
     ],
-    pendingMRI: false,
-    mriStatus: 'תור רמב"ם 06.04.2026 — טופס 17 אושר',
+    pendingMRI: true,
+    mriStatus: 'מכון מור לא עונה — ממתינים לחזרה. לברר אסותא + טופס 17 בכפר תבור',
     pendingAppeals: [
       { id: '82058388', subject: 'שוחרר מבני ציון באמצע בירורים', type: 'תלונה' },
       { id: '82058408', subject: 'עובדת שיקום לא הגיעה לביקור בית', type: 'בקשה' },
@@ -360,10 +360,11 @@ const D = {
     { text: 'לברר הקשר 3 הלוואות מעבר ↔ 4 באפליקציה', done: false },
     { text: 'לברר פירוט הלוואה נוספת + 2 פריטים', done: false },
     { text: 'למפות הוצאות קבועות למחיה (ארנונה, חשמל, מים, אוכל)', done: false },
-    { text: 'MRI בהרדמה — טופס 17 אושר', done: true },
-    { text: 'MRI — לבדוק מכון מור (PTSD + כללית)', done: false },
+    { text: 'MRI — מכון מור 📞 09-7663862: הושארה הודעה, ממתינים לחזרה (22/03)', done: false },
+    { text: 'MRI — 📞 לדבר עם אסותא בהקדם!', done: false },
+    { text: 'MRI — 📞 לברר טופס 17 במרפאת כפר תבור: 046621600', done: false },
     { text: 'MRI — לבדוק מכון מאר (כללית, הסכם חדש)', done: false },
-    { text: 'MRI בהרדמה — תור רמב"ם 06.04.2026', done: true },
+    { text: 'MRI — קביעת תור אחרי אישור טופס 17', done: false },
     { text: 'משהב"ט פנייה 82058388 — שוחרר מבני ציון באמצע בירורים', done: false },
     { text: 'משהב"ט פנייה 82058408 — עובדת שיקום לא הגיעה לביקור בית', done: false },
     { text: 'משהב"ט פנייה 82058428 — צירוף מסמכים רפואיים', done: false },
@@ -374,6 +375,7 @@ const D = {
     { text: 'משהב"ט פנייה 82059631 — 4 מסמכים רפואיים', done: false },
     { text: 'משהב"ט פנייה 82060756 — פנייה לד"ר אלרון', done: false },
     { text: 'משהב"ט פנייה 82060771 — שיפוץ והתאמת דירה', done: false },
+    { text: 'פנייה 250477 — נענתה 23/03/2026: עו"ס שוחחה, מחוז בקשר רציף. לחזור אם יש בקשה ספציפית שלא טופלה', done: false },
     { text: 'משהב"ט מרשם/הפניה — בהמתנה לטיפול (19/03/2026)', done: false },
     { text: 'תור נוירולוגיה — ד"ר דראושה, 23/03/2026', done: false },
     { text: 'תור אורולוגיה — ד"ר לביא, 24/04/2026', done: false },
@@ -382,9 +384,10 @@ const D = {
     { text: 'משהב"ט אישור פסיכיאטרית — נשלח', done: true },
     { text: 'משהב"ט הפניה רפואית — הוגשה', done: true },
     { text: 'משהב"ט בקשה לטופס 17 — הוגשה', done: true },
-    { text: 'דו"ח חנייה עפולה #24233512 — ₪250, מוקפא, מייל שני נשלח 21/03', done: false },
+    { text: 'דו"ח חנייה עפולה #24233512 — ₪250 | תגובה התקבלה 22/03: "טרם התקבלה החלטה, יישלח בדואר רשום" — ממתינים', done: false },
     { text: 'תלונת סלקום — תשתית לקויה (01/2026), לוודא טיפול', done: false },
-    { text: 'לוודא תשובה מעיריית עפולה/מיתר על דו"ח 24233512', done: false },
+    { text: 'Drive — גישה לכרמל שפריצר לתיקייה "כרמל אבא 2026" — טופל 22/03', done: true },
+    { text: 'לוודא תשובה מעיריית עפולה/מיתר על דו"ח 24233512 — תגובה התקבלה 22/03, ממתינים לדואר רשום', done: true },
     { text: 'UMI ביטוחי — לברר אם אישור תעודת חיל הועבר (בקשה מ-10/2025!)', done: false },
     { text: 'הפניה אורטופדית 250007779827 — תוקף פג 25/06/2025! לברר אם בוצע', done: false },
     { text: 'ישראכרט — הרשאת שינוי חשבון לכרטיסים 6921, 4685, 8545 (מעבר בנקאי!)', done: false },
@@ -393,20 +396,28 @@ const D = {
     { text: 'ד"ר גולדרינג המליצה EMDR — לברר עם כרמל אם מעוניין/טופל', done: false },
     { text: 'הפניה אורטופדית חדשה — לבקש באזור האישי למרפאה/מכון פרטי', done: false },
     { text: 'אחריות מאוורר פסיפיק (10 שנים) + פמי פרמיום (2017) — לשמור', done: true },
-    { text: 'עו"ד עירית פריבר נשר — בירור רשלנות רפואית (EMG לא מטופל)', done: false, link: 'https://mail.google.com/mail/u/0/#drafts', linkLabel: 'טיוטת מייל' },
-    // צלילה שיניים — סקציה ייעודית למעלה
+    { text: '🦷 תביעת שיניים להפניקס (צלילה) — 23 תמונות מוכנות, לאחד ל-PDF ולשלוח', done: false },
+    // --- רכב + נגישות (נוסף 25/03/2026) ---
+    { text: '🚗 שדרוג רכב לנפח 2000 סמ"ק — לפנות לאגף שיקום (משהב"ט). נדרש תיעוד רפואי (אורתופד + נוירולוגיה + פסיכיאטרית)', done: false },
+    { text: '🚗 מעלון לרכב — לבקש התקנת מעלון נגישות דרך אגף שיקום. נדרש ביקור סוקר + תיעוד רפואי', done: false },
+    { text: '🏛️ להזמין סוקר מטעם הרווחה — יגיע הביתה להעריך צרכי נגישות (רכב + בית). לתאם דרך עו"ס משרד הרווחה', done: false },
+    { text: '📋 תיעוד רפואי לרכב + מעלון — לאסוף: אורתופד (ד"ר קרסניאנסקי) + נוירולוגיה + פסיכיאטרית (ד"ר גרישין)', done: false },
+    { text: '🛏️ מיטה — מעקה מיוחד לקימה. ניתן לבקש דרך אגף שיקום כציוד עזר', done: false },
+    { text: '🚽 בקבוקי שתן — 12 בקבוקים לכל משלוח. לברר כיסוי דרך כללית/ביטוחים', done: false },
+    { text: '👩 צלילה (אמא) — 4 שעות ליווי בשבוע: לוודא שהשעות מנוצלות ולברר מי מספק', done: false },
   ],
 
   // Family Projects
   familyProjects: [
     {
       name: 'החזר הוצאות שיניים — צלילה',
-      status: '✅ פנייה התקבלה — מס׳ 20864970',
-      clinic: 'זוהלית סמייל — רפואת שיניים מקצועית, ב"ש',
+      status: 'ממתין — 23 תמונות מוכנות לשליחה להפניקס',
+      claimHaphenix: '23 תמונות JPG סרוקות (21/03/2026) — צריך לאחד ל-PDF ולשלוח',
+      clinic: 'מרפאת עפולה כללית סמייל',
       phone: '04-6428000',
-      contact: 'הפניקס: ts@fnx.co.il | חיה רפאלוב: ChayaH@fnx.co.il',
-      driveFolder: 'https://drive.google.com/file/d/1eLpQmsob08sE1iW3qoqzFKc5OP3_apH0/view',
-      note: '6 חשבוניות, סה"כ ₪5,962. סיכום חשבון מרפאה: ₪6,780. פנייה התקבלה ב-25/03/2026 — מס׳ פנייה 20864970. בקשת פוליסות מלאות — מס׳ פנייה 20863601. חיה רפאלוב נעדרת — ממתינים לחזרה.',
+      contact: 'סימי בנימין (simib@clalit.org.il)',
+      driveFolder: 'https://drive.google.com/drive/folders/1UhaAAM_ssd6gJcySQoL7vjE7ZvT5WH3R',
+      note: '6 חשבוניות, סה"כ ₪5,962. סיכום חשבון מרפאה: ₪6,779. טיוטת מייל ב-Gmail.',
       invoices: [
         { num: 'IN244174058168', date: '02/07/2024', amount: 20 },
         { num: 'IN244174052057', date: '15/07/2024', amount: 80 },
@@ -615,7 +626,6 @@ function fmtSign(n) { return (n>=0?'+':'-') + '₪' + fmt(n); }
 <section id="shikum" class="reveal">
   <div class="card">
     <div class="card-title">פניות למשהב"ט — אגף שיקום <span class="badge" style="background:var(--amber-bg);color:var(--amber)" id="appealsCount"></span></div>
-    <a href="https://drive.google.com/drive/folders/1o48fLgOrfl9uCv2vBJlfAhd3slhVd2L0?hl=he" target="_blank" style="display:block;text-align:center;background:var(--header-bg);color:white;padding:10px;border-radius:var(--radius);text-decoration:none;font-weight:600;font-size:.88em;margin-bottom:12px">📁 תיקיית פניות משהב"ט — פתח ב-Drive</a>
     <div id="rxCard" style="background:linear-gradient(135deg,#ebf4ff,#f0f5ff);border:1px solid #bee3f8;border-radius:var(--radius);padding:12px;margin-bottom:12px">
       <div style="display:inline-flex;align-items:center;gap:6px;font-size:.82em;font-weight:600;color:var(--amber);background:#fff;padding:3px 10px;border-radius:8px;margin-bottom:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block"></span> <span id="rxStatus"></span></div>
       <div style="font-weight:700;font-size:.88em">מרשם / הפניה</div>
@@ -681,6 +691,8 @@ updateClock(); setInterval(updateClock, 30000);
   html += `<div class="alert alert-warn"><span class="alert-icon">⚠️</span>כרטיסים ישנים (8563, 8309) נסגרו. כרטיסים חדשים (2818, 2917) פעילים. צריך לחכות חודש-חודשיים לנתונים.</div>`;
   // MRI
   if (D.medical.pendingMRI) html += `<div class="alert alert-danger"><span class="alert-icon">🏥</span>MRI בהרדמה: ${D.medical.mriStatus}. צריך מעקב!</div>`;
+  // Card 2818 issue
+  html += `<div class="alert alert-info"><span class="alert-icon">💳</span>כרטיס 2818: אם עדיין לא עובר מעל ₪300, לפנות למקס (חברת האשראי).</div>`;
   document.getElementById('alerts').innerHTML = html;
 })();
 
@@ -902,16 +914,10 @@ updateClock(); setInterval(updateClock, 30000);
   document.getElementById('tzilaActions').innerHTML = `
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <a href="${p.driveFolder}" target="_blank" style="flex:1;text-align:center;font-size:.82em;background:var(--blue-light);color:var(--blue);padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:600">📁 מסמכים ב-Drive</a>
-      <a href="https://mail.google.com/mail/u/0/#sent/19d2532e03dd10b5" target="_blank" style="flex:1;text-align:center;font-size:.82em;background:var(--green-bg);color:var(--green);padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:600">✅ מייל שנשלח</a>
+      <a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" style="flex:1;text-align:center;font-size:.82em;background:var(--amber-bg);color:var(--amber);padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:600">✉️ טיוטת מייל</a>
     </div>
-    <div style="margin-top:8px;font-size:.75em;color:var(--green);background:var(--green-bg);padding:8px;border-radius:6px">
-      ✅ <b>תביעת שיניים התקבלה</b> — מס׳ פנייה <b>20864970</b> (25/03/2026)
-    </div>
-    <div style="margin-top:6px;font-size:.75em;color:var(--blue);background:var(--blue-light);padding:8px;border-radius:6px">
-      📋 <b>בקשת פוליסות מלאות התקבלה</b> — מס׳ פנייה <b>20863601</b> (25/03/2026)
-    </div>
-    <div style="margin-top:6px;font-size:.75em;color:var(--amber);background:var(--amber-bg);padding:8px;border-radius:6px">
-      ⚠️ חיה רפאלוב נעדרת מהמשרד — ממתינות לחזרה
+    <div style="margin-top:8px;font-size:.75em;color:var(--text-muted);background:var(--red-bg);padding:8px;border-radius:6px">
+      ⚠️ <b>לפני שליחה:</b> להשלים מספר טלפון + לוודא ת.ז. צלילה + לצרף תמונות חשבוניות
     </div>
   `;
 })();
@@ -944,7 +950,7 @@ updateClock(); setInterval(updateClock, 30000);
   document.getElementById('tasksList').innerHTML = D.tasks.map(t => `
     <div class="task">
       <div class="task-check ${t.done?'done':'pending'}">${t.done?'✓':''}</div>
-      <div style="${t.done?'color:var(--text-muted);text-decoration:line-through':''}">${t.text} ${t.link ? '<a href="'+"${t.link}"+'" target="_blank" style="margin-right:6px;font-size:.75em;background:var(--amber);color:#fff;padding:1px 7px;border-radius:10px;text-decoration:none">'+"${t.linkLabel||'🔗'}"+'</a>' : ''}</div>
+      <div style="${t.done?'color:var(--text-muted);text-decoration:line-through':''}">${t.text}</div>
     </div>
   `).join('');
 })();
