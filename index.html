@@ -1609,9 +1609,8 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
 
       const endsText = p.ends ? ` · עד ${p.ends}` : '';
       const portalBtn = p.portal ? `<a href="${p.portal}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:3px;font-size:.72em;padding:3px 8px;border-radius:6px;background:var(--gold-pale);color:var(--gold);text-decoration:none;font-weight:600;white-space:nowrap" title="פורטל ${p.company}">🔗 כניסה</a>` : '';
-      const copyText = [p.company, p.name, p.policy ? 'פוליסה: '+p.policy : '', p.ends ? 'עד: '+p.ends : '', p.note || ''].filter(Boolean).join(' | ');
-      const safeText = copyText.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-      const copyBtn = `<button data-copy="${safeText}" onclick="var t=this.getAttribute('data-copy');navigator.clipboard.writeText(t).then(()=>{this.textContent='✓ הועתק';var b=this;setTimeout(()=>b.textContent='📋 העתק',1500)}).catch(()=>alert(t))" style="display:inline-flex;align-items:center;gap:3px;font-size:.72em;padding:3px 8px;border-radius:6px;background:#f3f0ff;color:#7c5cbf;border:none;cursor:pointer;font-weight:600;white-space:nowrap">📋 העתק</button>`;
+      const esc = s => (s||'').replace(/"/g,'&quot;');
+      const copyBtn = `<button onclick="showPolicy(this)" data-company="${esc(p.company)}" data-name="${esc(p.name)}" data-policy="${esc(p.policy||'')}" data-ends="${esc(p.ends||'')}" data-monthly="${p.monthly}" data-note="${esc(p.note||'')}" style="display:inline-flex;align-items:center;gap:3px;font-size:.72em;padding:3px 8px;border-radius:6px;background:#f3f0ff;color:#7c5cbf;border:none;cursor:pointer;font-weight:600;white-space:nowrap">📄 פרטי פוליסה</button>`;
       html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0ece8;font-size:.84em">
         <div>
           <div style="font-weight:600">${p.company} — ${p.name}</div>
@@ -1724,6 +1723,38 @@ new Chart(document.getElementById('budgetChart'), {
   },
   options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:legendOpts}, scales:{x:{beginAtZero:true}} }
 });
+</script>
+
+<!-- Policy Modal -->
+<div id="policyModal" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;direction:rtl">
+  <div style="background:#fff;border-radius:16px;padding:28px;max-width:480px;width:90%;max-height:80vh;overflow-y:auto;position:relative;font-family:var(--font-main)">
+    <button onclick="document.getElementById('policyModal').style.display='none'" style="position:absolute;top:12px;left:12px;background:none;border:none;font-size:1.4em;cursor:pointer;color:#999">✕</button>
+    <div id="policyModalContent"></div>
+    <button onclick="var t=document.getElementById('policyModalText').textContent;navigator.clipboard.writeText(t).then(()=>alert('הועתק!'))" style="margin-top:16px;width:100%;padding:10px;background:#f3f0ff;color:#7c5cbf;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.9em">📋 העתק פרטים</button>
+  </div>
+</div>
+<script>
+function showPolicy(btn) {
+  var d = btn.dataset;
+  var rows = [
+    ['חברה', d.company],
+    ['שם פוליסה', d.name],
+    ['מספר פוליסה', d.policy || '—'],
+    ['תקופה', d.ends ? 'עד ' + d.ends : '—'],
+    ['פרמיה', '₪' + d.monthly + '/חודש'],
+    ['פרטים', d.note || '—'],
+  ];
+  var html = '<h3 style="margin:0 0 16px;font-size:1.1em;color:#2d2d2d">📄 ' + d.company + ' — ' + d.name + '</h3>';
+  html += '<table style="width:100%;border-collapse:collapse;font-size:.88em">';
+  rows.forEach(function(r) {
+    if (r[1] && r[1] !== '—') html += '<tr><td style="padding:7px 4px;color:#888;white-space:nowrap;vertical-align:top;border-bottom:1px solid #f0f0f0">' + r[0] + '</td><td style="padding:7px 8px;font-weight:500;border-bottom:1px solid #f0f0f0">' + r[1] + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<div id="policyModalText" style="display:none">' + rows.filter(r=>r[1]&&r[1]!=='—').map(r=>r[0]+': '+r[1]).join('\n') + '</div>';
+  document.getElementById('policyModalContent').innerHTML = html;
+  var m = document.getElementById('policyModal');
+  m.style.display = 'flex';
+}
 </script>
 </body>
 </html>
