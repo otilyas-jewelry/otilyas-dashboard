@@ -314,7 +314,7 @@ const D = {
       'Anxiety Disorder + Mild Depression (ד"ר גולדרינג) — המלצה ל-EMDR',
     ],
     pendingMRI: true,
-    mriStatus: 'מכון מור לא עונה — ממתינים לחזרה. לברר אסותא + טופס 17 בכפר תבור',
+    mriStatus: '✅ נקבע! רמב"ם 06/04/2026 — 14:00 | להגיע ב-13:00 | אמבולנס מאושר',
     pendingAppeals: [
       { id: '82058388', subject: 'שוחרר מבני ציון באמצע בירורים', type: 'תלונה' },
       { id: '82058408', subject: 'עובדת שיקום לא הגיעה לביקור בית', type: 'בקשה' },
@@ -830,8 +830,10 @@ updateClock(); setInterval(updateClock, 30000);
     { text: 'אישור פסיכיאטרית — נשלח למרפאה', done: true },
     { text: 'הרופאה צירפה הפניה רפואית', done: true },
     { text: 'הוגשה בקשה לטופס 17', done: true },
-    { text: 'המתנה לאישור טופס 17', done: false },
-    { text: 'קביעת תור ברמב"ם עם הפניה + טופס 17', done: false },
+    { text: 'טופס 17 אושר — מס׳ 315280829 | ד"ר מרגיה יולנדה | ללא תשלום', done: true },
+    { text: 'תור נקבע ברמב"ם — 06/04/2026 14:00 | בניין סמי עופר קומה -1', done: true },
+    { text: 'אמבולנס אושר — הפניה 260002075776 | יוסי שירותים | 073-2697160', done: true },
+    { text: '⚠️ להגיע ב-13:00 | צום 6 שעות | מלווה חובה | להישקל לפני | לדווח: מפרק ירך + רסיסים', done: false },
   ];
   document.getElementById('mriTimeline').innerHTML = mriSteps.map(s => `
     <div class="timeline-item ${s.done?'done':'warn'}">
