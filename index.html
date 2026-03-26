@@ -1121,12 +1121,6 @@ updateClock(); setInterval(updateClock, 30000);
   const el = document.getElementById('alerts');
   let html = '';
   // Both installments end April
-  const activeInst = DATA.installments.filter(i => new Date(i.endsDate) > CALC.today);
-  if (activeInst.length > 0) {
-    const total = activeInst.reduce((a,i) => a+i.amount, 0);
-    const days = Math.ceil((new Date(activeInst[0].endsDate) - CALC.today) / 86400000);
-    if (days <= 45) html += `<div class="alert alert-green"><strong>חדשות טובות:</strong> פריסה (${fmt(activeInst[0].amount)}) + שיניים (${fmt(activeInst[1]?.amount||0)}) נגמרים באפריל! סה"כ <strong>₪${fmt(total)} ישוחרר</strong> בעוד ${days} ימים!</div>`;
-  }
   // Urgent dates
   CALC.countdowns.filter(c => c.type === 'danger' && c.days <= 14 && c.days > 0).forEach(c => {
     html += `<div class="alert alert-red"><strong>דחוף:</strong> ${c.label} — בעוד ${c.days} ימים!</div>`;
