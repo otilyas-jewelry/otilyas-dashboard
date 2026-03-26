@@ -280,10 +280,10 @@ const DATA = {
       'MASKIT':             { data: [1338, 1240, 0],  target: 1300, label: 'MASKIT' },
       'מוזיאון ישראל':     { data: [0, 427, 0],      target: 400,  label: 'Museum' },
       'MUZA':               { data: [0, 0, 0],        target: 200,  label: 'MUZA' },
-      'לקוחות ישירים':     { data: [0, 0, 3950],     target: 0,    label: 'Direct' },
+      'לקוחות ישירים':     { data: [0, 0, 3850],     target: 0,    label: 'Direct' },
     },
     fairMonth: [true, false, false],
-    marchNote: '⚠️ מרץ 2026 — ידוע: ₪6,645 | WIX ₪2,695 ✅ + לקוחות ₪3,950 ✅ (יסמין ₪3,800 + תום אבן ₪150) | ממתין: הייפ, MASKIT, מוזיאון',
+    marchNote: '⚠️ מרץ 2026 — ידוע: ₪6,545 | WIX ₪2,695 ✅ + לקוחות ₪3,850 ✅ | ממתין: הייפ, MASKIT, מוזיאון',
     targetRegular: 10400,
   },
 
@@ -1131,8 +1131,7 @@ updateClock(); setInterval(updateClock, 30000);
   CALC.countdowns.filter(c => c.type === 'danger' && c.days <= 14 && c.days > 0).forEach(c => {
     html += `<div class="alert alert-red"><strong>דחוף:</strong> ${c.label} — בעוד ${c.days} ימים!</div>`;
   });
-  // Birkhat HaZahav note
-  html += `<div class="alert"><strong>תזכורת:</strong> ברכת הזהב 1,449 חויב בדיינרס. בפעם הבאה לשלם עם MAX 1116!</div>`;
+
   el.innerHTML = html;
 })();
 
