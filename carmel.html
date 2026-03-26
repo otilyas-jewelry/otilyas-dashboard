@@ -374,6 +374,7 @@ const D = {
     { text: 'MAX — חסימה שוחררה', done: true },
     { text: 'כללית קופ"ח — הועבר לכרטיס 2818', done: true },
     { text: 'לברר סטטוס כ.א.ל, ישראכרט, יהב-ישראכרט', done: false },
+    { text: 'כרטיס 2818 — מגבלת ₪300 נפתרה (26/03/2026)', done: true },
     { text: 'לעקוב הוצאות כרטיסים חדשים (2818, 2917)', done: false },
     { text: 'לברר הקשר 3 הלוואות מעבר ↔ 4 באפליקציה', done: false },
     { text: 'לברר פירוט הלוואה נוספת + 2 פריטים', done: false },
@@ -731,8 +732,7 @@ updateClock(); setInterval(updateClock, 30000);
   html += `<div class="alert alert-warn"><span class="alert-icon">⚠️</span>כרטיסים ישנים (8563, 8309) נסגרו. כרטיסים חדשים (2818, 2917) פעילים. צריך לחכות חודש-חודשיים לנתונים.</div>`;
   // MRI
   if (D.medical.pendingMRI) html += `<div class="alert alert-danger"><span class="alert-icon">🏥</span>MRI בהרדמה: ${D.medical.mriStatus}. צריך מעקב!</div>`;
-  // Card 2818 issue
-  html += `<div class="alert alert-info"><span class="alert-icon">💳</span>כרטיס 2818: אם עדיין לא עובר מעל ₪300, לפנות למקס (חברת האשראי).</div>`;
+  // Card 2818 — resolved 26/03/2026
   document.getElementById('alerts').innerHTML = html;
 })();
 
