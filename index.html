@@ -268,7 +268,7 @@ tr:hover { background: var(--bg-hover); }
      ═══════════════════════════════════════════ -->
 <script>
 const DATA = {
-  lastUpdated: '2026-03-26',
+  lastUpdated: '2026-03-26 (שחר)',
   usdRate: 3.65,
 
   // Income by channel
@@ -276,14 +276,14 @@ const DATA = {
     months: ['ינואר', 'פברואר', 'מרץ'],
     channels: {
       'הייפ (חנות+יריד)': { data: [18116, 4875, 0], target: 5500, label: 'Hyp' },
-      'WIX':               { data: [3702, 2695, 0],  target: 3000, label: 'WIX' },
+      'WIX':               { data: [3702, 2695, 2695],  target: 3000, label: 'WIX' },
       'MASKIT':             { data: [1338, 1240, 0],  target: 1300, label: 'MASKIT' },
       'מוזיאון ישראל':     { data: [0, 427, 0],      target: 400,  label: 'Museum' },
       'MUZA':               { data: [0, 0, 0],        target: 200,  label: 'MUZA' },
-      'לקוחות ישירים':     { data: [0, 0, 3800],     target: 0,    label: 'Direct' },
+      'לקוחות ישירים':     { data: [0, 0, 3950],     target: 0,    label: 'Direct' },
     },
     fairMonth: [true, false, false],
-    marchNote: '⚠️ מרץ 2026 — הכנסות חלקיות: ₪3,800 (יסמין לוקץ\') | ממתין: WIX, MASKIT, הייפ, מוזיאון',
+    marchNote: '⚠️ מרץ 2026 — ידוע: ₪6,645 | WIX ₪2,695 ✅ + לקוחות ₪3,950 ✅ (יסמין ₪3,800 + תום אבן ₪150) | ממתין: הייפ, MASKIT, מוזיאון',
     targetRegular: 10400,
   },
 
@@ -412,12 +412,12 @@ const DATA = {
 
   // Bank snapshot — UPDATED 23/03/2026 (from app screenshots)
   bankSnapshot: {
-    date: '23/03/2026',
+    date: '26/03/2026',
     business: {
-      balance: 6142,        // 2342 + 3800 (יסמין לוקץ' שילמה 26/03)
-      withdrawable: 16142,  // balance + ₪10,000 credit line
+      balance: 8837,        // 2342 (23/03) + 2695 WIX (25/03) + 3800 יסמין (26/03)
+      withdrawable: 18837,  // balance + ₪10,000 credit line
       pendingOut: 3425,     // MAX credit card charge 03/04
-      pendingIn: 5406,      // WIX ₪2,695 + MASKIT ₪1,240 + Museum ₪427 + MUZA ₪1,044
+      pendingIn: 2711,      // MASKIT ₪1,240 + Museum ₪427 + MUZA ₪1,044 (WIX ✅ התקבל 25/03)
       creditPending: 817,   // זיכוי: ₪506 ב-03/04 + ₪311 ב-03/05
       customerPending: 0,   // ✅ יסמין לוקץ' שילמה ₪3,800 ב-26/03
       projected: 7120,      // 6142 + 5406 + 817 - 3425 - 820 - 1000 (ops)
@@ -433,6 +433,8 @@ const DATA = {
       targetGap: -5548,     // GAP to ₪10K target (₪10K - ₪4,452 projected end April)
     },
     recentTransactions: [
+      { date: '26/03', desc: 'יסמין לוקץ\' — תשלום סחורה (עסקי)', amount: 3800, type: 'in' },
+      { date: '25/03', desc: 'WIX — תשלום פברואר 2026 (עסקי)', amount: 2695, type: 'in' },
       { date: '23/03', desc: 'הפקדה — הסדרת חריגה', amount: 7000, type: 'in' },
       { date: '20/03', desc: 'אגרת התראה חריגת מסגרת', amount: -5, type: 'out' },
       { date: '16/03', desc: 'ביטוח לאומי ילדים', amount: 115, type: 'in' },
@@ -459,8 +461,8 @@ const DATA = {
     ],
     // Cash flow forecast — International (business) — UPDATED 23/03/2026
     forecastBusiness: [
-      { date: '26/03', label: '✅ יסמין לוקץ\' — ₪3,800 התקבל (סחורה פבר׳)', amount: 3800, balance: 6142, icon: '✅' },
-      { date: '27/03', label: 'WIX מרץ (ממתין)', amount: 2695, balance: 8837, icon: '⏳' },
+      { date: '25/03', label: '✅ WIX פברואר — ₪2,695 התקבל בבנק בינלאומי', amount: 2695, balance: 5037, icon: '✅' },
+      { date: '26/03', label: '✅ יסמין לוקץ\' — ₪3,800 התקבל (סחורה פבר׳)', amount: 3800, balance: 8837, icon: '✅' },
       { date: '28/03', label: 'MASKIT + מוזיאון (ממתין)', amount: 1667, balance: 10504, icon: '⏳' },
       { date: '31/03', label: 'הוצאות שוטפות עסקי', amount: -800, balance: 9704, icon: '🏪' },
       { date: '01/04', label: 'חיובי USD (~$224)', amount: -820, balance: 8884, icon: '💵' },
@@ -607,7 +609,8 @@ const DATA = {
   openTasks: {
     'פיננסי (ריף)': [
       { task: 'לברר העברות 99400 — ₪8,163 ב-2 חודשים', priority: 'medium' },
-      { task: 'MUZA חוב 2025 ₪1,044 — דדליין עיבוד עבר (22/03)! לעקוב עם אולגה: 03-7455727', priority: 'critical' },
+      { task: 'MUZA חוב 2025 ₪1,044 — מייל לאולגה נשלח 26/03. דדליין עיבוד עבר! לעקוב: 03-7455727', priority: 'critical' },
+      { task: '⚠️ להנפיק קבלה EZcount ל-WIX — ₪2,695, חשבונית 10013, וויקס וואט ח.פ. 516110996', priority: 'high' },
       { task: 'דמי כרטיס ₪19.80 — לבטל', priority: 'high' },
       { task: 'דוח רו"ח עמית ינואר+פברואר — ממתין מטלי', priority: 'medium' },
       { task: 'לבטל GPT4 ($20/חודש)', priority: 'high' },
@@ -624,6 +627,7 @@ const DATA = {
     ],
     'ביטוחים (שירה)': [
       { task: 'הפניקס מבנה — חודש! פוליסה חדשה 26/096/171/1664874 פעילה 01/04/2026. אהרונסון 29 ת"א. ₪934/שנה.', priority: 'done' },
+      { task: '🦷 תביעת שיניים הפניקס — צלילה שפריצר (ת"ז 054119532). פנייה 20864970 (שיניים) + 20863601 (פוליסות). נשלח 25/03. ממתינים לחיה רפאלוב (ChayaH@fnx.co.il). לעקוב!', priority: 'high' },
       { task: 'תביעת שיניים הראל (507551298) — חסר מידע! יש לצרף צילומי רנטגן לפני ואחרי הטיפול. מייל טיוטה נוצר 25/03. הפנייה 6438070.', priority: 'high' },
       { task: 'מגדל מחלות קשות מסתיים 01/06 — לחדש', priority: 'high' },
       { task: 'הפניקס חבילה מסתיימת 9/2026 — לבדוק חלופות', priority: 'medium' },
@@ -642,6 +646,7 @@ const DATA = {
       { task: '✅ egg ₪48 (26/03) — נרשם בהוצאות מרץ. תחבורה ציבורית 25/02–24/03.', priority: 'done' },
     ],
     'משפטי (ניצן)': [
+      { task: '🚨 ציות משפטי 31/03/2026 — לפרסם מדיניות פרטיות + TikTok Pixel ב-Shopify! 5 ימים!', priority: 'critical' },
       { task: 'אימות דומיין otilyas.com — הושלם ✅', priority: 'done' },
     ],
     'שיווק (ליהי)': [
