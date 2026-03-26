@@ -172,6 +172,7 @@ tr:hover { background: #f7fafc; }
 .tag-pending { background: var(--amber-bg); color: var(--amber); }
 .tag-done { background: var(--green-bg); color: var(--green); }
 .tag-urgent { background: var(--red-bg); color: var(--red); }
+.tag-info { background: var(--blue-light); color: var(--blue); }
 
 /* Medical section */
 .med-card {
@@ -328,6 +329,7 @@ const D = {
       { id: '82060756', subject: 'פנייה לד"ר אלרון — פניות חשובות', type: 'בקשה' },
       { id: '82060771', subject: 'שיפוץ והתאמת דירה — דרישה לנציג', type: 'בקשה' },
       { id: null, subject: 'פניית הציבור — ניתוק המערכת מאז המלחמה', type: 'תלונה' },
+      { id: '250477 | CRM:0011117', subject: 'פנייה לחטיבת פניות הציבור — ניתוק המערכת ואי-טיפול', type: 'פנייה כללית', status: 'בטיפול', note: 'תגובה התקבלה 23/03/2026: המחוז עומד בקשר רציף. אם יש בקשה ספציפית שלא טופלה — לפנות חזרה.' },
       { id: '250007779827', subject: 'הפניה אורטופדית — בי"ח העמק (תוקף פג 06/2025!)', type: 'הפניה' },
       // --- בקשות חדשות — נגישות ורכב (25/03/2026) ---
       { id: null, subject: 'שדרוג רכב לנפח 2000 סמ"ק — נדרש אישור אגף שיקום + תיעוד רפואי', type: 'בקשה-רכב' },
@@ -866,7 +868,7 @@ updateClock(); setInterval(updateClock, 30000);
   `).join('');
 
   // Appeals - full list
-  const waitingCount = D.medical.pendingAppeals.filter(a => !a.done).length;
+  const waitingCount = D.medical.pendingAppeals.filter(a => !a.done && a.status !== 'בטיפול').length;
   document.getElementById('appealsCount').textContent = waitingCount + ' ממתינות מתוך ' + D.medical.pendingAppeals.length;
 
   // Prescription
@@ -874,10 +876,10 @@ updateClock(); setInterval(updateClock, 30000);
   document.getElementById('rxNote').textContent = D.medical.prescription.note + ' (' + D.medical.prescription.date + ')';
 
   document.getElementById('appealsList').innerHTML = D.medical.pendingAppeals.map(a => {
-    const tagClass = a.done ? 'tag-done' : (a.type === 'תלונה' ? 'tag-urgent' : 'tag-pending');
-    const statusText = a.done ? 'נשלח' : 'ממתין';
-    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:.84em${a.done?';opacity:.6':''}">
-      <div style="${a.done?'text-decoration:line-through':''}"><span style="font-weight:600">${a.subject}</span><br><span style="font-size:.72em;color:var(--text-muted)">${a.type}</span></div>
+    const tagClass = a.done ? 'tag-done' : (a.status === 'בטיפול' ? 'tag-info' : (a.type === 'תלונה' ? 'tag-urgent' : 'tag-pending'));
+    const statusText = a.done ? 'נשלח ✓' : (a.status || 'ממתין');
+    return `<div style="display:flex;justify-content:space-between;align-items:start;padding:8px 0;border-bottom:1px solid var(--border);font-size:.84em${a.done?';opacity:.6':''}">
+      <div style="${a.done?'text-decoration:line-through':''}"><span style="font-weight:600">${a.subject}</span><br><span style="font-size:.72em;color:var(--text-muted)">${a.type}</span>${a.note ? `<br><span style="font-size:.72em;color:var(--blue)">${a.note}</span>` : ''}</div>
       <div style="text-align:left;min-width:90px"><span class="tag ${tagClass}">${a.id || 'פניית הציבור'}</span><br><span style="font-size:.65em;color:var(--text-muted)">${statusText}</span></div>
     </div>`;
   }).join('');
