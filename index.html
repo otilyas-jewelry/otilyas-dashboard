@@ -413,13 +413,13 @@ const DATA = {
   bankSnapshot: {
     date: '23/03/2026',
     business: {
-      balance: 2342,        // actual from app (בינלאומי 095-268372)
-      withdrawable: 12342,  // balance + ₪10,000 credit line
+      balance: 6142,        // 2342 + 3800 (יסמין לוקץ' שילמה 26/03)
+      withdrawable: 16142,  // balance + ₪10,000 credit line
       pendingOut: 3425,     // MAX credit card charge 03/04
       pendingIn: 5406,      // WIX ₪2,695 + MASKIT ₪1,240 + Museum ₪427 + MUZA ₪1,044
       creditPending: 817,   // זיכוי: ₪506 ב-03/04 + ₪311 ב-03/05
-      customerPending: 3800,// ⏳ יסמין לוקאץ' — סחורה סוף פברואר, טרם שולם
-      projected: 2140,      // 2342 + 5406 + 817 - 3425 - 820 - 1000 (ops)
+      customerPending: 0,   // ✅ יסמין לוקץ' שילמה ₪3,800 ב-26/03
+      projected: 7120,      // 6142 + 5406 + 817 - 3425 - 820 - 1000 (ops)
     },
     personal: {
       balance: -9152,       // actual from app
@@ -458,14 +458,13 @@ const DATA = {
     ],
     // Cash flow forecast — International (business) — UPDATED 23/03/2026
     forecastBusiness: [
-      { date: '23/03', label: 'יתרה נוכחית (בפועל)', amount: 0, balance: 2342, icon: '📍' },
-      { date: '27/03', label: 'WIX מרץ (ממתין)', amount: 2695, balance: 5037, icon: '⏳' },
-      { date: '28/03', label: 'MASKIT + מוזיאון (ממתין)', amount: 1667, balance: 6704, icon: '⏳' },
-      { date: '31/03', label: 'הוצאות שוטפות עסקי', amount: -800, balance: 5904, icon: '🏪' },
-      { date: '01/04', label: 'חיובי USD (~$224)', amount: -820, balance: 5084, icon: '💵' },
-      { date: '03/04', label: 'חיוב MAX 1116 (שקלים)', amount: -3425, balance: 1659, icon: '💳' },
-      { date: '03/04', label: 'זיכוי עסקי (ממתין)', amount: 506, balance: 2165, icon: '💚' },
-      { date: '07/04', label: '⏳ יסמין לוקאץ\' — ₪3,800 (סחורה סוף פבר׳, טרם שולם!)', amount: 3800, balance: 5965, icon: '⏳' },
+      { date: '26/03', label: '✅ יסמין לוקץ\' — ₪3,800 התקבל (סחורה פבר׳)', amount: 3800, balance: 6142, icon: '✅' },
+      { date: '27/03', label: 'WIX מרץ (ממתין)', amount: 2695, balance: 8837, icon: '⏳' },
+      { date: '28/03', label: 'MASKIT + מוזיאון (ממתין)', amount: 1667, balance: 10504, icon: '⏳' },
+      { date: '31/03', label: 'הוצאות שוטפות עסקי', amount: -800, balance: 9704, icon: '🏪' },
+      { date: '01/04', label: 'חיובי USD (~$224)', amount: -820, balance: 8884, icon: '💵' },
+      { date: '03/04', label: 'חיוב MAX 1116 (שקלים)', amount: -3425, balance: 5459, icon: '💳' },
+      { date: '03/04', label: 'זיכוי עסקי (ממתין)', amount: 506, balance: 5965, icon: '💚' },
       { date: '10/04', label: 'ארנונה + חשמל', amount: -676, balance: 5289, icon: '🏪' },
       { date: '15/04', label: 'רו"ח + ביט"ל + הייפ', amount: -882, balance: 4407, icon: '📄' },
       { date: '20/04', label: 'MUZA ₪1,044 (אם ישולם)', amount: 1044, balance: 5451, icon: '⏳' },
@@ -619,7 +618,7 @@ const DATA = {
       { task: 'הסכם בנק דיסקונט — ריבית חריגה: 19.75%/שנה מעל מסגרת. עלות מרץ: ₪7.50 (₪5 אגרה + ₪2.50 ריבית) ✅', priority: 'done' },
       { task: 'חריגת מסגרת דיסקונט מרץ — הוצאה לא צפויה ₪7.50 (תחויב בחיוב הבא)', priority: 'info' },
       { task: '⚠️ כרטיסי אשראי מרץ: ₪5,291 כבר צבורים (23/03) — צפי סופי ~₪5,870. ההערכה הקודמת ₪3,288 הייתה נמוכה ב-₪2,600!', priority: 'critical' },
-      { task: '🎯 פער ל-10K: -₪5,548. צפי אפריל: +₪4,452 (עם לקוחה ₪3,800). ללא לקוחה: -₪1,096', priority: 'high' },
+      { task: '✅ יסמין לוקץ\' שילמה ₪3,800 (26/03) — חשבון עסקי. פער ל-10K: -₪9,348 (צפי אפריל: +₪652).', priority: 'done' },
       { task: 'בנק דיסקונט: הצעת הלוואה עד ₪19,000 (פופ-אפ באפליקציה). לא מומלץ לנקות — לבדוק רק אם אין ברירה', priority: 'info' },
     ],
     'ביטוחים (שירה)': [
@@ -638,6 +637,8 @@ const DATA = {
       { task: 'עיבוד חשבוניות מרץ — ממתין לסוף החודש', priority: 'medium' },
       { task: 'טבלת הוצאות מאוחדת ינואר+פברואר — ממתין לפיזיות', priority: 'medium' },
       { task: 'Etsy — מעקב סגירה', priority: 'low' },
+      { task: '⚠️ Shopify $5.00 (26/03) — חיוב חריג! חויב על Diners 0112 (לא MAX 1116). שם חנות "My Store". לברר מה זה.', priority: 'high' },
+      { task: '✅ egg ₪48 (26/03) — נרשם בהוצאות מרץ. תחבורה ציבורית 25/02–24/03.', priority: 'done' },
     ],
     'משפטי (ניצן)': [
       { task: 'אימות דומיין otilyas.com — הושלם ✅', priority: 'done' },
@@ -799,10 +800,10 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
           <div style="font-size:1.05em;font-weight:700;margin-top:4px">בינלאומי 095-268372</div>
         </div>
         <div style="text-align:left">
-          <div style="font-family:var(--font-display);font-size:1.8em;font-weight:700;color:var(--green)">+₪2,342</div>
+          <div style="font-family:var(--font-display);font-size:1.8em;font-weight:700;color:var(--green)">+₪6,142</div>
         </div>
       </div>
-      <div style="font-size:.82em;color:var(--text-secondary);margin-bottom:8px">למשיכה: ₪12,342 | מסגרת: ₪10,000 ✅ בפלוס</div>
+      <div style="font-size:.82em;color:var(--text-secondary);margin-bottom:8px">למשיכה: ₪16,142 | מסגרת: ₪10,000 ✅ בפלוס</div>
       <div style="background:var(--amber-bg);padding:8px 12px;border-radius:8px;font-size:.82em;margin-top:8px">
         <div style="display:flex;justify-content:space-between"><span>ממתין (WIX+MASKIT+מוזיאון+MUZA):</span><span style="color:var(--green);font-weight:700">+₪5,406</span></div>
         <div style="display:flex;justify-content:space-between"><span>זיכוי עסקי (₪506 ב-03/04 + ₪311 ב-03/05):</span><span style="color:var(--green);font-weight:700">+₪817</span></div>
@@ -838,7 +839,7 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
       </div>
       <div style="background:var(--red-light);padding:8px 12px;border-radius:8px;font-size:.82em;margin-top:8px;text-align:center">
         <strong style="color:var(--red)">🎯 יעד ₪10K — פער: -₪9,348</strong><br>
-        <span style="font-size:.85em;color:var(--text-secondary)">לקוחה ₪3,800 → לחשבון עסקי (לא פרטי)</span>
+        <span style="font-size:.85em;color:var(--green)">✅ יסמין לוקץ' שילמה ₪3,800 ב-26/03 (חשבון עסקי)</span>
       </div>
     </div>
   </div>
