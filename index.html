@@ -535,8 +535,9 @@ const DATA = {
           { company: 'הראל', name: 'שיניים (ותיקי אל על)', monthly: 170, status: 'active', policy: '507551298', ends: '2030-01', note: 'טלי+יובל+גיא', portal: 'https://www.harel-group.co.il/personal-info/my-harel/Pages/client-view.aspx', pdf: 'pdfs/harel-shinayim.pdf' },
           { company: 'הפניקס', name: 'שיניים (קבוצתי)', monthly: 75, status: 'duplicate', policy: '310351743397', ends: '2028-02', note: 'כפל ביטוח!', portal: 'https://my.fnx.co.il/' },
           { company: 'הפניקס', name: 'חבילת כיסויים (קבוצתי)', monthly: 186, status: 'warning', policy: '2651100089', ends: '2026-09', note: 'מסתיים 9/2026', portal: 'https://my.fnx.co.il/', pdf: 'pdfs/phoenix-chavila.pdf' },
+          { company: 'כלל', name: 'בריאות משפחתי — כלל לבריאות', monthly: 0, status: 'active', policy: '122097753', ends: '2030-04-30', note: 'מבוטחים: עופר+טלי+יובל+גיא. פרמיה חודשית לבדוק בדף בנק! מרפאה, ניתוחים, שיניים, תרופות, כירורגיה. PDF ב-Drive: ביטוחים 2026', portal: 'https://www.clalins.co.il/personal/' },
         ],
-        alerts: ['כפל שיניים משולש: ₪387/חודש מ-3 מקורות!', 'כללית סמייל (₪142) נגמר יוני — לא לחדש']
+        alerts: ['כפל שיניים משולש: ₪387/חודש מ-3 מקורות!', 'כללית סמייל (₪142) נגמר יוני — לא לחדש', '⚠️ כלל בריאות 122097753 — פרמיה חודשית לא ידועה, לאמת בדף בנק']
       },
       {
         name: 'רכב', icon: '🚗', monthly: 639, yearly: 7667,
@@ -589,7 +590,10 @@ const DATA = {
       'עופר — אין כיסוי שיניים בהראל?',
       '6 פוליסות כללי בפורטל — טרם מופו',
       'הפניקס חבילה מסתיימת 9/2026 — מה הפלאן?',
+      'כלל בריאות 122097753 — פרמיה חודשית לאמת בדף בנק (הוסף 26/03/2026)',
+      'כלל בריאות 122097753 — לא הופיעה בהר הביטוח, לברר מדוע',
     ],
+    driveFolder: 'https://drive.google.com/drive/folders/1Ei9a-4a49ApGXIdKtu_n-bNb3h7xSKmE',
     pension: {
       tali: [
         { company: 'הפניקס', type: 'קרן השתלמות' },
@@ -1053,7 +1057,7 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
 
 <!-- Insurance -->
 <section id="insurance" class="section reveal">
-  <h2>ביטוחים <span class="updated">מקור: שירה (סוכנת ביטוח) | 20/03/2026</span></h2>
+  <h2>ביטוחים <span class="updated">מקור: שירה (סוכנת ביטוח) | עדכון: 26/03/2026</span></h2>
   <div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap">
     <div style="flex:1;min-width:140px;text-align:center;padding:14px;background:var(--gold-pale);border-radius:var(--radius)">
       <div style="font-size:.72em;color:var(--gold);font-weight:600">סה"כ חודשי</div>
@@ -1071,6 +1075,7 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
   <div id="insuranceCategories"></div>
   <div style="margin-top:14px" id="insuranceAlerts"></div>
   <div style="margin-top:14px">
+    <div id="insDriveFolder" style="margin-bottom:10px"></div>
     <h3 style="font-size:.88em;color:var(--gold);margin-bottom:8px">שאלות פתוחות</h3>
     <div id="insQuestions" style="font-size:.82em"></div>
   </div>
@@ -1634,6 +1639,12 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
     html += `</div></div>`;
   });
   document.getElementById('insuranceCategories').innerHTML = html;
+
+  // Drive folder link
+  if (ins.driveFolder) {
+    const dfEl = document.getElementById('insDriveFolder');
+    if (dfEl) dfEl.innerHTML = `<a href="${ins.driveFolder}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--gold-pale);border-radius:8px;color:var(--gold);font-size:.84em;font-weight:600;text-decoration:none">📁 תיקיית ביטוחים 2026 ב-Drive</a>`;
+  }
 
   // Open questions
   document.getElementById('insQuestions').innerHTML = ins.openQuestions.map(q =>
