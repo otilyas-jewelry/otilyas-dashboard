@@ -422,6 +422,10 @@ const D = {
     { text: 'חוב כללית בי"ח העמק — ₪1,222 מ-10/2025, תזכורת שנייה! לברר/טופס 17', done: false },
     { text: 'יוניברסל מוטורס — אישור שהרכב בתקן (פנייה 20/05/2025), לברר סטטוס', done: false },
     { text: 'ד"ר גולדרינג המליצה EMDR — לברר עם כרמל אם מעוניין/טופל', done: false },
+    // --- תיקיות Drive חדשות (26/03/2026) ---
+    { text: '🦴 EMG / גב תחתון — מסמכים ב-Drive. לבדוק תוצאות + לצרף לתיק אגף שיקום', done: false },
+    { text: '🌿 לזר קנאביס — אישורים ב-Drive. לוודא שהמרשם תקף ומחודש', done: false },
+    { text: '🧠 הפניות פסיכיאטריות — תיקייה ב-Drive. לוודא שכל ההפניות של ד"ר גרישין תקפות', done: false },
     { text: 'הפניה אורטופדית חדשה — לבקש באזור האישי למרפאה/מכון פרטי', done: false },
     { text: 'אחריות מאוורר פסיפיק (10 שנים) + פמי פרמיום (2017) — לשמור', done: true },
     { text: '🦷 תביעת שיניים להפניקס (צלילה) — 23 תמונות מוכנות, לאחד ל-PDF ולשלוח', done: false },
@@ -460,6 +464,18 @@ const D = {
     totalFiles: 28,
     uniqueFiles: 16,
     duplicates: 12,
+    // תיקיות נושא — עודכן 26/03/2026
+    subFolders: [
+      { name: 'EMG וגב תחתון — במלחמה', id: '1D_WMl5XBaB9pzqYXHnOwAS9ULe5B_aqc', emoji: '🦴', note: 'בדיקות EMG, כאב גב תחתון — נפגע קרב' },
+      { name: 'אגף השיקום', id: '1m88iDTKcULVB_hNlmYEe0LuzWNFGgt1a', emoji: '🛡️', note: 'אישורים + צילומי מסך פניות' },
+      { name: 'הפניות פסיכיאטריות', id: '1m2phLIoKNDimuCWpgeoPIF1XdWD_ZbpM', emoji: '🧠', note: 'ד"ר גרישין + ד"ר גולדרינג' },
+      { name: 'לזר — אישורים לקנאביס', id: '1sZ1H4kOyxOmC_1nz2p41xQiZbMwh2opu', emoji: '🌿', note: 'אישורי קנאביס רפואי (PTSD)' },
+      { name: 'לטיפול', id: '1RJLCE_0oahfyZLVRLN78gsYu0xKVMVgP', emoji: '📋', note: 'מסמכים לטיפול שוטף' },
+      { name: 'מאוורר תקרה', id: '1GWwycpXFIIRdSb6iFhHjtDLxGT3l0nrg', emoji: '🌀', note: 'אחריות + אישורים' },
+      { name: 'סלקום', id: '1iMT-8eJYz0sV3s6ACEdk5MUTbM4CkMwq', emoji: '📡', note: 'תלונת תשתית ינואר 2026' },
+      { name: 'צלילה שיניים', id: '1UhaAAM_ssd6gJcySQoL7vjE7ZvT5WH3R', emoji: '🦷', note: 'תביעה להפניקס — 23 תמונות' },
+      { name: 'רכב כללי', id: '1q4rYWpsBvX7P3eLLEaRHGtoldzLEcS8T', emoji: '🚗', note: 'דוח חניה + מסמכי רכב' },
+    ],
   },
 };
 
@@ -946,21 +962,21 @@ updateClock(); setInterval(updateClock, 30000);
 
 // Google Drive
 (function(){
-  document.getElementById('driveBadge').textContent = D.driveFolder.duplicates + ' כפילויות למחיקה';
+  document.getElementById('driveBadge').textContent = D.driveFolder.subFolders.length + ' תיקיות נושא';
+  const foldersHtml = D.driveFolder.subFolders.map(f => `
+    <a href="https://drive.google.com/drive/folders/${f.id}" target="_blank"
+       style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--blue-light);border-radius:8px;text-decoration:none;color:var(--text);border:1px solid var(--border)">
+      <span style="font-size:1.2em">${f.emoji}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.82em;font-weight:600;color:var(--header-bg)">${f.name}</div>
+        <div style="font-size:.72em;color:var(--text-muted)">${f.note}</div>
+      </div>
+      <span style="font-size:.7em;color:var(--text-muted)">↗</span>
+    </a>
+  `).join('');
   document.getElementById('driveInfo').innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">
-      <div style="text-align:center;padding:10px;background:var(--blue-light);border-radius:var(--radius)">
-        <div style="font-family:var(--mono);font-size:1.3em;font-weight:700;color:var(--blue)">${D.driveFolder.totalFiles}</div>
-        <div style="font-size:.72em;color:var(--text-muted)">סה"כ קבצים</div>
-      </div>
-      <div style="text-align:center;padding:10px;background:var(--green-bg);border-radius:var(--radius)">
-        <div style="font-family:var(--mono);font-size:1.3em;font-weight:700;color:var(--green)">${D.driveFolder.uniqueFiles}</div>
-        <div style="font-size:.72em;color:var(--text-muted)">ייחודיים</div>
-      </div>
-      <div style="text-align:center;padding:10px;background:var(--red-bg);border-radius:var(--radius)">
-        <div style="font-family:var(--mono);font-size:1.3em;font-weight:700;color:var(--red)">${D.driveFolder.duplicates}</div>
-        <div style="font-size:.72em;color:var(--text-muted)">כפילויות</div>
-      </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      ${foldersHtml}
     </div>
     <a href="${D.driveFolder.url}" target="_blank" style="display:block;text-align:center;background:var(--header-bg);color:white;padding:10px;border-radius:var(--radius);text-decoration:none;font-weight:600;font-size:.88em">📁 ${D.driveFolder.name} — פתח ב-Drive</a>
   `;
