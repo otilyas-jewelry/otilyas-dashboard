@@ -237,7 +237,7 @@ tr:hover { background: #f7fafc; }
 // DATA — Edit here to update the dashboard
 // ═══════════════════════════════════════════
 const D = {
-  lastUpdated: '2026-03-27 (בדיקת מייל + אימות Drive)',
+  lastUpdated: '2026-03-27 (כלב סיוע ברי + בדיקת מייל + אימות Drive)',
 
   // Income
   income: {
@@ -470,6 +470,21 @@ const D = {
     },
   ],
 
+  // Service Dog
+  serviceDog: {
+    name: 'ברי',
+    nameEn: 'Berry',
+    serialNo: '04251404',
+    chipNo: '900163000178167',
+    validUntil: '2026-08-01',
+    validUntilDisplay: '01/08/2026',
+    issuer: 'המרכז להכשרות כלבי שירות',
+    phone: '055-6806099',
+    email: 'k9isdtc@gmail.com',
+    law: 'חוק שוויון זכויות לאנשים עם מוגבלות, תשנ"ח-1998',
+    rights: 'גישה מלאה לכל מקום ציבורי ותחבורה ציבורית',
+  },
+
   // Google Drive
   driveFolder: {
     name: 'כרמל אבא 2026 כל הקבצים',
@@ -573,6 +588,7 @@ function fmtSign(n) { return (n>=0?'+':'-') + '₪' + fmt(n); }
   <a href="#appointments">תורים</a>
   <a href="#tzilaTeeth">🦷 צלילה</a>
   <a href="#tasks">משימות</a>
+  <a href="#serviceDog">🐕 ברי</a>
 </nav>
 
 <!-- Alerts -->
@@ -706,6 +722,12 @@ function fmtSign(n) { return (n>=0?'+':'-') + '₪' + fmt(n); }
   <div id="driveInfo"></div>
 </section>
 
+<!-- כלב סיוע -->
+<section id="serviceDog" class="card reveal visible">
+  <div class="card-title">🐕 כלב סיוע — ברי <span class="badge" style="background:var(--amber-bg);color:var(--amber)" id="dogBadge"></span></div>
+  <div id="dogInfo"></div>
+</section>
+
 <!-- Tasks -->
 <section id="tasks" class="card reveal">
   <div class="card-title">משימות <span class="badge" id="taskBadge"></span></div>
@@ -740,6 +762,13 @@ updateClock(); setInterval(updateClock, 30000);
   html += `<div class="alert alert-warn"><span class="alert-icon">⚠️</span>כרטיסים ישנים (8563, 8309) נסגרו. כרטיסים חדשים (2818, 2917) פעילים. צריך לחכות חודש-חודשיים לנתונים.</div>`;
   // MRI
   if (D.medical.pendingMRI) html += `<div class="alert alert-danger"><span class="alert-icon">🏥</span>MRI בהרדמה: ${D.medical.mriStatus}. צריך מעקב!</div>`;
+  // Service dog renewal alert
+  const dog = D.serviceDog;
+  const dogExpiry = new Date(dog.validUntil);
+  const daysUntilDogExpiry = Math.round((dogExpiry - new Date()) / 86400000);
+  if (daysUntilDogExpiry < 90) {
+    html += `<div class="alert alert-danger"><span class="alert-icon">🐕</span>תעודת כלב הסיוע ברי פגה בעוד ${daysUntilDogExpiry} ימים (${dog.validUntilDisplay}). לחדש עם המרכז להכשרות כלבי שירות: ${dog.phone}</div>`;
+  }
   // Card 2818 — resolved 26/03/2026
   document.getElementById('alerts').innerHTML = html;
 })();
@@ -1004,6 +1033,38 @@ updateClock(); setInterval(updateClock, 30000);
       <div style="${t.done?'color:var(--text-muted);text-decoration:line-through':''}">${t.text}</div>
     </div>
   `).join('');
+})();
+
+// Service Dog
+(function(){
+  const dog = D.serviceDog;
+  const expiry = new Date(dog.validUntil);
+  const daysLeft = Math.round((expiry - new Date()) / 86400000);
+  const urgentColor = daysLeft < 60 ? 'var(--red)' : daysLeft < 90 ? 'var(--amber)' : 'var(--green)';
+  document.getElementById('dogBadge').textContent = `בתוקף עד ${dog.validUntilDisplay}`;
+  document.getElementById('dogInfo').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:var(--radius);padding:14px;text-align:center">
+        <div style="font-size:2.5em">🐕</div>
+        <div style="font-weight:800;font-size:1.1em;color:var(--header-bg)">${dog.name} / ${dog.nameEn}</div>
+        <div style="font-size:.78em;color:var(--text-sec);margin-top:4px">כלב סיוע של כרמל</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px">
+        <div style="font-size:.75em;color:var(--text-sec);margin-bottom:6px">סטטוס תעודה</div>
+        <div style="font-weight:700;color:${urgentColor};font-size:1em">${daysLeft} ימים לתוקף</div>
+        <div style="font-size:.78em;color:var(--text-muted);margin-top:2px">עד ${dog.validUntilDisplay}</div>
+      </div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:.84em">
+      <tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 4px;color:var(--text-sec);width:40%">מס' סידורי</td><td style="padding:7px 4px;font-weight:600">${dog.serialNo}</td></tr>
+      <tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 4px;color:var(--text-sec)">מספר שבב</td><td style="padding:7px 4px;font-weight:600">${dog.chipNo}</td></tr>
+      <tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 4px;color:var(--text-sec)">גוף מנפיק</td><td style="padding:7px 4px">${dog.issuer}</td></tr>
+      <tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 4px;color:var(--text-sec)">טלפון</td><td style="padding:7px 4px"><a href="tel:${dog.phone}" style="color:var(--blue)">${dog.phone}</a></td></tr>
+      <tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 4px;color:var(--text-sec)">מייל</td><td style="padding:7px 4px"><a href="mailto:${dog.email}" style="color:var(--blue)">${dog.email}</a></td></tr>
+      <tr><td style="padding:7px 4px;color:var(--text-sec)">זכות חוקית</td><td style="padding:7px 4px;font-size:.8em">${dog.rights} | ${dog.law}</td></tr>
+    </table>
+    ${daysLeft < 90 ? `<div style="margin-top:12px;padding:10px 14px;background:var(--amber-bg);border:1px solid var(--amber);border-radius:var(--radius);font-size:.82em;color:var(--amber);font-weight:600">⚠️ יש לחדש את התעודה לפני ${dog.validUntilDisplay} — לפנות ל-${dog.phone} או ${dog.email}</div>` : ''}
+  `;
 })();
 
 // Last update
