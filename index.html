@@ -529,21 +529,30 @@ const DATA = {
       {
         name: 'בריאות', icon: '🏥', monthly: 790, yearly: 9480,
         policies: [
-          { company: 'כללית', name: 'מושלם פלטינום (שב"ן)', monthly: 104, status: 'active', ends: null, portal: 'https://www.clalit.co.il/he/Pages/default.aspx' },
-          { company: 'הראל', name: 'סיעודי (קבוצתי קופ"ח)', monthly: 128, status: 'active', policy: '300994208', ends: null, portal: 'https://www.harel-group.co.il/personal-info/my-harel/Pages/client-view.aspx' },
-          { company: 'מגדל', name: 'מחלות קשות (אישי)', monthly: 127, status: 'warning', policy: '22945374', ends: '2026-06-01', note: 'מסתיים! לחדש', portal: 'https://my.migdal.co.il/mymigdal/process/login', pdf: 'pdfs/migdal-machalot-kashot.pdf' },
-          { company: 'הראל', name: 'שיניים (ותיקי אל על)', monthly: 170, status: 'active', policy: '507551298', ends: '2030-01', note: 'טלי+יובל+גיא', portal: 'https://www.harel-group.co.il/personal-info/my-harel/Pages/client-view.aspx', pdf: 'pdfs/harel-shinayim.pdf' },
-          { company: 'הפניקס', name: 'שיניים (קבוצתי)', monthly: 75, status: 'duplicate', policy: '310351743397', ends: '2028-02', note: 'כפל ביטוח!', portal: 'https://my.fnx.co.il/' },
-          { company: 'הפניקס', name: 'חבילת כיסויים (קבוצתי)', monthly: 186, status: 'warning', policy: '2651100089', ends: '2026-09', note: 'מסתיים 9/2026', portal: 'https://my.fnx.co.il/', pdf: 'pdfs/phoenix-chavila.pdf' },
-          { company: 'כלל', name: 'בריאות משפחתי — כלל לבריאות', monthly: 0, status: 'active', policy: '122097753', ends: '2030-04-30', note: 'מבוטחים: עופר+טלי+יובל+גיא. פרמיה חודשית לבדוק בדף בנק! מרפאה, ניתוחים, שיניים, תרופות, כירורגיה.', portal: 'https://www.clalins.co.il/personal/', pdf: 'pdfs/clal-briut.pdf' },
+          { company: 'כללית', name: 'מושלם פלטינום (שב"ן)', monthly: 104, status: 'active', ends: null, portal: 'https://www.clalit.co.il/he/Pages/default.aspx',
+            contact: '📞 *2700 | 🌐 clalit.co.il | שירות מנויים: 03-7472700' },
+          { company: 'הראל', name: 'סיעודי (קבוצתי קופ"ח)', monthly: 128, status: 'active', policy: '300994208', ends: null, portal: 'https://www.harel-group.co.il/personal-info/my-harel/Pages/client-view.aspx',
+            contact: '📞 03-7540000 | תביעות: harel-group.co.il/insurance/health/claim' },
+          { company: 'מגדל', name: 'מחלות קשות (אישי)', monthly: 127, status: 'warning', policy: '22945374', ends: '2026-06-01', note: 'מסתיים! לחדש', portal: 'https://my.migdal.co.il/mymigdal/process/login', pdf: 'pdfs/migdal-machalot-kashot.pdf',
+            contact: '📞 שירות: 03-9210101 שלוחה 9 | תביעות: שלוחה 3 | סוכן: שרי — sari@se-fi.co.il' },
+          { company: 'הראל', name: 'שיניים (ותיקי אל על)', monthly: 170, status: 'active', policy: '507551298', ends: '2030-01', note: 'טלי+יובל+גיא', portal: 'https://www.harel-group.co.il/personal-info/my-harel/Pages/client-view.aspx', pdf: 'pdfs/harel-shinayim.pdf',
+            contact: '🌐 תביעות: harel-group.co.il/insurance/health/claim | 📞 03-7540000' },
+          { company: 'הפניקס', name: 'שיניים (קבוצתי)', monthly: 75, status: 'duplicate', policy: '310351743397', ends: '2028-02', note: 'כפל ביטוח!', portal: 'https://my.fnx.co.il/',
+            contact: '📞 חיה רפאלוב: 03-7335469 | ✉️ ChayaH@fnx.co.il | כללי: f1@fnx.co.il' },
+          { company: 'הפניקס', name: 'חבילת כיסויים (קבוצתי)', monthly: 186, status: 'warning', policy: '2651100089', ends: '2026-09', note: 'מסתיים 9/2026', portal: 'https://my.fnx.co.il/', pdf: 'pdfs/phoenix-chavila.pdf',
+            contact: '📞 חיה רפאלוב: 03-7335469 | ✉️ ChayaH@fnx.co.il | תביעות: ts@fnx.co.il' },
+          { company: 'כלל', name: 'בריאות משפחתי — כלל לבריאות', monthly: 0, status: 'active', policy: '122097753', ends: '2030-04-30', note: 'מבוטחים: עופר+טלי+יובל+גיא. פרמיה חודשית לבדוק בדף בנק!', portal: 'https://www.clalins.co.il/personal/', pdf: 'pdfs/clal-briut.pdf',
+            contact: '📞 03-6386666 | 🌐 clalins.co.il' },
         ],
         alerts: ['כפל שיניים משולש: ₪387/חודש מ-3 מקורות!', 'כללית סמייל (₪142) נגמר יוני — לא לחדש', '⚠️ כלל בריאות 122097753 — פרמיה חודשית לא ידועה, לאמת בדף בנק']
       },
       {
         name: 'רכב', icon: '🚗', monthly: 639, yearly: 7667,
         policies: [
-          { company: 'AIG', name: 'מאזדה CX-5 (חובה+מקיף)', monthly: 366, status: 'active', policy: '1681471725', ends: '2026-11-30', note: 'עופר נהג עיקרי', portal: 'https://services.aig.co.il/PersonalServices/#/policydetails/1681471725/send-doc', pdf: 'pdfs/aig-mazda.pdf' },
-          { company: 'הראל', name: 'קיה סול 2011 (חובה+מקיף)', monthly: 273, status: 'active', policy: '8038115940', ends: '2026-08-31', note: 'טלי נהגת', portal: 'https://www.harel-group.co.il/personal-info/my-harel/Pages/client-view.aspx', pdf: 'pdfs/harel-kia.pdf' },
+          { company: 'AIG', name: 'מאזדה CX-5 (חובה+מקיף)', monthly: 366, status: 'active', policy: '1681471725', ends: '2026-11-30', note: 'עופר נהג עיקרי', portal: 'https://services.aig.co.il/PersonalServices/#/policydetails/1681471725/send-doc', pdf: 'pdfs/aig-mazda.pdf',
+            contact: '📞 תביעות: *6266 | ✉️ claims@aig.co.il | שירות: 03-9272300 | גרירה: *2008 | שמשות: 1-800-404-505 | שגריר: *8888' },
+          { company: 'הראל', name: 'קיה סול 2011 (חובה+מקיף)', monthly: 273, status: 'active', policy: '8038115940', ends: '2026-08-31', note: 'טלי נהגת', portal: 'https://www.harel-group.co.il/personal-info/my-harel/Pages/client-view.aspx', pdf: 'pdfs/harel-kia.pdf',
+            contact: '📞 תביעות: 03-9294000 | חירום וואטסאפ: 052-7544589 | סוכן וריטס: 03-9208056 | ✉️ teudathova@harel-ins.co.il' },
         ],
         alerts: ['תביעה אחת (01/2026): ₪10,628 — סגורה']
       },
@@ -551,8 +560,9 @@ const DATA = {
         name: 'דירה (הכורם 11, פ"ת)', icon: '🏠', monthly: 357, yearly: 4282,
         policies: [
           { company: 'מנורה מבטחים', name: 'TOP — מבנה + תכולה', monthly: 357, status: 'warning', policy: '00-22-637388-25-9', ends: '2026-05-31',
-            note: 'מבוטח: עופר דלאל. מבנה ₪2,501,189 + תכולה ₪310,658 + צד ג\' ₪2M + מעביד ₪19.5M. 3 תשלומים ב-Visa 8756. סוכן: TOP 072-3838272.',
-            portal: 'https://www.menora.co.il/', pdf: 'pdfs/menora-hakoreim.pdf' },
+            note: 'מבוטח: עופר דלאל. מבנה ₪2,501,189 + תכולה ₪310,658 + צד ג\' ₪2M + מעביד ₪19.5M. 3 תשלומים ב-Visa 8756.',
+            portal: 'https://www.menora.co.il/', pdf: 'pdfs/menora-hakoreim.pdf',
+            contact: '📞 סוכן TOP מבטחים: 072-3838272 | תביעות מנורה: 03-7107107' },
         ],
         alerts: [
           'מסתיים 31/05/2026 — לחדש בעוד ~2 חודשים!',
@@ -563,7 +573,8 @@ const DATA = {
         policies: [
           { company: 'הפניקס SMART', name: 'HOME Plus — מבנה דירה', monthly: 78, status: 'active', policy: '26/096/171/1664874', ends: '2027-03-31',
             note: 'דירה שכורה — אהרונסון 29, תל אביב-יפו. מבנה ₪867,303 + נזקי מים ₪750,530 + צד ג\' ₪2M + עובד בית ₪20M. 2 תשלומים ₪467 ב-Visa 8756.',
-            portal: 'https://my.fnx.co.il/', pdf: 'pdfs/phoenix-aharonson.pdf' },
+            portal: 'https://my.fnx.co.il/', pdf: 'pdfs/phoenix-aharonson.pdf',
+            contact: '📞 חיה רפאלוב: 03-7335469 | ✉️ ChayaH@fnx.co.il | תביעות: ts@fnx.co.il | כללי: f1@fnx.co.il' },
         ],
         alerts: [
           'פוליסה חדשה — פעילה 01/04/2026 עד 31/03/2027',
@@ -573,8 +584,9 @@ const DATA = {
         name: 'עסק', icon: '💼', monthly: 111, yearly: 1331,
         policies: [
           { company: 'כלל', name: 'מקיף לבית עסק (מטריה)', monthly: 111, status: 'active', policy: '6-44830746-00', ends: '2026-12-31',
-            note: 'מבנה ₪150K + צד ג\' ₪2M + מעביד ₪20M (2 עובדים). 5 תשלומים ₪266/חודש. שינקין 17 ת"א. יעל לוי: 074-7505151',
-            portal: 'https://www.clalins.co.il/personal/', pdf: 'pdfs/clal-shenkin.pdf' },
+            note: 'מבנה ₪150K + צד ג\' ₪2M + מעביד ₪20M (2 עובדים). 5 תשלומים ₪266/חודש. שינקין 17 ת"א.',
+            portal: 'https://www.clalins.co.il/personal/', pdf: 'pdfs/clal-shenkin.pdf',
+            contact: '📞 סוכנת יעל לוי (אבידן): 074-7505151 | ✉️ yael@avidan-ins.co.il' },
         ],
         alerts: [
           'כלל מכסה מבנה חנות ₪150K (פרק 2). הפניקס = ביטוח דירה בלבד (אהרונסון 29) — אין כפל!',
@@ -1619,16 +1631,22 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
       const copyBtn = p.pdf
         ? `<a href="${p.pdf}" target="_blank" style="display:inline-flex;align-items:center;gap:3px;font-size:.72em;padding:3px 8px;border-radius:6px;background:#f3f0ff;color:#7c5cbf;text-decoration:none;font-weight:600;white-space:nowrap">📄 פוליסה</a>`
         : '';
-      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0ece8;font-size:.84em">
-        <div>
-          <div style="font-weight:600">${p.company} — ${p.name}</div>
-          <div style="font-size:.78em;color:var(--text-muted)">${p.note || ''}${endsText}${p.policy ? ' · פוליסה: '+p.policy : ''}</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end">
-          <span style="font-family:var(--font-mono);font-weight:600">₪${p.monthly}</span>
-          ${statusTag}
-          ${portalBtn}
-          ${copyBtn}
+      const contactRow = p.contact
+        ? `<div style="font-size:.74em;color:#0984e3;margin-top:3px;line-height:1.5">${p.contact}</div>`
+        : '';
+      html += `<div style="padding:8px 0;border-bottom:1px solid #f0ece8;font-size:.84em">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div style="font-weight:600">${p.company} — ${p.name}</div>
+            <div style="font-size:.78em;color:var(--text-muted)">${p.note || ''}${endsText}${p.policy ? ' · פוליסה: '+p.policy : ''}</div>
+            ${contactRow}
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0;margin-right:8px">
+            <span style="font-family:var(--font-mono);font-weight:600">₪${p.monthly}</span>
+            ${statusTag}
+            ${portalBtn}
+            ${copyBtn}
+          </div>
         </div>
       </div>`;
     });
