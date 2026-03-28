@@ -1625,7 +1625,6 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
       else if (p.status === 'duplicate') statusTag = '<span class="tag tag-urgent">כפל!</span>';
       else statusTag = '<span class="tag tag-active">פעיל</span>';
 
-      const endsText = p.ends ? ` · עד ${p.ends}` : '';
       const portalBtn = p.portal ? `<a href="${p.portal}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:3px;font-size:.72em;padding:3px 8px;border-radius:6px;background:var(--gold-pale);color:var(--gold);text-decoration:none;font-weight:600;white-space:nowrap" title="פורטל ${p.company}">🔗 כניסה</a>` : '';
       const esc = s => (s||'').replace(/"/g,'&quot;');
       const copyBtn = p.pdf
@@ -1634,11 +1633,27 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
       const contactRow = p.contact
         ? `<div style="font-size:.74em;color:#0984e3;margin-top:3px;line-height:1.5">${p.contact}</div>`
         : '';
+      let renewalRow = '';
+      if (p.ends) {
+        const endDate = new Date(p.ends.length === 7 ? p.ends + '-01' : p.ends);
+        const today = new Date('2026-03-28');
+        const days = Math.round((endDate - today) / 86400000);
+        const d = endDate.getDate ? endDate : null;
+        const formatted = endDate.toLocaleDateString('he-IL', { day:'2-digit', month:'2-digit', year:'numeric' });
+        let rColor, rIcon;
+        if (days <= 75) { rColor = '#e17055'; rIcon = '🔴'; }
+        else if (days <= 150) { rColor = '#e67e22'; rIcon = '🟠'; }
+        else { rColor = '#00b894'; rIcon = '🟢'; }
+        renewalRow = `<div style="font-size:.74em;color:${rColor};font-weight:600;margin-top:3px">${rIcon} חידוש: ${formatted} · עוד ${days} יום</div>`;
+      } else {
+        renewalRow = `<div style="font-size:.74em;color:#00b894;margin-top:3px">🟢 מתחדש אוטומטית</div>`;
+      }
       html += `<div style="padding:8px 0;border-bottom:1px solid #f0ece8;font-size:.84em">
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
           <div>
             <div style="font-weight:600">${p.company} — ${p.name}</div>
-            <div style="font-size:.78em;color:var(--text-muted)">${p.note || ''}${endsText}${p.policy ? ' · פוליסה: '+p.policy : ''}</div>
+            <div style="font-size:.78em;color:var(--text-muted)">${p.note || ''}${p.policy ? ' · פוליסה: '+p.policy : ''}</div>
+            ${renewalRow}
             ${contactRow}
           </div>
           <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0;margin-right:8px">
