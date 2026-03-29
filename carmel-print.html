@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>כרמל — דשבורד להדפסה</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Arial', 'Heebo', sans-serif;
+    background: #fff;
+    color: #1a202c;
+    direction: rtl;
+    font-size: 11pt;
+    padding: 20px;
+  }
+
+  /* ===== SCREEN ONLY ===== */
+  @media screen {
+    body { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
+    .print-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: #2b6cb0;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .print-btn:hover { background: #1a4f8a; }
+  }
+
+  /* ===== PRINT ===== */
+  @media print {
+    .print-btn { display: none; }
+    body { font-size: 10pt; padding: 10px; }
+    .page-break { page-break-before: always; }
+    section { page-break-inside: avoid; }
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: #1a365d;
+    color: white;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header h1 { font-size: 20pt; font-weight: 700; }
+  .header .meta { font-size: 9pt; opacity: 0.85; text-align: left; line-height: 1.6; }
+
+  /* ===== SUMMARY BOXES ===== */
+  .summary-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .box {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .box.green { border-color: #276749; background: #f0fff4; }
+  .box.red   { border-color: #c53030; background: #fff5f5; }
+  .box.blue  { border-color: #2b6cb0; background: #ebf4ff; }
+  .box .label { font-size: 9pt; color: #4a5568; margin-bottom: 6px; }
+  .box .amount { font-size: 18pt; font-weight: 700; }
+  .box.green .amount { color: #276749; }
+  .box.red   .amount { color: #c53030; }
+  .box.blue  .amount { color: #2b6cb0; }
+  .box .sub  { font-size: 8pt; color: #718096; margin-top: 4px; }
+
+  /* ===== SECTIONS ===== */
+  section {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .section-title {
+    background: #f7fafc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 10px 16px;
+    font-size: 12pt;
+    font-weight: 700;
+    color: #2d3748;
+  }
+  .section-body { padding: 12px 16px; }
+
+  /* ===== TABLES ===== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+  }
+  th {
+    background: #edf2f7;
+    padding: 7px 10px;
+    text-align: right;
+    font-weight: 600;
+    color: #2d3748;
+    border-bottom: 1px solid #cbd5e0;
+  }
+  td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #edf2f7;
+    color: #2d3748;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f7fafc; }
+  .total-row td { font-weight: 700; background: #edf2f7; border-top: 2px solid #cbd5e0; }
+  .amount-col { font-weight: 600; }
+  .green-text { color: #276749; }
+  .red-text   { color: #c53030; }
+  .blue-text  { color: #2b6cb0; }
+  .muted      { color: #718096; font-size: 9pt; }
+
+  /* ===== STATUS BADGES ===== */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 8pt;
+    font-weight: 600;
+  }
+  .badge-green { background: #c6f6d5; color: #276749; }
+  .badge-red   { background: #fed7d7; color: #c53030; }
+  .badge-amber { background: #fefcbf; color: #b7791f; }
+  .badge-blue  { background: #bee3f8; color: #2b6cb0; }
+
+  /* ===== TASKS ===== */
+  .task-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid #edf2f7;
+  }
+  .task-row:last-child { border-bottom: none; }
+  .task-icon { font-size: 13pt; min-width: 22px; }
+  .task-text { flex: 1; line-height: 1.4; font-size: 10pt; }
+  .task-urgent { color: #c53030; font-weight: 600; }
+
+  /* ===== TIMELINE BAR ===== */
+  .timeline-bar {
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .timeline-fill {
+    height: 100%;
+    background: #2b6cb0;
+    border-radius: 4px;
+  }
+  .progress-label {
+    font-size: 8pt;
+    color: #718096;
+    margin-top: 2px;
+  }
+
+  /* ===== TWO COLS ===== */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  @media print {
+    .two-col { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ===== NOTE ===== */
+  .note {
+    background: #fffbeb;
+    border: 1px solid #f6e05e;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 9pt;
+    color: #744210;
+    margin-top: 8px;
+  }
+  .note-red {
+    background: #fff5f5;
+    border-color: #feb2b2;
+    color: #742a2a;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    font-size: 8pt;
+    color: #a0aec0;
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">🖨️ הדפס</button>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>כרמל — ניהול פיננסי</h1>
+  <div class="meta">
+    עדכון אחרון: 29/03/2026<br>
+    בנק: דיסקונט | חשבון: 1615 / 1616<br>
+    כרטיסים פעילים: 2818, 2917
+  </div>
+</div>
+
+<!-- SUMMARY BOXES -->
+<div class="summary-row">
+  <div class="box green">
+    <div class="label">🟢 הכנסות חודשיות</div>
+    <div class="amount">₪35,749</div>
+    <div class="sub">5 מקורות קבועים</div>
+  </div>
+  <div class="box red">
+    <div class="label">🔴 התחייבויות מאומתות</div>
+    <div class="amount">₪17,430</div>
+    <div class="sub">הלוואות + משכנתא + הו"קים</div>
+  </div>
+  <div class="box blue">
+    <div class="label">💰 נשאר למחיה</div>
+    <div class="amount">₪18,319</div>
+    <div class="sub">לפני הוצאות שוטפות</div>
+  </div>
+</div>
+
+<!-- INCOME + EXPENSES SIDE BY SIDE -->
+<div class="two-col">
+
+  <!-- INCOME -->
+  <section>
+    <div class="section-title">🟢 הכנסות קבועות</div>
+    <div class="section-body">
+      <table>
+        <thead><tr><th>#</th><th>מקור</th><th>סכום חודשי</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>משרד הביטחון</td><td class="amount-col green-text">₪20,700</td></tr>
+          <tr><td>2</td><td>עובד מדינה</td><td class="amount-col green-text">₪7,958</td></tr>
+          <tr><td>3</td><td>ביטוח לאומי (1)</td><td class="amount-col green-text">₪2,757</td></tr>
+          <tr><td>4</td><td>ביטוח לאומי (2)</td><td class="amount-col green-text">₪2,417</td></tr>
+          <tr><td>5</td><td>כלל פנסיה</td><td class="amount-col green-text">₪1,916</td></tr>
+          <tr class="total-row"><td colspan="2">סה"כ</td><td class="green-text">₪35,749</td></tr>
+        </tbody>
+      </table>
+      <div class="note">✅ אומת מול נתוני הבנק (ממוצע 6 חודשים: ~₪36,632)</div>
+    </div>
+  </section>
+
+  <!-- EXPENSES SUMMARY -->
+  <section>
+    <div class="section-title">🔴 יוצא — סיכום</div>
+    <div class="section-body">
+      <table>
+        <thead><tr><th>קטגוריה</th><th>סכום</th></tr></thead>
+        <tbody>
+          <tr><td>4 הלוואות דיסקונט</td><td class="amount-col red-text">₪7,123</td></tr>
+          <tr><td>משכנתא (טפחות)</td><td class="amount-col red-text">₪5,557</td></tr>
+          <tr><td>הלוואות נוספות</td><td class="amount-col red-text">₪4,269</td></tr>
+          <tr><td>הו"קים (שריר + דמי כרטיס)</td><td class="amount-col red-text">₪481</td></tr>
+          <tr class="total-row"><td>סה"כ מאומת</td><td class="red-text">₪17,430</td></tr>
+        </tbody>
+      </table>
+      <div class="note">💡 מתוך ה-₪18,319 יוצאים: אוכל, חשמל, מים, ארנונה, דלק, הוצאות אישיות ומשיכות מזומן</div>
+    </div>
+  </section>
+
+</div>
+
+<!-- LOANS DETAIL -->
+<section>
+  <div class="section-title">🏦 הלוואות דיסקונט — פירוט (מ-15.03.2026)</div>
+  <div class="section-body">
+    <table>
+      <thead>
+        <tr>
+          <th>מס' הלוואה</th>
+          <th>קרן מקורית</th>
+          <th>יתרת חוב</th>
+          <th>תשלום חודשי</th>
+          <th>סטטוס</th>
+          <th>צפי סיום</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="muted">15500243667</td>
+          <td>₪91,000</td>
+          <td>₪91,129</td>
+          <td class="amount-col red-text">₪1,852</td>
+          <td><div class="timeline-bar"><div class="timeline-fill" style="width:0%"></div></div><div class="progress-label">0/60 תשלומים</div></td>
+          <td>מרץ 2031</td>
+        </tr>
+        <tr>
+          <td class="muted">15500240285</td>
+          <td>₪60,000</td>
+          <td>₪58,481</td>
+          <td class="amount-col red-text">₪1,196</td>
+          <td><div class="timeline-bar"><div class="timeline-fill" style="width:3%"></div></div><div class="progress-label">2/60 תשלומים</div></td>
+          <td>ינואר 2031</td>
+        </tr>
+        <tr>
+          <td class="muted">15500230905</td>
+          <td>₪150,000</td>
+          <td>₪130,748</td>
+          <td class="amount-col red-text">₪2,356</td>
+          <td><div class="timeline-bar"><div class="timeline-fill" style="width:16%"></div></div><div class="progress-label">13/80 תשלומים</div></td>
+          <td>אוקטובר 2031</td>
+        </tr>
+        <tr>
+          <td class="muted">15500183265</td>
+          <td>₪100,000</td>
+          <td>₪35,321</td>
+          <td class="amount-col red-text">₪1,718</td>
+          <td><div class="timeline-bar"><div class="timeline-fill" style="width:69%"></div></div><div class="progress-label">50/72 תשלומים ⭐</div></td>
+          <td><strong>ינואר 2028</strong> — ראשון לגמור!</td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="2">סה"כ | יתרה: ₪315,680</td>
+          <td>₪315,680</td>
+          <td class="red-text">₪7,123</td>
+          <td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">📌 ינואר 2028 — ₪1,718 מתפנים. 2031 — כל ₪7,123 מתפנים!</div>
+  </div>
+</section>
+
+<!-- LOANS TIMELINE -->
+<section>
+  <div class="section-title">⏳ ציר זמן — מתי ההלוואות נגמרות?</div>
+  <div class="section-body">
+    <table>
+      <thead><tr><th>הלוואה</th><th>תשלום חודשי</th><th>נותרו תשלומים</th><th>צפי סיום</th><th>סכום שישתחרר</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>#4 (183265)</td>
+          <td>₪1,718</td>
+          <td>22</td>
+          <td><strong class="green-text">~ינואר 2028 ⭐</strong></td>
+          <td class="green-text">+₪1,718/חודש</td>
+        </tr>
+        <tr>
+          <td>#2 (240285)</td>
+          <td>₪1,196</td>
+          <td>58</td>
+          <td>~ינואר 2031</td>
+          <td class="green-text">+₪1,196/חודש</td>
+        </tr>
+        <tr>
+          <td>#1 (243667)</td>
+          <td>₪1,852</td>
+          <td>60</td>
+          <td>~מרץ 2031</td>
+          <td class="green-text">+₪1,852/חודש</td>
+        </tr>
+        <tr>
+          <td>#3 (230905)</td>
+          <td>₪2,356</td>
+          <td>67</td>
+          <td>~אוקטובר 2031</td>
+          <td class="green-text">+₪2,356/חודש</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- MRI -->
+<section>
+  <div class="section-title">🏥 MRI — 06/04/2026 רמב"ם</div>
+  <div class="section-body">
+    <table>
+      <thead><tr><th>פרט</th><th>ערך</th></tr></thead>
+      <tbody>
+        <tr><td>📅 תאריך</td><td><strong>06/04/2026, 14:00 | להגיע ב-13:00</strong></td></tr>
+        <tr><td>🏥 מיקום</td><td>רמב"ם, בניין סמי עופר, קומה -1</td></tr>
+        <tr><td>🚑 אמבולנס</td><td>יוסי שירותים | 073-2697160 | הפניה 260002075776</td></tr>
+        <tr><td>🍽️ צום</td><td>6 שעות לפני | מלווה חובה | להישקל לפני</td></tr>
+        <tr><td>⚠️ לדווח לצוות</td><td>מפרק ירך מלאכותי שמאל (2023) + רסיסי ירי</td></tr>
+        <tr><td>📋 טופס 17</td><td>✅ בתוקף עד 24/09/2026 | הפניה MRI: תוקף 24/06/2026</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- TASKS -->
+<section>
+  <div class="section-title">📋 משימות פתוחות</div>
+  <div class="section-body">
+
+    <div class="task-row">
+      <div class="task-icon">🔴</div>
+      <div class="task-text task-urgent">ישראכרט — 3 כרטיסים (6921, 4685, 8545) לא הועברו לדיסקונט! חשבון יהב נסגר!</div>
+    </div>
+    <div class="task-row">
+      <div class="task-icon">🔴</div>
+      <div class="task-text task-urgent">UMI ביטוחי — אישור תעודת חיל לא הועבר 5 חודשים, פוליסה בסכנה!</div>
+    </div>
+    <div class="task-row">
+      <div class="task-icon">🔴</div>
+      <div class="task-text task-urgent">חוב כללית בי"ח העמק — ₪1,222 מ-10/2025. לבדוק טופס 17</div>
+    </div>
+    <div class="task-row">
+      <div class="task-icon">🚗</div>
+      <div class="task-text">שדרוג רכב לנפח 2000 סמ"ק — לפנות לאגף שיקום. נדרש: תיעוד רפואי (אורתופד + נוירולוגיה + פסיכיאטרית)</div>
+    </div>
+    <div class="task-row">
+      <div class="task-icon">🚗</div>
+      <div class="task-text">מעלון לרכב — לבקש התקנה דרך אגף שיקום + ביקור סוקר</div>
+    </div>
+    <div class="task-row">
+      <div class="task-icon">🐕</div>
+      <div class="task-text"><strong>לחדש תעודת ברי לפני 01/08/2026</strong> — k9isdtc@gmail.com | 055-6806099</div>
+    </div>
+    <div class="task-row">
+      <div class="task-icon">🏠</div>
+      <div class="task-text">מעקה קימה למיטה + בקבוקי שתן — להזמין דרך כללית/ביטוחים</div>
+    </div>
+    <div class="task-row">
+      <div class="task-icon">👩</div>
+      <div class="task-text">צלילה — להגדיל שעות ליווי (כיום 4 שעות) — לפנות לאגף שיקום / משרד הרווחה</div>
+    </div>
+    <div class="task-row">
+      <div class="task-icon">🦷</div>
+      <div class="task-text">תביעת שיניים פניקס (₪6,780) — נשלחה 25/03. פנייה 20864970. ממתינים לחיה רפאלוב</div>
+    </div>
+    <div class="task-row">
+      <div class="task-icon">⏳</div>
+      <div class="task-text">יולנדה — מייל נשלח 27/03 לגבי MRI. אם לא ענתה עד 29/03 → 04-6621600</div>
+    </div>
+    <div class="task-row">
+      <div class="task-icon">⏳</div>
+      <div class="task-text">דו"ח חנייה עפולה #24233512 — ₪250. ממתין לדואר רשום עם החלטת התובעת</div>
+    </div>
+    <div class="task-row">
+      <div class="task-icon">⏳</div>
+      <div class="task-text">סלקום — תלונת תשתית לקויה מ-01/2026, 2 חודשים ללא מענה</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BANK + CONTACTS -->
+<div class="two-col">
+
+  <section>
+    <div class="section-title">🏦 בנק דיסקונט — פרטים</div>
+    <div class="section-body">
+      <table>
+        <tbody>
+          <tr><td>חשבון עו"ש</td><td><strong>1615</strong></td></tr>
+          <tr><td>חשבון הלוואות</td><td><strong>1616</strong></td></tr>
+          <tr><td>כרטיס 1</td><td><strong>2818</strong> ✅ פעיל</td></tr>
+          <tr><td>כרטיס 2</td><td><strong>2917</strong> ✅ פעיל</td></tr>
+          <tr><td>איש קשר</td><td>בקי</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px; font-size:9pt; color:#c53030; font-weight:600;">
+        ❌ 8563 (MAX) — נסגר 11/03<br>
+        ❌ 8309 (ויזה כאל) — נסגר 11/03<br>
+        ❌ 4629 (ויזה) — מבוטל
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">📞 אנשי קשר חשובים</div>
+    <div class="section-body">
+      <table>
+        <tbody>
+          <tr><td>בנק דיסקונט (בקי)</td><td>בקי</td></tr>
+          <tr><td>יוסי שירותים (אמבולנס)</td><td>073-2697160</td></tr>
+          <tr><td>כלבי שירות (ברי)</td><td>055-6806099</td></tr>
+          <tr><td>הפניקס (שיניים)</td><td>ts@fnx.co.il | 03-7335469</td></tr>
+          <tr><td>ד"ר גולדרינג (פסיכיאטרית)</td><td>052-8489249</td></tr>
+          <tr><td>יולנדה (כללית)</td><td>04-6621600</td></tr>
+          <tr><td>אגף שיקום משהב"ט</td><td>פניה 250477 (CRM:0011117)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+<!-- MEDICAL DOCS -->
+<section>
+  <div class="section-title">🩺 מסמכים רפואיים פעילים</div>
+  <div class="section-body">
+    <table>
+      <thead><tr><th>תאריך</th><th>מסמך</th><th>תוקף / הערה</th></tr></thead>
+      <tbody>
+        <tr><td>23/03/2026</td><td>סיכום ביקור נוירולוגי — ד"ר דראושה</td><td>חשד CIDP + AS</td></tr>
+        <tr><td>24/03/2026</td><td>טופס 17 — MRI בהרדמה ברמב"ם</td><td class="green-text">✅ תוקף עד 24/09/2026</td></tr>
+        <tr><td>25/03/2026</td><td>הפניה לאמבולנס — יוסי שירותים</td><td class="green-text">✅ 01-30/04/2026 | ₪3,012.80</td></tr>
+        <tr><td>25/03/2026</td><td>הפניה למכון MRI — רמב"ם</td><td class="green-text">✅ תוקף עד 24/06/2026</td></tr>
+      </tbody>
+    </table>
+    <div class="note">⚠️ מפרק ירך מלאכותי שמאל (2023) + רסיסי ירי — לדווח לצוות MRI!</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer">
+  כרמל — דשבורד פיננסי | הופק ע"י דביר (מערכת OTILYAS) | 29/03/2026
+</div>
+
+</body>
+</html>
