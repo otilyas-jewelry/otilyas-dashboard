@@ -183,6 +183,32 @@ tr:hover { background: #f7fafc; }
 .med-card .med-title { font-weight: 700; font-size: .92em; margin-bottom: 4px; }
 .med-card .med-detail { font-size: .78em; color: var(--text-sec); line-height: 1.5; }
 
+/* System cards */
+.sys-card {
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+.sys-title { font-size: .88em; font-weight: 700; margin-bottom: 6px; }
+.sys-item { font-size: .78em; color: var(--text-sec); padding: 2px 0; border-bottom: 1px solid rgba(0,0,0,.05); line-height:1.5; }
+.sys-item:last-child { border-bottom: none; }
+
+/* Test results */
+.test-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); font-size:.84em; }
+.test-row:last-child { border-bottom:none; }
+.test-badge { font-size:.72em; font-weight:700; padding:2px 8px; border-radius:6px; }
+
+/* Medical pending */
+.med-pending-item { display:flex; align-items:flex-start; gap:8px; padding:8px 0; border-bottom:1px solid var(--border); font-size:.84em; }
+.med-pending-item:last-child { border-bottom:none; }
+.med-urgent-dot { flex-shrink:0; width:8px; height:8px; border-radius:50%; margin-top:5px; }
+
+/* Appointment card */
+.appt-card { border-radius:10px; padding:12px; margin-bottom:8px; border:1px solid var(--border); }
+.appt-card.done-appt { opacity:.7; border-color:var(--green); background:var(--green-bg); }
+.appt-card.pending-appt { border-color:var(--amber); background:var(--amber-bg); }
+.appt-card.urgent-appt { border-color:var(--red); background:var(--red-bg); }
+
 /* Timeline */
 .timeline-item {
   position: relative;
@@ -366,6 +392,56 @@ const D = {
       { name: 'אורי שחמון', role: 'ספק משרד הביטחון — התאמת דיור | 052-286-3167 | יצרנו קשר 30/03, לחזור 31/03' },
     ],
     meds: ['Seroquel 25mg/d (PTSD)', 'Lyrica 150mg (כאב עצבי) — הועלה מינון 23/03/2026', 'ARCOXIA 90MG (כאב) — ד"ר דראושה 23/03', 'קנאביס רפואי (PTSD)', 'BIMATOPROST (עיניים)', 'CARGILOC 1.25mg (לב)', 'ROWATINEX (כליות)', 'EMDR — מומלץ (ד"ר גולדרינג)'],
+
+    // Conditions organized by system
+    conditionsBySystem: [
+      { system: '🧠 נוירו-פסיכיאטרי', color: '#553c9a', bg: '#faf5ff', items: [
+        'PTSD 50% נכות — נפצע באינתיפאדה (ירי צלף)',
+        'CIDP — חשד (ד"ר דראושה 23/03) | LP ממתין',
+        'Anxiety + Mild Depression | EMDR מומלץ',
+      ]},
+      { system: '🦴 אורתופדי-נוירו', color: '#744210', bg: '#fffaf0', items: [
+        'Ankylosing Spondylitis — חשד',
+        'DISH + היצרות L4-5',
+        'החלפת מפרק ירך שמאל (2023)',
+      ]},
+      { system: '🫘 אורולוגיה', color: '#2b6cb0', bg: '#ebf4ff', items: [
+        'CALCULUS RENAL bilateral — אבנים לא חוסמות (US 11/2025)',
+        'ערמונית מוגדלת 76CC | PSA 0.52 ✅',
+        'הפניה: מרפאת אבנים בעמק 04-6494130',
+      ]},
+      { system: '❤️ לב וכלי דם', color: '#c53030', bg: '#fff5f5', items: [
+        'יתר לחץ דם (HTN) — CARGILOC 1.25mg',
+        'סוכרת / טרום-סוכרת (DM) — מעקב',
+      ]},
+      { system: '👁 עיניים', color: '#276749', bg: '#e6ffed', items: [
+        'חשד גלאוקומה — BIMATOPROST (טיפות)',
+      ]},
+      { system: '🔬 אחר', color: '#4a5568', bg: '#f7fafc', items: [
+        'בלוטות לימפה — ריאקטיבי, שפיר (ביופסיה 2019+2026)',
+      ]},
+    ],
+
+    // Recent test results
+    recentTests: [
+      { name: 'PSA', result: '0.52', status: 'תקין', date: '31/03/2026', ok: true },
+      { name: 'US דרכי שתן — אבנים', result: 'לא חוסמות, דו"צ', status: 'מעקב', date: '24/11/2025', ok: null },
+      { name: 'ערמונית (US)', result: '76CC', status: 'מוגדלת', date: '24/11/2025', ok: false },
+      { name: 'ביופסיה בלוטות', result: 'ריאקטיבי — שפיר', status: 'תקין', date: '2026', ok: true },
+    ],
+
+    // Pending medical actions (separate from general tasks)
+    medicalPending: [
+      { text: 'MRI רמב"ם — 06/04/2026 14:00 | להגיע 13:00 | צום 6ש׳ | מלווה חובה | לדווח: מפרק ירך שמאל + רסיסים', urgent: true },
+      { text: 'אמבולנס — לאשר שעה עם האדי (יוסי שירותים) לפני 06/04 | 073-2697160', urgent: true },
+      { text: 'לתאם תור — מרפאת אבנים בעמק | 04-6494130 | הפניה ד"ר משיח 31/03', urgent: true },
+      { text: 'LP (ניקור מותני) — אשפוז אלקטיבי | המלצת ד"ר דראושה 23/03', urgent: true },
+      { text: 'לקבוע תור רומאטולוג — חשד Ankylosing Spondylitis (המלצת ד"ר דראושה)', urgent: false },
+      { text: 'ביקור פיזי ד"ר דראושה — הביקור הקודם היה טלפוני, ממליץ להגיע', urgent: false },
+      { text: 'הפניה אורטופדית 250007779827 — תוקף פג! לחדש', urgent: false },
+      { text: 'ליריקה 150mg — לוודא ביצוע העלאת מינון', urgent: false },
+      { text: 'EMDR — לברר עם כרמל אם מעוניין להתחיל', urgent: false },
+    ],
   },
 
   // Tasks
@@ -590,9 +666,9 @@ function fmtSign(n) { return (n>=0?'+':'-') + '₪' + fmt(n); }
   <a href="#loans">הלוואות</a>
   <a href="#cards">כרטיסים</a>
   <a href="#insurance">ביטוחים</a>
-  <a href="#medical">רפואי</a>
+  <a href="#medical">🏥 רפואי</a>
+  <a href="#appointments">📅 תורים</a>
   <a href="#shikum">אגף שיקום</a>
-  <a href="#appointments">תורים</a>
   <a href="#tzilaTeeth">🦷 צלילה</a>
   <a href="#tasks">משימות</a>
   <a href="#serviceDog">🐕 ברי</a>
@@ -669,29 +745,49 @@ function fmtSign(n) { return (n>=0?'+':'-') + '₪' + fmt(n); }
   <div id="insuranceList"></div>
 </section>
 
-<!-- Medical -->
+<!-- Medical — all health topics in one place -->
 <section id="medical" class="reveal">
+
+  <!-- 1. Conditions by system + Medications -->
   <div class="card">
-    <div class="card-title">מצב רפואי</div>
-    <div class="grid-2">
-      <div>
-        <h3 style="font-size:.88em;color:var(--header-bg);margin-bottom:8px">מצבים כרוניים</h3>
-        <div id="conditions"></div>
-      </div>
-      <div>
-        <h3 style="font-size:.88em;color:var(--header-bg);margin-bottom:8px">תרופות</h3>
-        <div id="meds"></div>
-      </div>
+    <div class="card-title">🏥 מצב רפואי — מערכות הגוף</div>
+    <div id="conditionsBySystem"></div>
+    <div style="margin-top:16px">
+      <h3 style="font-size:.85em;font-weight:700;color:var(--header-bg);margin-bottom:8px">💊 תרופות קבועות</h3>
+      <div id="meds"></div>
     </div>
   </div>
+
+  <!-- 2. Recent tests -->
   <div class="card">
-    <div class="card-title">MRI בהרדמה <span class="badge" style="background:var(--amber-bg);color:var(--amber)" id="mriStatus"></span></div>
+    <div class="card-title">🔬 תוצאות בדיקות אחרונות</div>
+    <div id="recentTests"></div>
+  </div>
+
+  <!-- 3. Appointments -->
+  <div class="card" id="appointments">
+    <div class="card-title">📅 תורים ובדיקות <span class="badge" style="background:var(--red-bg);color:var(--red)" id="apptBadge"></span></div>
+    <div id="apptList"></div>
+  </div>
+
+  <!-- 4. MRI -->
+  <div class="card">
+    <div class="card-title">🧠 MRI בהרדמה — רמב"ם 06/04/2026 <span class="badge" style="background:var(--amber-bg);color:var(--amber)" id="mriStatus"></span></div>
     <div id="mriTimeline"></div>
   </div>
+
+  <!-- 5. Pending medical actions -->
   <div class="card">
-    <div class="card-title">אנשי קשר רפואיים</div>
+    <div class="card-title">⏳ פעולות רפואיות ממתינות <span class="badge" id="medPendingBadge"></span></div>
+    <div id="medicalPending"></div>
+  </div>
+
+  <!-- 6. Medical contacts -->
+  <div class="card">
+    <div class="card-title">📞 אנשי קשר רפואיים</div>
     <div id="contactsList"></div>
   </div>
+
 </section>
 
 <!-- אגף שיקום -->
@@ -705,12 +801,6 @@ function fmtSign(n) { return (n>=0?'+':'-') + '₪' + fmt(n); }
     </div>
     <div id="appealsList"></div>
   </div>
-</section>
-
-<!-- תורים -->
-<section id="appointments" class="card reveal">
-  <div class="card-title">תורים קרובים <span class="badge" style="background:var(--red-bg);color:var(--red)" id="apptBadge"></span></div>
-  <div id="apptList"></div>
 </section>
 
 <!-- צלילה — החזר שיניים -->
@@ -889,63 +979,118 @@ updateClock(); setInterval(updateClock, 30000);
   document.getElementById('insuranceList').innerHTML = html;
 })();
 
-// Medical
+// Medical — full section render
 (function(){
-  document.getElementById('conditions').innerHTML = D.medical.conditions.map(c => `<div style="font-size:.82em;padding:4px 0;border-bottom:1px solid var(--border)">• ${c}</div>`).join('');
-  document.getElementById('meds').innerHTML = D.medical.meds.map(m => `<div style="font-size:.82em;padding:4px 0;border-bottom:1px solid var(--border)">💊 ${m}</div>`).join('');
 
-  // MRI
+  // 1. Conditions by system
+  document.getElementById('conditionsBySystem').innerHTML = D.medical.conditionsBySystem.map(s => `
+    <div class="sys-card" style="background:${s.bg};border:1px solid ${s.color}22;margin-bottom:8px">
+      <div class="sys-title" style="color:${s.color}">${s.system}</div>
+      ${s.items.map(i => `<div class="sys-item">• ${i}</div>`).join('')}
+    </div>
+  `).join('');
+
+  // 2. Medications
+  document.getElementById('meds').innerHTML = D.medical.meds.map(m => `
+    <div style="display:flex;align-items:center;gap:6px;font-size:.82em;padding:5px 0;border-bottom:1px solid var(--border)">
+      <span>💊</span><span>${m}</span>
+    </div>`).join('');
+
+  // 3. Recent test results
+  document.getElementById('recentTests').innerHTML = `
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr style="background:var(--header-bg);color:#fff;font-size:.78em">
+          <th style="padding:8px;text-align:right">בדיקה</th>
+          <th style="padding:8px;text-align:right">תוצאה</th>
+          <th style="padding:8px;text-align:center">סטטוס</th>
+          <th style="padding:8px;text-align:right">תאריך</th>
+        </tr></thead>
+        <tbody>
+          ${D.medical.recentTests.map(t => `
+            <tr class="test-row" style="font-size:.84em">
+              <td style="padding:8px;font-weight:600">${t.name}</td>
+              <td style="padding:8px;font-family:var(--mono)">${t.result}</td>
+              <td style="padding:8px;text-align:center">
+                <span class="test-badge" style="background:${t.ok===true?'var(--green-bg)':t.ok===false?'var(--red-bg)':'var(--amber-bg)'};color:${t.ok===true?'var(--green)':t.ok===false?'var(--red)':'var(--amber)'}">
+                  ${t.status}
+                </span>
+              </td>
+              <td style="padding:8px;color:var(--text-muted);font-size:.85em">${t.date}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+
+  // 4. Appointments
+  document.getElementById('apptBadge').textContent = D.medical.appointments.length + ' תורים';
+  document.getElementById('apptList').innerHTML = D.medical.appointments.map(a => {
+    const isDone = a.doctor.includes('✅');
+    const isPending = !a.date;
+    const cls = isDone ? 'done-appt' : isPending ? 'pending-appt' : 'urgent-appt';
+    return `<div class="appt-card ${cls}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:.9em">${a.doctor}</div>
+          <div style="font-size:.76em;color:var(--text-sec);margin-top:3px;line-height:1.5">${a.specialty}</div>
+          <div style="font-size:.72em;color:var(--text-muted);margin-top:2px">🏥 ${a.clinic}${a.phone ? ` | 📞 ${a.phone}` : ''}</div>
+        </div>
+        <div style="text-align:left;min-width:80px;flex-shrink:0">
+          ${a.date ? `<div style="font-family:var(--mono);font-weight:700;font-size:.88em;color:${isDone?'var(--green)':'var(--red)'}">${a.date}</div>` : '<div style="font-size:.78em;color:var(--amber)">לתאם תור</div>'}
+          ${a.time ? `<div style="font-family:var(--mono);font-size:.75em;color:var(--text-sec)">${a.time}</div>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // 5. MRI timeline
   document.getElementById('mriStatus').textContent = D.medical.mriStatus;
   const mriSteps = [
     { text: 'אישור פסיכיאטרית — נשלח למרפאה', done: true },
     { text: 'הרופאה צירפה הפניה רפואית', done: true },
-    { text: 'הוגשה בקשה לטופס 17', done: true },
     { text: 'טופס 17 אושר — מס׳ 315280829 | ד"ר מרגיה יולנדה | ללא תשלום', done: true },
     { text: 'תור נקבע ברמב"ם — 06/04/2026 14:00 | בניין סמי עופר קומה -1', done: true },
-    { text: 'אמבולנס אושר — הפניה 260002075776 | יוסי שירותים | 073-2697160', done: true },
-    { text: '📱 תיאום אמבולנס — האדי (יוסי שירותים) אישר טיפול 30/03 | ⏳ ממתין לאישור שעה מדויקת', done: false, urgent: true },
-    { text: '📧 זימון MRI נשלח ליולנדה 27/03 | ממתין לאישור קריאטינין מבני ציון', done: false },
-    { text: '⚠️ להגיע ב-13:00 | צום 6 שעות | מלווה חובה | להישקל לפני | לדווח: מפרק ירך + רסיסים', done: false },
+    { text: 'אמבולנס אושר — הפניה 260002075776 | יוסי שירותים 073-2697160', done: true },
+    { text: '📱 לאשר שעת אמבולנס עם האדי — ⏳ ממתין', done: false, urgent: true },
+    { text: '⚠️ להגיע 13:00 | צום 6ש׳ | מלווה חובה | לדווח: מפרק ירך שמאל + רסיסים', done: false },
   ];
   document.getElementById('mriTimeline').innerHTML = mriSteps.map(s => `
     <div class="timeline-item ${s.done?'done':'warn'}">
-      <div class="tl-text" style="${s.done?'text-decoration:line-through;color:var(--text-muted)':''}">${s.text}</div>
-    </div>
-  `).join('');
+      <div class="tl-text" style="${s.done?'text-decoration:line-through;color:var(--text-muted)':s.urgent?'color:var(--red);font-weight:700':''}">${s.text}</div>
+    </div>`).join('');
 
-  // Appeals - full list
+  // 6. Medical pending actions
+  const urgentCount = D.medical.medicalPending.filter(p => p.urgent).length;
+  document.getElementById('medPendingBadge').textContent = urgentCount + ' דחופות';
+  document.getElementById('medPendingBadge').style.cssText = 'background:var(--red-bg);color:var(--red)';
+  document.getElementById('medicalPending').innerHTML = D.medical.medicalPending.map(p => `
+    <div class="med-pending-item">
+      <div class="med-urgent-dot" style="background:${p.urgent?'var(--red)':'var(--amber)'}"></div>
+      <div style="${p.urgent?'font-weight:600':''}">${p.text}</div>
+    </div>`).join('');
+
+  // 7. Appeals
   const waitingCount = D.medical.pendingAppeals.filter(a => !a.done && a.status !== 'בטיפול').length;
   document.getElementById('appealsCount').textContent = waitingCount + ' ממתינות מתוך ' + D.medical.pendingAppeals.length;
-
-  // Prescription
   document.getElementById('rxStatus').textContent = D.medical.prescription.status;
   document.getElementById('rxNote').textContent = D.medical.prescription.note + ' (' + D.medical.prescription.date + ')';
-
   document.getElementById('appealsList').innerHTML = D.medical.pendingAppeals.map(a => {
     const tagClass = a.done ? 'tag-done' : (a.status === 'בטיפול' ? 'tag-info' : (a.type === 'תלונה' ? 'tag-urgent' : 'tag-pending'));
-    const statusText = a.done ? 'נשלח ✓' : (a.status || 'ממתין');
-    return `<div style="display:flex;justify-content:space-between;align-items:start;padding:8px 0;border-bottom:1px solid var(--border);font-size:.84em${a.done?';opacity:.6':''}">
-      <div style="${a.done?'text-decoration:line-through':''}"><span style="font-weight:600">${a.subject}</span><br><span style="font-size:.72em;color:var(--text-muted)">${a.type}</span>${a.note ? `<br><span style="font-size:.72em;color:var(--blue)">${a.note}</span>` : ''}</div>
-      <div style="text-align:left;min-width:90px"><span class="tag ${tagClass}">${a.id || 'פניית הציבור'}</span><br><span style="font-size:.65em;color:var(--text-muted)">${statusText}</span></div>
+    return `<div style="display:flex;justify-content:space-between;align-items:start;padding:8px 0;border-bottom:1px solid var(--border);font-size:.84em${a.done?';opacity:.55':''}">
+      <div style="${a.done?'text-decoration:line-through':''}"><span style="font-weight:600">${a.subject}</span><br>
+      <span style="font-size:.72em;color:var(--text-muted)">${a.type}</span>
+      ${a.note ? `<br><span style="font-size:.72em;color:var(--blue)">${a.note}</span>` : ''}</div>
+      <div style="text-align:left;min-width:90px"><span class="tag ${tagClass}">${a.id || 'פניית הציבור'}</span><br>
+      <span style="font-size:.65em;color:var(--text-muted)">${a.done?'נשלח ✓':(a.status||'ממתין')}</span></div>
     </div>`;
   }).join('');
 
-  // Appointments
-  document.getElementById('apptBadge').textContent = D.medical.appointments.length + ' תורים';
-  document.getElementById('apptList').innerHTML = D.medical.appointments.map(a => `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:.84em">
-      <div><span style="font-weight:700">${a.doctor}</span><br><span style="font-size:.75em;color:var(--text-sec)">${a.specialty} | ${a.clinic} | ${a.phone}</span></div>
-      <div style="text-align:left"><div style="font-family:var(--mono);font-weight:700;color:var(--red)">${a.date}</div><div style="font-family:var(--mono);font-size:.78em;color:var(--text-sec)">${a.time}</div></div>
-    </div>
-  `).join('');
-
-  // Contacts
+  // 8. Contacts
   document.getElementById('contactsList').innerHTML = D.medical.contacts.map(c => `
-    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:.84em">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:.84em">
       <div style="font-weight:600">${c.name}</div>
-      <div style="color:var(--text-sec)">${c.role}</div>
-    </div>
-  `).join('');
+      <div style="color:var(--text-sec);font-size:.9em;text-align:left;max-width:60%">${c.role}</div>
+    </div>`).join('');
 })();
 
 // צלילה — שיניים
