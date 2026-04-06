@@ -263,7 +263,7 @@ tr:hover { background: #f7fafc; }
 // DATA — Edit here to update the dashboard
 // ═══════════════════════════════════════════
 const D = {
-  lastUpdated: '2026-04-03 (🔴 אשפוז פוריה — אבצס פסואס שמאל CT 03/04 | Cauda Equina חשד | LP נדחה | MRI ממתין)',
+  lastUpdated: '2026-04-06 (🔴 MRI היום 14:00 רמב"ם | פנייה 82111176 שיקום נשלחה | Hb 12.6 שיפור | 18 מסמכים לMRI ב-Drive)',
 
   // Income
   income: {
@@ -341,8 +341,9 @@ const D = {
       'Anxiety Disorder + Mild Depression (ד"ר גולדרינג) — המלצה ל-EMDR',
     ],
     pendingMRI: true,
-    mriStatus: '✅ נשמר לעת עתה — 06/04 14:00 | יבוטל רק אם יבצעו MRI בבית החולים',
+    mriStatus: '🔴 היום! 06/04 14:00 | רמב"ם בניין סמי עופר קומה -1 | הגעה 13:00 | צום 6ש׳',
     pendingAppeals: [
+      { id: '82111176', subject: '✅ נשלחה 06/04 — בקשה למסגרת שיקומית לאחר שחרור | CT 03/04 מצורף | כולל הצהרה: "איבדתי יכולת הליכה"', type: 'בקשה', status: 'בטיפול' },
       { id: '82058388', subject: 'שוחרר מבני ציון באמצע בירורים', type: 'תלונה' },
       { id: '82058408', subject: 'עובדת שיקום לא הגיעה לביקור בית', type: 'בקשה' },
       { id: '82058428', subject: 'צירוף מסמכים רפואיים מבני ציון', type: 'בקשה' },
@@ -407,9 +408,10 @@ const D = {
 
     // Conditions organized by system
     conditionsBySystem: [
-      { system: '🔴 זיהומי — אקוטי (אשפוז 03/04/2026)', color: '#c53030', bg: '#fff5f5', items: [
+      { system: '🔴 זיהומי — אקוטי (אשפוז פוריה 31/03–כרגע)', color: '#c53030', bg: '#fff5f5', items: [
         '🔴 אבצס בשריר הפסואס השמאלי — CT 03/04/2026 | מסביר CRP גבוה + כאבים + קושי הליכה',
-        'CRP 15 mg/dl (עולה) | LDH 371 (יורד בהדרגה)',
+        'בדיקות דם: CRP 13.57→15.00⬆ (זיהום פעיל לא נחלש) | LDH 398→371⬇ (שיפור) | Hb 11.5→11.1→12.0→12.6⬆ (שיפור!)',
+        'WBC 8.22→8.68→9.07→10.06 (עולה) | נויטרופילים 75-77% (גבוה — מגיב לזיהום) | CRP עדיין עולה!',
         'טיפול נדרש: אנטיביוטיקה + שקילת ניקוז | תרבית — ממתינים לזיהוי חיידק',
       ]},
       { system: '🧠 נוירולוגי', color: '#553c9a', bg: '#faf5ff', items: [
@@ -451,26 +453,27 @@ const D = {
 
     // Recent test results
     recentTests: [
-      { name: 'CRP', result: '15.0 mg/dl ⬆', status: 'גבוה מאוד', date: '02/04/2026', ok: false },
-      { name: 'המוגלובין Hb', result: '12.0 g/dl (↑ מ-11.1)', status: 'אנמיה קלה', date: '02/04/2026', ok: null },
-      { name: 'LDH', result: '371 U/l (↓ מ-503)', status: 'יורד — חיובי', date: '02/04/2026', ok: null },
-      { name: 'חומצה פולית', result: '2.90 ng/ml', status: 'נמוכה', date: '02/04/2026', ok: false },
-      { name: 'CT אבטן/אגן', result: 'אבצס פסואס שמאל', status: '🔴 חדש!', date: '03/04/2026', ok: false },
+      { name: 'WBC לויקוציטים', result: '10.06 (↑ מ-8.22)', status: 'מגמה עולה', date: '04/04/2026', ok: null },
+      { name: 'המוגלובין Hb', result: '12.6 g/dl (↑ מ-11.1→12.0)', status: '⬆ שיפור! עדיין אנמיה', date: '04/04/2026', ok: null },
+      { name: 'CRP', result: '15.0 mg/dl ⬆ (↑ מ-13.57)', status: '🔴 עולה — זיהום פעיל', date: '02/04/2026', ok: false },
+      { name: 'LDH', result: '371 U/l (↓ מ-398)', status: 'יורד בהדרגה — חיובי', date: '02/04/2026', ok: null },
+      { name: 'AST/ALP', result: 'AST 52 / ALP 126', status: 'מוגבר קל — יציב', date: '02/04/2026', ok: null },
+      { name: 'חומצה פולית', result: '2.90 ng/ml ⬇', status: '🔴 נמוכה — נוירופתיה!', date: '01/04/2026', ok: false },
+      { name: 'CT אבטן/אגן', result: 'אבצס פסואס שמאל', status: '🔴 ממצא מרכזי!', date: '03/04/2026', ok: false },
       { name: 'PSA', result: '0.52', status: 'תקין', date: '31/03/2026', ok: true },
-      { name: 'US דרכי שתן', result: 'אבנים לא חוסמות דו"צ', status: 'מעקב', date: '24/11/2025', ok: null },
-      { name: 'ביופסיה בלוטות', result: 'Reactive lymph node', status: 'שפיר ✅', date: '03/03/2026', ok: true },
-      { name: 'Complement C3/C4', result: 'C3 127 / C4 26.4', status: 'תקין — שולל לופוס', date: '02/04/2026', ok: true },
-      { name: 'TSH / T4', result: 'TSH 1.009 / T4 1.06', status: 'תקין', date: '02/04/2026', ok: true },
+      { name: 'Complement C3/C4', result: 'C3 127 / C4 26.4', status: 'תקין — שולל לופוס', date: '01/04/2026', ok: true },
+      { name: 'TSH / T4 / B12', result: 'TSH 1.009 / T4 1.06 / B12 462', status: 'תקין', date: '01/04/2026', ok: true },
+      { name: 'קריאטינין / GFR', result: '0.71 / GFR 97', status: 'כליות תקינות ✅', date: '02/04/2026', ok: true },
+      { name: 'סידן Ca', result: '8.90 (↑ מ-8.40)', status: 'נמוך — שיפור', date: '02/04/2026', ok: null },
     ],
 
     // Pending medical actions (separate from general tasks)
     medicalPending: [
-      { text: '🔴 אבצס פסואס — לברר תוכנית טיפול: אנטיביוטיקה? ניקוז? | האם זוהה החיידק (תרבית)?', urgent: true },
-      { text: '⏳ נוירולוג — ממתינים לבדיקה | הוא יחליט על MRI + LP לפי הבדיקה', urgent: true },
-      { text: 'MRI רמב"ם 06/04 — ההחלטה אצל הנוירולוג | אם יתקיים: להגיע 13:00, צום 6ש׳, מלווה חובה, לדווח: מפרק ירך + רסיסים', urgent: true },
-      { text: 'LP (ניקור מותני) — נדחה עקב אבצס פעיל | האם ייעשה אחרי MRI?', urgent: true },
-      { text: 'אמבולנס — לאשר/לבטל עם האדי (יוסי שירותים) לפי מצב האשפוז | 073-2697160', urgent: true },
-      { text: 'חומצה פולית נמוכה (2.90) — האם הוחל טיפול? לברר', urgent: false },
+      { text: '🔴 MRI היום! 06/04/2026 14:00 | רמב"ם בניין סמי עופר קומה -1 | הגעה 13:00 | 18 מסמכים ב-Drive מוכנים | לדווח: מפרק ירך שמאל מלאכותי + רסיסים!', urgent: true },
+      { text: '🔴 אבצס פסואס — לברר תוכנית טיפול: אנטיביוטיקה? ניקוז? | האם זוהה החיידק (תרבית)? | CRP עולה 13.57→15.00', urgent: true },
+      { text: '🔴 חומצה פולית נמוכה (2.90 ng/ml, נורמה 3.1+) — השפעה ישירה על נוירופתיה! האם הוחל טיפול?', urgent: true },
+      { text: '⏳ שיקום — פנייה 82111176 נשלחה 06/04 לכללית | ממתינים לאישור מסגרת שיקומית', urgent: true },
+      { text: 'LP (ניקור מותני) — נדחה עקב אבצס פעיל | האם ייעשה אחרי MRI ואחרי שליטה בזיהום?', urgent: false },
       { text: 'לתאם תור — מרפאת אבנים בעמק | 04-6494130 (אחרי השחרור)', urgent: false },
       { text: 'ראומטולוג — חשד Ankylosing Spondylitis (המלצת ד"ר דראושה)', urgent: false },
       { text: 'הפניה אורטופדית 250007779827 — תוקף פג! לחדש', urgent: false },
