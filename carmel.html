@@ -333,7 +333,44 @@ const D = {
     { name: 'בריאות קבוצתית (הראל/משהב"ט)', policy: '50825414-1', premium: 0, cover: null, note: 'ניתוחים+השתלות+תרופות' },
     { name: 'הראל חיים חדשים מורחב', policy: '005966120', premium: 308.03, cover: null, note: 'כרמל+צלילה+ברק' },
     { name: 'איילון בריאות', policy: '15526621', premium: 899.30, cover: null, note: 'כרמל ₪430 + צלילה ₪470' },
+    // כללית מושלם — מדוח רבעון ד׳ 2025 (עודכן 09/04/2026)
+    { name: 'כללית מושלם זהב — כרמל', policy: 'ויזה 9264', premium: 153.38, cover: null, note: 'מושלם זהב + סיעודי פלטינום | חיוב ב-1 לחודש | אין יתרה לתשלום ✅' },
+    { name: 'סיעודי הראל (ע"י כללית) — כרמל', policy: '880519122', premium: 348.00, cover: null, note: 'כ-₪347-349/חודש | חיוב נפרד מ-04/2025 | ויזה 9264' },
+    { name: 'כללית מושלם פלטינום — צלילה', policy: 'ויזה 9264', premium: 153.38, cover: null, note: 'מושלם פלטינום + סיעודי | חלק ממשפחת שפריצר | ת"ז 54119532' },
   ],
+
+  // כללית מושלם — דוח רבעוני (Q4 2025, עודכן 09/04/2026)
+  clalitMushlam: {
+    quarter: 'Q4 2025 (אוקטובר-נובמבר-דצמבר)',
+    printDate: '13/04/2026',
+    totalFamilyPaid: 3757.81,
+    clalitMushlam: 2886.94,
+    noBalance: true,
+    paymentCard: 'ויזה 9264 — הוראת קבע',
+    karmelCoverage: 'מושלם זהב + ביטוח סיעודי',
+    tzelilaCoverage: 'מושלם פלטינום + ביטוח סיעודי',
+    monthlyKarmel: {
+      mushlam: 153.38,
+      siudi: 348,
+      total: 501,
+    },
+    pharmacyQ4: {
+      inBasket: 295.73,
+      outOfBasket: 363.51,
+      note: 'אחרי הנחות מושלם + כללית | רבעוני בלבד',
+    },
+    copaysQ4: {
+      gross: 180,
+      afterCap: 121,
+      note: 'תקרה משפחתית רבעונית -₪59',
+    },
+    doctorsQ4: [
+      { name: 'ד"ר בוסתן', date: '01/12/25', amount: 30 },
+      { name: 'ד"ר חן', date: '24/12/25', amount: 29 },
+      { name: 'מור — מכון למידע רפואי', date: '13/10/25', amount: 40 },
+      { name: 'מרכז רפואי כרמל (x2)', date: '20/10 + 23/11/25', amount: 80 },
+    ],
+  },
 
   // Medical
   medical: {
