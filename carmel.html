@@ -304,8 +304,7 @@ const D = {
     'ויזה 4629': { avg: 7905, status: 'cancelled' },
     'ויזה 8309': { avg: 6403, status: 'closed', closedDate: '11.03.2026' },
     'כ.א.ל חוץ בנקאי': { avg: 1827, status: 'active', balance: 307, note: 'יתרה נותרת ₪307 (09/04/2026)' },
-    'ישראכרט 6921': { avg: 0, status: '✅ חוב שולם!', paidAmount: 3188, confirmationNo: '024737', paidDate: '09/04/2026', note: '✅ חוב ₪3,188 שולם 09/04 | אישור 024737 | אסף — מנהל תיק גביה: 03-6364554 | ⏳ עדיין צריך: פתיחת הרשאה לחיוב חשבון | קוד מוסד: 20543' },
-    'ישראכרט 6921': { type: 'גולד מסטרקארד', status: '✅ פעיל', charge: 1484.90, limit: 33500, available: 18295.88, billingDay: '2.5', note: 'חיוב שוטף ₪1,484.90 | מסגרת ₪33,500 | ⏳ לפתוח הרשאה — קוד 20543' },
+    'ישראכרט 6921': { avg: 1484.90, type: 'גולד מסטרקארד', status: '✅ פעיל', charge: 1484.90, limit: 33500, available: 18295.88, billingDay: '2.5', note: '✅ חוב ישן ₪3,188 שולם (אישור 024737) | חיוב שוטף ₪1,484.90 | מסגרת ₪33,500 | ⏳ לפתוח הרשאה — קוד 20543 | אסף 03-6364554' },
     'ישראכרט 4685': { type: 'מסטרקארד PLUS LS', status: '✅ פעיל', charge: 252, limit: 8000, available: 4472, billingDay: '2.5', note: 'חיוב שוטף ₪252 | מסגרת ₪8,000' },
     'ישראכרט 8545': { type: 'אמריקן אקספרס זהב', status: '✅ פעיל — נקי', charge: 0, limit: 3000, available: 3000, billingDay: '2.5', note: '₪0 חיוב | מסגרת מלאה פנויה' },
     'ישראכרט 4015': { type: 'גולד מסטרקארד', status: '❌ מבוטל — חוב פתוח!', charge: 448.33, limit: 0, available: 0, billingDay: '2.5', note: '🔴 כרטיס מבוטל עם ₪448.33 שלא שולם! כנראה "יהב ישראכרט" | לסלק בהקדם' },
@@ -731,7 +730,7 @@ C.verifiedExpenses = C.totalLoanPayment + D.mortgage.payment + C.totalOtherLoans
 C.netForLiving = C.totalIncome - C.verifiedExpenses;
 
 // Credit card spending (historical, excl cancelled 4629)
-C.cardSpending = D.oldCards['ויזה 8309'].avg + D.oldCards['כ.א.ל'].avg + D.oldCards['ישראכרט'].avg;
+C.cardSpending = (D.oldCards['ויזה 8309']?.avg||0) + (D.oldCards['כ.א.ל חוץ בנקאי']?.avg||0) + (D.oldCards['ישראכרט 6921']?.avg||0);
 
 // True net
 C.trueNet = C.netForLiving - C.cardSpending;
