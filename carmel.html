@@ -327,6 +327,8 @@ const D = {
   accounts: {
     account1: { id: '1615', type: 'עו"ש יומיומי', balance: 66.61 },
     account2: { id: '1616', type: 'הלוואות/פנסיה', balance: 185603 },
+    account3: { id: '66420', type: 'כרמל+צלילה — דיסקונט סניף 362 אם המושבות', balance: 188154.36, date: '19/04/2026',
+      note: 'משכנתא ₪5,545 | הלוואות ₪4,767 | ויזה 2818: ₪3,012 | ויזה 2917: ₪3,220 | כאל הרשאה ✅ 15/04 | הרשאה קוד 8547' },
   },
 
   // Insurance
@@ -566,7 +568,8 @@ const D = {
     { text: 'בירור שריר, דניאלה, שיק, 4629, מזומן', done: true },
     { text: 'MAX — חסימה שוחררה', done: true },
     { text: 'כללית קופ"ח — הועבר לכרטיס 2818', done: true },
-    { text: '🔴 כאל חוץ בנקאי — חוב ₪3,016.79 (חיוב לא כובד 05/04 — אין הרשאה לחיוב חשבון!) | לפתוח הרשאה + לסלק | 03-5724326 | קוד: 1002471276', done: false, urgent: true },
+    { text: '✅ כאל — הרשאה לחיוב חשבון 66420 נפתחה בסניף 15/04/2026! קוד מוסד: 8547 | ✅ פעילה ללא הגבלה', done: true },
+    { text: '🔴 כאל — חוב ₪3,016.79 עדיין לא נגבה (אין חיוב מ-15/04) | לוודא שכאל גובה את החוב מהחשבון בהקדם | קוד מזהה: 1002471276 | 03-5724326', done: false, urgent: true },
     { text: 'כרטיס 2818 — מגבלת ₪300 נפתרה (26/03/2026)', done: true },
     { text: 'לעקוב הוצאות כרטיסים חדשים (2818, 2917)', done: false },
     { text: 'לברר הקשר 3 הלוואות מעבר ↔ 4 באפליקציה', done: false },
@@ -1085,6 +1088,12 @@ updateClock(); setInterval(updateClock, 30000);
       <div style="font-weight:700">${D.accounts.account2.type}</div>
       <div style="font-family:var(--mono);font-size:1.3em;font-weight:700;margin:6px 0;color:var(--green)">₪${fmt(D.accounts.account2.balance)}</div>
       <div style="font-size:.72em;color:var(--text-muted)">הכנסות נכנסות, הלוואות יוצאות</div>
+    </div>
+    <div style="border:2px solid var(--green);border-radius:var(--radius);padding:14px;text-align:center;grid-column:1/-1">
+      <div style="font-size:.72em;background:var(--green-bg);color:var(--green);display:inline-block;padding:2px 8px;border-radius:10px;margin-bottom:6px">חשבון ${D.accounts.account3.id} — חדש ✅ (${D.accounts.account3.date})</div>
+      <div style="font-weight:700;font-size:.85em">${D.accounts.account3.type}</div>
+      <div style="font-family:var(--mono);font-size:1.4em;font-weight:700;margin:6px 0;color:var(--green)">₪${fmt(D.accounts.account3.balance)}</div>
+      <div style="font-size:.72em;color:var(--text-sec)">${D.accounts.account3.note}</div>
     </div>
   `;
 })();
