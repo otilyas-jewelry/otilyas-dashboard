@@ -308,7 +308,7 @@ const DATA = {
     'הפניקס ביטוח': { price: 186, desc: 'חבילת כיסויים קבוצתי — 8 כיסויים בריאות' },
     'הראל שיניים': { price: 170, desc: 'ביטוח שיניים ותיקי אל על — טלי+יובל+גיא' },
     'ביטוח סיעודי (כלל/הראל)': { price: 151, desc: 'ביטוח סיעודי — קצבה חודשית במצב סיעודי' },
-    'מגדל מחלות קשות': { price: 127, desc: 'פיצוי חד פעמי: סרטן, שבץ, לב — מסתיים 06/2026!' },
+    'מנורה קרן אור TOP': { price: 143, desc: 'מחלות קשות — ₪200,000 פיצוי אחיד. החליף מגדל מ-01/05/2026' },
     'הפניקס שיניים': { price: 75, desc: 'ביטוח שיניים קבוצתי — כפל ביטוח!' },
     'סאני Samsung 360': { price: 70, desc: 'הוראת קבע — תקשורת/מכשיר' },
     'דינמיקה סלולר': { price: 60, desc: 'קו סלולרי נוסף / פרטנר' },
@@ -342,7 +342,7 @@ const DATA = {
     'הפניקס ביטוח': { price: 185.82, card: 'Diners 0112' },
     'ביטוח סיעודי כלל': { price: 151, card: 'Bank' },
     'בריאות כללית': { price: 142, card: 'Bank' },
-    'מגדל ביטוח': { price: 126.74, card: 'Diners 0112' },
+    'מנורה קרן אור TOP': { price: 143, card: 'Diners 0112' },
     'סאני Samsung': { price: 69.80, card: 'Diners 0112' },
     'דינמיקה/פרטנר': { price: 59.90, card: 'Diners 0112' },
     'עמותת ותיק': { price: 239, card: 'Bank' },
@@ -533,8 +533,10 @@ const DATA = {
             contact: '📞 *2700 | 🌐 clalit.co.il | שירות מנויים: 03-7472700' },
           { company: 'הראל', name: 'סיעודי (קבוצתי קופ"ח)', monthly: 128, status: 'active', policy: '300994208', ends: null, portal: 'https://www.harel-group.co.il/personal-info/my-harel/Pages/client-view.aspx',
             contact: '📞 03-7540000 | תביעות: harel-group.co.il/insurance/health/claim' },
-          { company: 'מגדל', name: 'מחלות קשות (אישי)', monthly: 127, status: 'warning', policy: '22945374', ends: '2026-06-01', note: '⏳ ממתין להצעת מנורה — לא לחדש לפני השוואה!', portal: 'https://my.migdal.co.il/mymigdal/process/login', pdf: 'pdfs/migdal-machalot-kashot.pdf',
-            contact: '📞 שירות: 03-9210101 שלוחה 9 | תביעות: שלוחה 3 | סוכנת: שרי 📞 052-6881587 | sari@se-fi.co.il' },
+          { company: 'מגדל', name: 'מחלות קשות (אישי) — ❌ בוטל', monthly: 0, status: 'cancelled', policy: '22945374', ends: '2026-05-01', note: 'בוטל 01/05/2026. הוחלף במנורה קרן אור TOP. כיסוי לשעבר: ₪157,890 (סרטן) / ₪105,260 (שאר)', portal: 'https://my.migdal.co.il/mymigdal/process/login',
+            contact: '📞 שירות: 03-9210101 שלוחה 9 | סוכן: אופיר דנה, SE-FI 📞 0546300450 | ofir@se-fi.co.il' },
+          { company: 'מנורה מבטחים', name: 'קרן אור TOP — מחלות קשות ✅ חדש!', monthly: 143, status: 'active', policy: 'בהנפקה', ends: null, note: 'פיצוי אחיד ₪200,000 לכלל המחלות (סרטן, שבץ, לב ועוד). החליף מגדל 22945374 מ-01/05/2026. לעדכן מספר פוליסה לאחר הנפקה.', portal: 'https://www.menora.co.il/',
+            contact: '📞 סוכן: אופיר דנה, SE-FI 📞 0546300450 | ofir@se-fi.co.il | רישיון: 031681851' },
           { company: 'הראל', name: 'שיניים (ותיקי אל על)', monthly: 170, status: 'active', policy: '507551298', ends: '2030-01', note: 'טלי+יובל+גיא', portal: 'https://www.harel-group.co.il/personal-info/my-harel/Pages/client-view.aspx', pdf: 'pdfs/harel-shinayim.pdf',
             contact: '🌐 תביעות: harel-group.co.il/insurance/health/claim | 📞 03-7540000' },
           { company: 'הפניקס', name: 'שיניים (קבוצתי)', monthly: 75, status: 'duplicate', policy: '310351743397', ends: '2028-02', note: 'כפל ביטוח!', portal: 'https://my.fnx.co.il/',
@@ -594,7 +596,8 @@ const DATA = {
       },
     ],
     agents: [
-      { name: 'אבידן ביטוחים (סה-פיי)', contact: 'יעל לוי', phone: '074-7505151', email: 'yael@avidan-ins.co.il', scope: 'עסק' },
+      { name: 'SE-FI סוכנות לביטוח פנסיוני', contact: 'אופיר דנה', phone: '0546300450', email: 'ofir@se-fi.co.il', scope: 'מחלות קשות (מנורה) — החליף מגדל' },
+      { name: 'אבידן ביטוחים', contact: 'יעל לוי', phone: '074-7505151', email: 'yael@avidan-ins.co.il', scope: 'עסק' },
       { name: 'וריטס סוכנויות כאל', phone: '03-9208056', scope: 'רכב (הראל)' },
     ],
     openQuestions: [
@@ -645,7 +648,7 @@ const DATA = {
       { task: 'הפניקס מבנה — חודש! פוליסה חדשה 26/096/171/1664874 פעילה 01/04/2026. אהרונסון 29 ת"א. ₪934/שנה.', priority: 'done' },
       { task: '🦷 תביעת שיניים הפניקס — צלילה שפריצר (ת"ז 054119532). פנייה 20864970 (שיניים) + 20863601 (פוליסות). נשלח 25/03. ממתינים לחיה רפאלוב (ChayaH@fnx.co.il). לעקוב!', priority: 'high' },
       { task: 'תביעת שיניים הראל (507551298) — חסר מידע! יש לצרף צילומי רנטגן לפני ואחרי הטיפול. מייל טיוטה נוצר 25/03. הפנייה 6438070.', priority: 'high' },
-      { task: 'מעבר ממגדל למנורה — מחלות קשות ✅ מאושר. הצהרת בריאות + חתימות דיגיטליות אחרי פסח. לחזור לשרי (052-6881587) ב-15/04', priority: 'high' },
+      { task: 'מנורה קרן אור TOP ✅ הוגש 19/04/2026. מגדל 22945374 בוטל מ-01/05/2026. לאשר: (1) מספר פוליסה רשמי ממנורה (2) תאריך כניסה 01/05 מסונכרן (3) לתקן מצב משפחתי ב"רווק" בטפסים (4) לברר מנורה 347368110 מהר הביטוח', priority: 'high' },
       { task: 'הפניקס חבילה מסתיימת 9/2026 — לבדוק חלופות', priority: 'medium' },
       { task: 'כללית סמייל נגמר יוני — לא לחדש (חיסכון ₪142)', priority: 'medium' },
       { task: 'כפל שיניים — לבדוק אם אפשר לוותר על הפניקס שיניים', priority: 'medium' },
@@ -1069,7 +1072,7 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
 
 <!-- Insurance -->
 <section id="insurance" class="section reveal">
-  <h2>ביטוחים <span class="updated">מקור: שירה (סוכנת ביטוח) | עדכון: 28/03/2026</span></h2>
+  <h2>ביטוחים <span class="updated">מקור: שירה (סוכנת ביטוח) | עדכון: 19/04/2026</span></h2>
   <div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap">
     <div style="flex:1;min-width:140px;text-align:center;padding:14px;background:var(--gold-pale);border-radius:var(--radius)">
       <div style="font-size:.72em;color:var(--gold);font-weight:600">סה"כ חודשי</div>
@@ -1099,6 +1102,12 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
     <h3 style="font-size:.88em;color:var(--gold);margin-bottom:8px">סוכנויות ביטוח</h3>
     <div id="insAgents" style="font-size:.82em"></div>
   </div>
+</section>
+
+<!-- Health -->
+<section id="health" class="section reveal">
+  <h2>בריאות — מעקב אישי</h2>
+  <div id="healthContent"></div>
 </section>
 
 <!-- Open Tasks -->
@@ -1457,6 +1466,56 @@ document.getElementById('woltMarNote').textContent = DATA.wolt.mar.note + ' | Di
       <div class="sub">עם העברת עופר ₪${fmt(DATA.oferTransfer)}</div>
     </div>`;
   }).join('');
+})();
+
+// Health Section
+(function() {
+  const health = {
+    lastUpdated: '19/04/2026',
+    alerts: [
+      { level: 'red', text: 'US שד — BIRADS 3, לא בוצע מאוגוסט 2025', action: 'לקבוע עכשיו אצל ד"ר חרמוני / מכון מור' },
+      { level: 'red', text: 'בדיקות דם חסרות — TSH, ויטמין D, B12, ברזל, HbA1c, שומנים, מגנזיום, הורמונים', action: 'לבקש מד"ר בוגוסלבסקי' },
+      { level: 'amber', text: 'US שחלות מעקב — תור 20/04/2026 ד"ר ענת שמואלי', action: 'לדווח תוצאות אחרי הביקור' }
+    ],
+    done: [
+      'מרקרים אונקולוגיים 08/2024 — CA-125, CEA, CA-19-9 — תקינים',
+      'ספירת דם + כימיה + פאנל אוטואימוני מלא 05/2023 — תקינים',
+      'BRCA1/BRCA2 — שלילי | HPV — שלילי (09/2023)',
+      'הפטיטיס B+C — שלילי, מחוסנת לB'
+    ],
+    nextAppointment: { date: '20/04/2026', dr: 'ד"ר ענת שמואלי', type: 'US שחלות מעקב' }
+  };
+
+  const colorMap = { red: 'var(--red)', amber: '#f0a500', green: 'var(--green)' };
+  const bgMap = { red: 'var(--red-bg)', amber: '#fff8e6', green: 'var(--green-bg)' };
+
+  let html = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">`;
+
+  // Alerts
+  html += `<div><h3 style="font-size:.85em;color:var(--text-secondary);margin-bottom:8px;font-weight:500">התראות פתוחות</h3>`;
+  health.alerts.forEach(a => {
+    html += `<div style="background:${bgMap[a.level]};border-right:3px solid ${colorMap[a.level]};border-radius:8px;padding:10px 12px;margin-bottom:8px">
+      <div style="font-size:.84em;font-weight:600;color:${colorMap[a.level]}">${a.text}</div>
+      <div style="font-size:.78em;color:var(--text-secondary);margin-top:3px">${a.action}</div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // Done + Next appointment
+  html += `<div>
+    <h3 style="font-size:.85em;color:var(--text-secondary);margin-bottom:8px;font-weight:500">בדיקות תקינות</h3>`;
+  health.done.forEach(d => {
+    html += `<div style="font-size:.82em;color:var(--text-secondary);padding:5px 0;border-bottom:1px solid #f0f0f0;display:flex;align-items:flex-start;gap:6px"><span style="color:var(--green);font-size:.9em">✓</span>${d}</div>`;
+  });
+  html += `<div style="background:var(--blue-bg);border-radius:8px;padding:10px 12px;margin-top:12px">
+    <div style="font-size:.78em;color:var(--text-secondary)">תור קרוב</div>
+    <div style="font-weight:600;font-size:.88em">${health.nextAppointment.dr}</div>
+    <div style="font-size:.82em;color:var(--text-secondary)">${health.nextAppointment.type} | ${health.nextAppointment.date}</div>
+  </div>`;
+  html += `</div></div>`;
+  html += `<div style="font-size:.75em;color:var(--text-muted);text-align:left">עודכן על ידי נועה | ${health.lastUpdated} | תיק מלא: OBSIDIAN/בריאות/</div>`;
+
+  document.getElementById('healthContent').innerHTML = html;
 })();
 
 // Last update
