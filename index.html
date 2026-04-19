@@ -1468,54 +1468,335 @@ document.getElementById('woltMarNote').textContent = DATA.wolt.mar.note + ' | Di
   }).join('');
 })();
 
-// Health Section
+// Health Section — Comprehensive Medical File
 (function() {
-  const health = {
-    lastUpdated: '19/04/2026',
-    alerts: [
-      { level: 'red', text: 'US שד — BIRADS 3, לא בוצע מאוגוסט 2025', action: 'לקבוע עכשיו אצל ד"ר חרמוני / מכון מור' },
-      { level: 'red', text: 'בדיקות דם חסרות — TSH, ויטמין D, B12, ברזל, HbA1c, שומנים, מגנזיום, הורמונים', action: 'לבקש מד"ר בוגוסלבסקי' },
-      { level: 'amber', text: 'US שחלות מעקב — תור 20/04/2026 ד"ר ענת שמואלי', action: 'לדווח תוצאות אחרי הביקור' }
-    ],
-    done: [
-      'מרקרים אונקולוגיים 08/2024 — CA-125, CEA, CA-19-9 — תקינים',
-      'ספירת דם + כימיה + פאנל אוטואימוני מלא 05/2023 — תקינים',
-      'BRCA1/BRCA2 — שלילי | HPV — שלילי (09/2023)',
-      'הפטיטיס B+C — שלילי, מחוסנת לB'
-    ],
-    nextAppointment: { date: '20/04/2026', dr: 'ד"ר ענת שמואלי', type: 'US שחלות מעקב' }
+  const OBS = 'obsidian://open?vault=OBSIDIAN&file=';
+  const FILES = {
+    readme:  OBS + '%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA%2FREADME',
+    shad:    OBS + '%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA%2F%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA-%D7%A9%D7%93',
+    gyn:     OBS + '%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA%2F%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA-%D7%92%D7%99%D7%A0%D7%A7%D7%95%D7%9C%D7%95%D7%92%D7%99%D7%AA',
+    blood:   OBS + '%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA%2F%D7%91%D7%93%D7%99%D7%A7%D7%95%D7%AA-%D7%93%D7%9D',
+    general: OBS + '%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA%2F%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA-%D7%9B%D7%9C%D7%9C%D7%99%D7%AA'
   };
 
-  const colorMap = { red: 'var(--red)', amber: '#f0a500', green: 'var(--green)' };
-  const bgMap = { red: 'var(--red-bg)', amber: '#fff8e6', green: 'var(--green-bg)' };
+  function obsBtn(href, label) {
+    return `<a href="${href}" style="display:inline-flex;align-items:center;gap:5px;font-size:.75em;color:var(--gold);text-decoration:none;border:1px solid var(--gold-pale);border-radius:6px;padding:4px 10px;margin-bottom:10px;background:var(--gold-pale)" title="פתח ב-Obsidian">📂 ${label}</a>`;
+  }
+  function badge(text, color, bg) {
+    return `<span style="font-size:.72em;font-weight:700;background:${bg};color:${color};border-radius:4px;padding:2px 7px;letter-spacing:.3px">${text}</span>`;
+  }
+  function statusDot(ok) {
+    return ok === 'red' ? '🔴' : ok === 'amber' ? '🟡' : '✅';
+  }
 
-  let html = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">`;
+  // ── Shared styles
+  const tblStyle = 'width:100%;border-collapse:collapse;font-size:.8em;margin-top:8px';
+  const thStyle  = 'background:var(--bg);padding:6px 10px;text-align:right;font-weight:600;color:var(--text-secondary);border-bottom:2px solid var(--gold-pale)';
+  const tdStyle  = 'padding:6px 10px;border-bottom:1px solid #f0f0f0;vertical-align:top';
+  const tdC      = tdStyle + ';text-align:center';
 
-  // Alerts
-  html += `<div><h3 style="font-size:.85em;color:var(--text-secondary);margin-bottom:8px;font-weight:500">התראות פתוחות</h3>`;
-  health.alerts.forEach(a => {
-    html += `<div style="background:${bgMap[a.level]};border-right:3px solid ${colorMap[a.level]};border-radius:8px;padding:10px 12px;margin-bottom:8px">
-      <div style="font-size:.84em;font-weight:600;color:${colorMap[a.level]}">${a.text}</div>
-      <div style="font-size:.78em;color:var(--text-secondary);margin-top:3px">${a.action}</div>
+  // ══════════════════════════════════════════════
+  // TAB 1 — התראות
+  // ══════════════════════════════════════════════
+  let tabAlerts = `
+    ${obsBtn(FILES.readme, 'פתח תיק בריאות ב-Obsidian')}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:.84em;font-weight:600;color:var(--text-secondary);margin-bottom:8px">🚨 התראות דחופות</div>
+        <div style="background:var(--red-bg);border-right:3px solid var(--red);border-radius:8px;padding:10px 12px;margin-bottom:8px">
+          <div style="font-weight:700;color:var(--red);font-size:.84em">🔴 US שד — BIRADS 3 — דחוף מאוד</div>
+          <div style="font-size:.78em;color:var(--text-secondary);margin-top:3px">היה אמור אוגוסט 2025. לא בוצע. עברו 15+ חודשים מ-US האחרון (01/2025).</div>
+          <div style="font-size:.77em;margin-top:5px;color:var(--red)">לפעולה: ד"ר חרמוני הילה | OFEK MEDICAL קריית אונו</div>
+        </div>
+        <div style="background:var(--red-bg);border-right:3px solid var(--red);border-radius:8px;padding:10px 12px;margin-bottom:8px">
+          <div style="font-weight:700;color:var(--red);font-size:.84em">🔴 בדיקות דם חסרות — 8 פריטים</div>
+          <div style="font-size:.78em;color:var(--text-secondary);margin-top:3px">TSH · ויטמין D · B12 · ברזל+פריטין · HbA1c · שומנים · מגנזיום · E2+FSH+LH</div>
+          <div style="font-size:.77em;margin-top:5px;color:var(--red)">לפעולה: ד"ר אינסה בוגוסלבסקי — לבקש בביקור הבא</div>
+        </div>
+        <div style="background:#fff8e6;border-right:3px solid #f0a500;border-radius:8px;padding:10px 12px;margin-bottom:8px">
+          <div style="font-weight:700;color:#c87800;font-size:.84em">🟡 US שחלות מעקב</div>
+          <div style="font-size:.78em;color:var(--text-secondary);margin-top:3px">תור 20/04/2026 — ד"ר ענת שמואלי. לדווח תוצאות.</div>
+        </div>
+        <div style="background:#fff8e6;border-right:3px solid #f0a500;border-radius:8px;padding:10px 12px;margin-bottom:8px">
+          <div style="font-weight:700;color:#c87800;font-size:.84em">🟡 בדיקה גנטית לנשאות</div>
+          <div style="font-size:.78em;color:var(--text-secondary);margin-top:3px">ד"ר גיא המליצה 10.09.2024 — לא ידוע אם בוצע. לברר.</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.84em;font-weight:600;color:var(--text-secondary);margin-bottom:8px">✅ בסיס תקין</div>
+        ${[
+          ['BRCA1/BRCA2','שלילי','2024'],
+          ['HPV','שלילי','09/2023'],
+          ['Mirena IUD','תקף עד 08/2027','08/2022'],
+          ['CA-125','11 (תקין <35)','08/2024'],
+          ['CEA','1.02 (תקין <5)','08/2024'],
+          ['CA-19-9','<8 (תקין <37)','08/2024'],
+          ['CBC (ספירת דם)','תקין','05/2023'],
+          ['כימיה (כבד/כליות/אלקטרוליטים)','תקין','05/2023'],
+          ['פאנל אוטואימוני מלא','שלילי לחלוטין','05/2023'],
+          ['הפטיטיס B+C','שלילי — מחוסנת לB','05/2023'],
+          ['ויטמינים B1, B6, פולאט','תקין','05/2023'],
+          ['ממוגרפיה','BIRADS 1/1 תקין','01/2025'],
+        ].map(([k,v,d]) => `<div style="font-size:.81em;padding:5px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;gap:6px">
+          <span><span style="color:var(--green)">✓</span> <strong>${k}</strong></span>
+          <span style="color:var(--text-secondary);font-size:.93em">${v} <span style="color:var(--text-muted)">${d}</span></span>
+        </div>`).join('')}
+        <div style="background:var(--blue-bg);border-radius:8px;padding:10px 12px;margin-top:12px">
+          <div style="font-size:.78em;color:var(--text-secondary)">תור קרוב</div>
+          <div style="font-weight:600;font-size:.88em">ד"ר ענת שמואלי</div>
+          <div style="font-size:.82em;color:var(--text-secondary)">US שחלות מעקב + E2/FSH/LH | 20/04/2026</div>
+        </div>
+      </div>
     </div>`;
+
+  // ══════════════════════════════════════════════
+  // TAB 2 — שד
+  // ══════════════════════════════════════════════
+  let tabShad = `
+    ${obsBtn(FILES.shad, 'בריאות-שד.md')}
+    <div style="background:var(--red-bg);border-right:4px solid var(--red);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:.84em">
+      <strong style="color:var(--red)">🔴 US מעקב BIRADS 3 — דחוף!</strong>
+      <span style="color:var(--text-secondary)"> היה אמור אוגוסט 2025. עברו 15+ חודשים. לקבוע מיד אצל ד"ר חרמוני / מכון מור.</span>
+    </div>
+    <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin-bottom:6px">ציר זמן — בדיקות שד</div>
+    <table style="${tblStyle}">
+      <thead><tr>
+        <th style="${thStyle}">תאריך</th>
+        <th style="${thStyle}">בדיקה</th>
+        <th style="${thStyle}">ממצא</th>
+        <th style="${thStyle};text-align:center">BIRADS</th>
+        <th style="${thStyle}">רופא/ה</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="${tdStyle}">07/2023</td><td style="${tdStyle}">ייעוץ שד</td><td style="${tdStyle}">המלצה על ביופסיה / מעקב גוש שד ימין — הניח את הקליפ המתכתי</td><td style="${tdC}">—</td><td style="${tdStyle}">ד"ר מנסה תהילה</td></tr>
+        <tr><td style="${tdStyle}">01.09.2024</td><td style="${tdStyle}">US שד</td><td style="${tdStyle}">ממצא חדש שד ימין שעה 1 — גוש 1 ס"מ, גבולות ברורים. ממצא קיים (קליפ). ציסטות דו"צ BIRADS 2.</td><td style="${tdC}">${badge('3','var(--red)','var(--red-bg)')}</td><td style="${tdStyle}">קרן אטיאס</td></tr>
+        <tr><td style="${tdStyle}">05.09.2024</td><td style="${tdStyle}">ייעוץ</td><td style="${tdStyle}">בבדיקה ידנית — ללא ממצא חשוד</td><td style="${tdC}">${badge('1','var(--green)','var(--green-bg)')}</td><td style="${tdStyle}">ד"ר אורלי פרידמן אלדר</td></tr>
+        <tr><td style="${tdStyle}">12.01.2025</td><td style="${tdStyle}">US שד</td><td style="${tdStyle}">שד ימין: גוש 5.0×1.1 ס"מ — BIRADS 3. ציסטות BIRADS 2 דו"צ. קליפ מתכתי ימין.</td><td style="${tdC}">${badge('3','var(--red)','var(--red-bg)')}</td><td style="${tdStyle}">ד"ר ג'יאורג'יו</td></tr>
+        <tr><td style="${tdStyle}">20.01.2025</td><td style="${tdStyle}">ממוגרפיה</td><td style="${tdStyle}">תקין לחלוטין. נראה קליפ מתכתי שד ימין.</td><td style="${tdC}">${badge('1/1','var(--green)','var(--green-bg)')}</td><td style="${tdStyle}">מכון מור — ד"ר סוסנה פלדמן</td></tr>
+        <tr><td style="${tdStyle}">03.02.2025</td><td style="${tdStyle}">ייעוץ</td><td style="${tdStyle}">ללא גושים ידניים. שד סמיך. המלצה: US כל 6 חודשים.</td><td style="${tdC}">—</td><td style="${tdStyle}">ד"ר חרמוני הילה (OFEK MEDICAL)</td></tr>
+        <tr style="background:var(--red-bg)"><td style="${tdStyle};font-weight:700;color:var(--red)">08/2025</td><td style="${tdStyle};color:var(--red);font-weight:600">US מעקב</td><td style="${tdStyle};color:var(--red);font-weight:600">🔴 לא בוצע! דחוף מאוד.</td><td style="${tdC}">—</td><td style="${tdStyle}">לקבוע מיד</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:14px">
+      <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin-bottom:6px">מרקרים אונקולוגיים — 28.08.2024</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        ${[['CA-125','11 U/mL','<35'],['CEA','1.02 ng/mL','<5'],['CA-19-9','<8','<37']].map(([n,v,r]) =>
+          `<div style="flex:1;min-width:120px;background:var(--green-bg);border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:.78em;color:var(--text-secondary)">${n}</div>
+            <div style="font-weight:700;color:var(--green);font-size:1.05em">${v}</div>
+            <div style="font-size:.72em;color:var(--text-muted)">תקין ${r}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div style="margin-top:14px;font-size:.8em;color:var(--text-secondary)">
+      <strong>רקע:</strong> שד סמיך — חובה US בנוסף לכל ממוגרפיה. קליפ מתכתי שד ימין מפרוצדורה 07/2023.
+    </div>`;
+
+  // ══════════════════════════════════════════════
+  // TAB 3 — גינקולוגי
+  // ══════════════════════════════════════════════
+  let tabGyn = `
+    ${obsBtn(FILES.gyn, 'בריאות-גינקולוגית.md')}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+      <div>
+        <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin-bottom:6px">מידע בסיסי</div>
+        ${[
+          ['HPV','שלילי','11.03.2020 + 06.09.2023',FILES.gyn],
+          ['BRCA1/BRCA2','שלילי','2024',FILES.gyn],
+          ['Mirena IUD','תקף עד 08/2027','הוחדר 08/2022',FILES.gyn],
+          ['ציסטות נבות — צוואר הרחם','~10 מ"מ (שפיר)','28.11.2023',FILES.gyn],
+        ].map(([k,v,d]) => `<div style="font-size:.81em;padding:6px 0;border-bottom:1px solid #f0f0f0">
+          <span style="color:var(--green)">✓</span> <strong>${k}</strong><br>
+          <span style="color:var(--text-secondary);padding-right:14px">${v} <span style="color:var(--text-muted);font-size:.9em">${d}</span></span>
+        </div>`).join('')}
+      </div>
+      <div>
+        <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin-bottom:6px">תורים ומשימות</div>
+        <div style="background:var(--blue-bg);border-radius:8px;padding:10px 12px;margin-bottom:8px">
+          <div style="font-size:.78em;color:var(--text-secondary)">תור קרוב</div>
+          <div style="font-weight:600;font-size:.88em">ד"ר ענת שמואלי</div>
+          <div style="font-size:.81em;color:var(--text-secondary)">US שחלות מעקב | 20/04/2026</div>
+          <div style="font-size:.78em;margin-top:4px;color:var(--gold)">לבקש: E2 + FSH + LH</div>
+        </div>
+        <div style="background:#fff8e6;border-right:3px solid #f0a500;border-radius:8px;padding:10px 12px;font-size:.82em">
+          <strong style="color:#c87800">🟡 בדיקה גנטית לנשאות</strong><br>
+          <span style="color:var(--text-secondary)">ד"ר גיא המליצה 10.09.2024 — לא ידוע אם בוצע. לברר בביקור הבא.</span>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin-bottom:6px">מעקב שחלות — ציר זמן</div>
+    <table style="${tblStyle}">
+      <thead><tr>
+        <th style="${thStyle}">תאריך</th>
+        <th style="${thStyle}">שחלה ימין</th>
+        <th style="${thStyle}">שחלה שמאל</th>
+        <th style="${thStyle}">הערות</th>
+        <th style="${thStyle}">רופא/ה</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="${tdStyle}">28.11.2023</td><td style="${tdStyle}">41×36 מ"מ</td><td style="${tdStyle}">19×10 מ"מ</td><td style="${tdStyle}">ציסטות נבות בצוואר הרחם 10 מ"מ</td><td style="${tdStyle}">ד"ר ורד יולזרי</td></tr>
+        <tr><td style="${tdStyle}">19.08.2024</td><td style="${tdStyle}">38×26 מ"מ + ציסטה 17 מ"מ</td><td style="${tdStyle}">25×11 מ"מ</td><td style="${tdStyle}">ציסטה חדשה ימין</td><td style="${tdStyle}">ד"ר זימן</td></tr>
+        <tr style="background:var(--red-bg)"><td style="${tdStyle}">26.08.2024</td><td style="${tdStyle};font-weight:600;color:var(--red)">49×50 מ"מ + ציסטה</td><td style="${tdStyle}">—</td><td style="${tdStyle};color:var(--red);font-size:.8em">גדילה! US דחוף</td><td style="${tdStyle}">ד"ר שמואלי</td></tr>
+        <tr><td style="${tdStyle}">05.09.2024</td><td style="${tdStyle}">—</td><td style="${tdStyle}">32×40 מ"מ</td><td style="${tdStyle}">ד"ר גיא ממליצה בדיקה גנטית</td><td style="${tdStyle}">ד"ר ליאורה גיא</td></tr>
+        <tr style="background:var(--green-bg)"><td style="${tdStyle}">10.11.2024</td><td style="${tdStyle};color:var(--green);font-weight:600">35.2×28.2 מ"מ</td><td style="${tdStyle}">35.8×32.2 מ"מ + החזר צלול 29 מ"מ</td><td style="${tdStyle};color:var(--green);font-size:.8em">ירידה! בלינסון</td><td style="${tdStyle}">ד"ר ליאורה גיא</td></tr>
+        <tr style="background:var(--blue-bg)"><td style="${tdStyle};font-weight:600">20.04.2026</td><td style="${tdStyle}">לבדוק</td><td style="${tdStyle}">לבדוק</td><td style="${tdStyle};color:var(--gold);font-weight:600">תור מחר!</td><td style="${tdStyle}">ד"ר ענת שמואלי</td></tr>
+      </tbody>
+    </table>`;
+
+  // ══════════════════════════════════════════════
+  // TAB 4 — בדיקות דם
+  // ══════════════════════════════════════════════
+  let tabBlood = `
+    ${obsBtn(FILES.blood, 'בדיקות-דם.md')}
+    <div style="background:var(--red-bg);border-right:4px solid var(--red);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:.84em">
+      <strong style="color:var(--red)">🔴 חסר — לבקש מד"ר בוגוסלבסקי:</strong>
+      <span style="color:var(--text-secondary)"> TSH · ויטמין D · B12 · ברזל+פריטין · HbA1c · שומנים · מגנזיום · E2+FSH+LH</span>
+    </div>
+
+    <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin-bottom:6px">מרקרים אונקולוגיים — 28.08.2024</div>
+    <table style="${tblStyle}"><thead><tr>
+      <th style="${thStyle}">בדיקה</th><th style="${thStyle}">תוצאה</th><th style="${thStyle}">טווח תקין</th><th style="${thStyle};text-align:center">סטטוס</th>
+    </tr></thead><tbody>
+      ${[['CA-125 (שחלות)','11 U/mL','<35'],['CEA (כללי)','1.02 ng/mL','<5'],['CA-19-9 (לבלב/מעי)','<8','<37']].map(([n,v,r]) =>
+        `<tr><td style="${tdStyle}">${n}</td><td style="${tdStyle};font-weight:600">${v}</td><td style="${tdStyle};color:var(--text-muted)">${r}</td><td style="${tdC}">${badge('✓ תקין','var(--green)','var(--green-bg)')}</td></tr>`).join('')}
+    </tbody></table>
+
+    <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin:14px 0 6px">ספירת דם (CBC) — 03.05.2023</div>
+    <table style="${tblStyle}"><thead><tr>
+      <th style="${thStyle}">בדיקה</th><th style="${thStyle}">תוצאה</th><th style="${thStyle}">טווח תקין</th><th style="${thStyle};text-align:center">סטטוס</th>
+    </tr></thead><tbody>
+      ${[['WBC','6.4 K/ul','4.5-11'],['RBC','4.41 M/ul','4-5.2'],['HB','13.8 g/dl','12-16'],['HCT','40.6%','36-46'],['PLT','274 K/ul','150-450'],['MCV','92.0 fL','80-100']].map(([n,v,r]) =>
+        `<tr><td style="${tdStyle}">${n}</td><td style="${tdStyle};font-weight:600">${v}</td><td style="${tdStyle};color:var(--text-muted)">${r}</td><td style="${tdC}">${badge('✓','var(--green)','var(--green-bg)')}</td></tr>`).join('')}
+    </tbody></table>
+
+    <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin:14px 0 6px">כימיה — 03.05.2023</div>
+    <table style="${tblStyle}"><thead><tr>
+      <th style="${thStyle}">בדיקה</th><th style="${thStyle}">תוצאה</th><th style="${thStyle}">טווח תקין</th><th style="${thStyle};text-align:center">סטטוס</th>
+    </tr></thead><tbody>
+      ${[['גלוקוז (צום)','81 mg/dL','70-100','ok'],['אוראה','19.69 mg/dL','17-43','ok'],['קריאטינין','0.55 mg/dL','0.51-0.95','ok'],['נתרן','137.8 mEq/L','135-145','ok'],['אשלגן','4.20 mEq/L','3.5-5.1','ok'],['סידן','9.36 mg/dL','8.5-10.5','ok'],['AST','21 U/L','0-31','ok'],['ALT','15 U/L','0-34','ok'],['GGT','18 U/L','0-38','ok'],['CPK','203 U/L','20-180','warn']].map(([n,v,r,s]) =>
+        `<tr${s==='warn'?' style="background:var(--amber-bg)"':''}><td style="${tdStyle}">${n}</td><td style="${tdStyle};font-weight:600">${v}</td><td style="${tdStyle};color:var(--text-muted)">${r}</td><td style="${tdC}">${s==='warn'?badge('⚠️ גבוה קל','#c87800','#fff8e6'):badge('✓','var(--green)','var(--green-bg)')}</td></tr>`).join('')}
+    </tbody></table>
+    <div style="font-size:.78em;color:var(--text-secondary);margin-top:5px;padding:6px 10px;background:#fff8e6;border-radius:6px">⚠️ CPK 203: CK-MM=100% (שרירים בלבד, לא לב). ירד ל-193 ב-10/2023. לא מדאיג. לוודא בבדיקה הבאה.</div>
+
+    <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin:14px 0 6px">ויטמינים — 03.05.2023</div>
+    <table style="${tblStyle}"><thead><tr>
+      <th style="${thStyle}">בדיקה</th><th style="${thStyle}">תוצאה</th><th style="${thStyle}">טווח תקין</th><th style="${thStyle};text-align:center">סטטוס</th>
+    </tr></thead><tbody>
+      ${[['ויטמין B1','78 ug/L','28-85'],['ויטמין B6','35 ug/L','13-45'],['פולאט','34.1 nmol/L','>12.2']].map(([n,v,r]) =>
+        `<tr><td style="${tdStyle}">${n}</td><td style="${tdStyle};font-weight:600">${v}</td><td style="${tdStyle};color:var(--text-muted)">${r}</td><td style="${tdC}">${badge('✓','var(--green)','var(--green-bg)')}</td></tr>`).join('')}
+    </tbody></table>
+
+    <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin:14px 0 6px">אוטואימוני + הפטיטיס — 03.05.2023</div>
+    <table style="${tblStyle}"><thead><tr>
+      <th style="${thStyle}">בדיקה</th><th style="${thStyle}">תוצאה</th><th style="${thStyle};text-align:center">סטטוס</th>
+    </tr></thead><tbody>
+      ${[['Anti-MPO (ANCA)','<0.2','ok'],['Anti-PR3 (ANCA)','<0.2','ok'],['Anti-Cardiolipin IgA/G/M','שלילי','ok'],['B2-Glycoprotein IgG/M','שלילי','ok'],['LAC (RVVT + SCT)','NORMALIZED','ok'],['Complement C3','84 mg/dL (גבול 83)','warn'],['Complement C4','25 mg/dL','ok'],['Rheumatoid Factor','<15','ok'],['Hepatitis Bs Ab','>1000 — מחוסנת!','ok'],['Hepatitis B/C Ag/Ab','שלילי','ok']].map(([n,v,s]) =>
+        `<tr${s==='warn'?' style="background:#f0f8ff"':''}><td style="${tdStyle}">${n}</td><td style="${tdStyle};font-weight:600">${v}</td><td style="${tdC}">${s==='warn'?badge('שים לב','var(--blue)','var(--blue-bg)'):badge('✓ שלילי','var(--green)','var(--green-bg)')}</td></tr>`).join('')}
+    </tbody></table>
+
+    <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin:14px 0 6px">חדר מיון — 31.10.2023</div>
+    <table style="${tblStyle}"><thead><tr>
+      <th style="${thStyle}">בדיקה</th><th style="${thStyle}">תוצאה</th><th style="${thStyle}">טווח</th><th style="${thStyle};text-align:center">סטטוס</th>
+    </tr></thead><tbody>
+      <tr style="background:var(--amber-bg)"><td style="${tdStyle}">גלוקוז</td><td style="${tdStyle};font-weight:600">123 mg/dL</td><td style="${tdStyle};color:var(--text-muted)">70-100</td><td style="${tdC}">${badge('⚠️ גבוה','#c87800','#fff8e6')}</td></tr>
+      <tr style="background:var(--red-bg)"><td style="${tdStyle}">זרחן</td><td style="${tdStyle};font-weight:600;color:var(--red)">1.9 mg/dL</td><td style="${tdStyle};color:var(--text-muted)">2.5-4.5</td><td style="${tdC}">${badge('🔴 נמוך','var(--red)','var(--red-bg)')}</td></tr>
+    </tbody></table>
+    <div style="font-size:.78em;color:var(--text-secondary);margin-top:5px;padding:6px 10px;background:var(--amber-bg);border-radius:6px">⚠️ גלוקוז 123: ייתכן סטרס/לא צום. HbA1c חובה! זרחן 1.9: ב-05/2023 היה 3.32 — ייתכן חולף.</div>
+
+    <div style="margin-top:14px;background:var(--red-bg);border:1.5px dashed var(--red);border-radius:8px;padding:12px 14px">
+      <div style="font-size:.84em;font-weight:700;color:var(--red);margin-bottom:8px">🔴 חסר — לבקש בביקור הבא אצל ד"ר בוגוסלבסקי</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        ${[['TSH','בלוטת תריס — שכיח בנשים 47+'],['ויטמין D','חסר ב-70%+ בארץ. עצמות.'],['ויטמין B12','ספיגה פוחתת עם הגיל'],['ברזל + פריטין','מחסור שכיח בנשים'],['HbA1c','גלוקוז 123 בחדר מיון!'],['שומנים (כולסטרול/LDL/HDL)','מגיל 40 — חובה'],['מגנזיום','שינה, שרירים, עייפות'],['E2 + FSH + LH','מצב הורמונלי גיל 47']].map(([n,d]) =>
+          `<div style="font-size:.8em;background:var(--bg-card);border-radius:6px;padding:6px 8px">
+            <strong>${n}</strong><br>
+            <span style="color:var(--text-muted)">${d}</span>
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  // ══════════════════════════════════════════════
+  // TAB 5 — כללי
+  // ══════════════════════════════════════════════
+  let tabGeneral = `
+    ${obsBtn(FILES.general, 'בריאות-כללית.md')}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin-bottom:6px">מדדי בסיס</div>
+        ${[['קבוצת דם','A+'],['IUD','Mirena — 08/2022 עד 08/2027'],['BRCA','שלילי (2024)'],['HPV','שלילי (09/2023)'],['מחוסנת הפטיטיס B','כן (>1000)']].map(([k,v]) =>
+          `<div style="font-size:.81em;padding:6px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between">
+            <strong>${k}</strong><span style="color:var(--text-secondary)">${v}</span>
+          </div>`).join('')}
+        <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin:12px 0 6px">פרוצדורות עבר</div>
+        ${[['היסטרוסקופיה','31/01/2022'],['ביופסיה שד + קליפ','07/2023'],['הפטיטיס B — חיסון','מחוסנת']].map(([k,v]) =>
+          `<div style="font-size:.81em;padding:6px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between">
+            <strong>${k}</strong><span style="color:var(--text-secondary)">${v}</span>
+          </div>`).join('')}
+      </div>
+      <div>
+        <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin-bottom:6px">ממצאים מיוחדים לשים לב</div>
+        ${[
+          ['שד סמיך','חובה US בנוסף לכל ממוגרפיה','warn'],
+          ['קליפ מתכתי שד ימין','מפרוצדורה 07/2023 — לציין בכל US','info'],
+          ['ציסטות נבות צוואר הרחם','~10 מ"מ — שפיר לחלוטין','ok'],
+          ['CPK 203 (05/2023)','CK-MM בלבד, ירד ל-193. לא לב.','warn'],
+          ['גלוקוז 123 (חדר מיון 10/2023)','HbA1c חובה!','warn'],
+          ['C3 84 mg/dL','בתחתית נורמה (גבול 83). לפקח.','info'],
+        ].map(([k,v,s]) => {
+          const bg = s==='warn'?'var(--amber-bg)':s==='info'?'var(--blue-bg)':'var(--green-bg)';
+          const bc = s==='warn'?'#f0a500':s==='info'?'var(--blue)':'var(--green)';
+          return `<div style="background:${bg};border-right:3px solid ${bc};border-radius:6px;padding:7px 10px;margin-bottom:7px;font-size:.8em">
+            <strong>${k}</strong><br>
+            <span style="color:var(--text-secondary)">${v}</span>
+          </div>`;
+        }).join('')}
+        <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin:10px 0 6px">רופאים קבועים</div>
+        ${[['ד"ר אינסה בוגוסלבסקי','רופאת משפחה — כללית'],['ד"ר חרמוני הילה','מומחית שד — OFEK MEDICAL'],['ד"ר ענת שמואלי','רופאת נשים'],['ד"ר אורלי פרידמן אלדר','ייעוץ שד'],['ד"ר ליאורה גיא','רופאת נשים — ייעוץ']].map(([n,r]) =>
+          `<div style="font-size:.79em;padding:5px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between">
+            <strong>${n}</strong><span style="color:var(--text-muted)">${r}</span>
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  // ══════════════════════════════════════════════
+  // ASSEMBLE TABS
+  // ══════════════════════════════════════════════
+  const tabs = [
+    { id: 'hTab1', label: '🚨 התראות', content: tabAlerts, active: true },
+    { id: 'hTab2', label: '🫁 שד', content: tabShad },
+    { id: 'hTab3', label: '🩺 גינקולוגי', content: tabGyn },
+    { id: 'hTab4', label: '🩸 בדיקות דם', content: tabBlood },
+    { id: 'hTab5', label: '📋 כללי', content: tabGeneral },
+  ];
+
+  let html = `<div class="tab-bar" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;border-bottom:1px solid var(--gold-pale);padding-bottom:8px">`;
+  tabs.forEach(t => {
+    html += `<button class="tab${t.active?' active':''}" onclick="showTab(this,'${t.id}')" style="font-size:.8em;padding:5px 12px">${t.label}</button>`;
   });
   html += `</div>`;
 
-  // Done + Next appointment
-  html += `<div>
-    <h3 style="font-size:.85em;color:var(--text-secondary);margin-bottom:8px;font-weight:500">בדיקות תקינות</h3>`;
-  health.done.forEach(d => {
-    html += `<div style="font-size:.82em;color:var(--text-secondary);padding:5px 0;border-bottom:1px solid #f0f0f0;display:flex;align-items:flex-start;gap:6px"><span style="color:var(--green);font-size:.9em">✓</span>${d}</div>`;
+  tabs.forEach(t => {
+    html += `<div id="${t.id}" class="tab-content${t.active?' active':''}" style="display:${t.active?'block':'none'}">`;
+    html += t.content;
+    html += `</div>`;
   });
-  html += `<div style="background:var(--blue-bg);border-radius:8px;padding:10px 12px;margin-top:12px">
-    <div style="font-size:.78em;color:var(--text-secondary)">תור קרוב</div>
-    <div style="font-weight:600;font-size:.88em">${health.nextAppointment.dr}</div>
-    <div style="font-size:.82em;color:var(--text-secondary)">${health.nextAppointment.type} | ${health.nextAppointment.date}</div>
+
+  html += `<div style="margin-top:12px;font-size:.73em;color:var(--text-muted);border-top:1px solid var(--gold-pale);padding-top:8px">
+    עודכן: 19/04/2026 | נועה — סוכנת בריאות OTILYAS | תיק מלא:
+    <a href="${FILES.readme}" style="color:var(--gold);text-decoration:none">OBSIDIAN/בריאות/README</a>
   </div>`;
-  html += `</div></div>`;
-  html += `<div style="font-size:.75em;color:var(--text-muted);text-align:left">עודכן על ידי נועה | ${health.lastUpdated} | תיק מלא: OBSIDIAN/בריאות/</div>`;
 
   document.getElementById('healthContent').innerHTML = html;
+
+  // Fix tab switching for health section (tab-content display:block/none)
+  document.querySelectorAll('#health .tab').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('#health .tab-content').forEach(t => t.style.display = 'none');
+      document.querySelectorAll('#health .tab').forEach(t => t.classList.remove('active'));
+      const targetId = this.getAttribute('onclick').match(/'([^']+)'/g)[1].replace(/'/g,'');
+      const target = document.getElementById(targetId);
+      if (target) { target.style.display = 'block'; this.classList.add('active'); }
+    });
+  });
 })();
 
 // Last update
