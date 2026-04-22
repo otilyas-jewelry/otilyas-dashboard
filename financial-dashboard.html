@@ -604,9 +604,14 @@ select.inp{direction:rtl;text-align:right}
   <div class="sec-title" style="margin-bottom:16px">⚙️ הגדרות — הוצאות קבועות</div>
 
   <div class="card" style="margin-bottom:16px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
       <div class="card-title" style="margin:0">הוצאות קבועות חודשיות</div>
-      <div style="display:flex;gap:8px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <div class="pill-toggle" id="fixedFilter">
+          <button class="active" onclick="filterFixed('all',this)">הכל</button>
+          <button onclick="filterFixed('biz',this)">💼 עסקי</button>
+          <button onclick="filterFixed('prv',this)">🏠 אישי</button>
+        </div>
         <button class="btn btn-ghost btn-sm" onclick="resetFixedToDefaults()">אפס לברירת מחדל</button>
         <button class="btn btn-primary btn-sm" onclick="addFixedExpense()">+ הוסף</button>
       </div>
@@ -881,10 +886,24 @@ function renderFixedTable() {
   if (tot) tot.textContent = fmt(fixedTotal());
 }
 
+let fixedFilterMode = 'all';
+function filterFixed(mode, btn) {
+  fixedFilterMode = mode;
+  document.querySelectorAll('#fixedFilter button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSettingsFixed();
+}
+
 function renderSettingsFixed() {
   const tbody = document.getElementById('settingsFixedBody');
   if (!tbody) return;
-  tbody.innerHTML = DATA.fixedExpenses.map((f,i) => {
+  const filtered = DATA.fixedExpenses.filter(f =>
+    fixedFilterMode === 'all' ? true : fixedFilterMode === 'biz' ? f.biz : !f.biz
+  );
+  const originalIndices = DATA.fixedExpenses.map((f,i) => ({f,i})).filter(({f}) =>
+    fixedFilterMode === 'all' ? true : fixedFilterMode === 'biz' ? f.biz : !f.biz
+  );
+  tbody.innerHTML = originalIndices.map(({f, i}) => {
     const noteWarn = f.note && (f.note.includes('לבטל') || f.note.includes('⚠️'));
     return `<tr style="${f.active?'':'opacity:.4'}">
       <td><input style="border:1px solid var(--border);border-radius:4px;padding:3px 6px;width:130px;font-size:.8rem" value="${f.name}" onchange="updateFixed(${i},'name',this.value)"></td>
@@ -904,8 +923,9 @@ function renderSettingsFixed() {
     </tr>`;
   }).join('');
   const tot = DATA.fixedExpenses.filter(f=>f.active).reduce((s,f)=>s+(f.currency==='USD'?usd(f.amount):f.amount),0);
+  const filtTot = originalIndices.filter(({f})=>f.active).reduce((s,{f})=>s+(f.currency==='USD'?usd(f.amount):f.amount),0);
   const el = document.getElementById('settingsFixedTotal');
-  if (el) el.textContent = fmt(tot);
+  if (el) el.textContent = fixedFilterMode==='all' ? fmt(tot) : `${fmt(filtTot)} (מסוננים) | סה"כ: ${fmt(tot)}`;
 }
 
 function updateFixed(i, key, val) {
