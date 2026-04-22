@@ -851,18 +851,32 @@ function fixedTotal() {
 function renderFixedTable() {
   const tbody = document.getElementById('fixedTableBody');
   if (!tbody) return;
-  const rate = DATA.usdRate || 3.72;
-  tbody.innerHTML = DATA.fixedExpenses.map(f => {
-    const ils = f.currency==='USD' ? usd(f.amount) : f.amount;
-    const sym = f.currency==='USD' ? `$${f.amount} = ₪${ils.toFixed(0)}` : `₪${f.amount}`;
-    return `<tr style="${f.active?'':'opacity:.4'}">
-      <td>${f.name}</td>
-      <td>${f.category}</td>
-      <td style="text-align:center"><span class="${f.biz?'badge-biz':'badge-prv'}">${f.biz?'עסקי':'אישי'}</span></td>
-      <td class="num">${sym}</td>
-      <td class="num" style="font-weight:600">₪${ils.toFixed(0)}</td>
-    </tr>`;
-  }).join('');
+  const biz = DATA.fixedExpenses.filter(f=>f.biz);
+  const prv = DATA.fixedExpenses.filter(f=>!f.biz);
+  const bizTotal = biz.filter(f=>f.active).reduce((s,f)=>s+(f.currency==='USD'?usd(f.amount):f.amount),0);
+  const prvTotal = prv.filter(f=>f.active).reduce((s,f)=>s+(f.currency==='USD'?usd(f.amount):f.amount),0);
+
+  function rows(list) {
+    return list.map(f => {
+      const ils = f.currency==='USD' ? usd(f.amount) : f.amount;
+      const sym = f.currency==='USD' ? `$${f.amount} = ₪${ils.toFixed(0)}` : `₪${f.amount}`;
+      return `<tr style="${f.active?'':'opacity:.35'}">
+        <td>${f.name}</td>
+        <td style="color:var(--txt-d);font-size:.75rem">${f.category}</td>
+        <td class="num">${sym}</td>
+        <td class="num" style="font-weight:700">₪${ils.toFixed(0)}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  tbody.innerHTML =
+    `<tr><td colspan="4" style="background:var(--pink-d);padding:7px 10px;font-weight:700;font-size:.8rem;color:var(--pink)">
+      💼 עסקי &nbsp;<span style="font-weight:400;color:var(--txt-m)">סה"כ: ${fmt(bizTotal)}</span>
+    </td></tr>` + rows(biz) +
+    `<tr><td colspan="4" style="background:var(--purple-d);padding:7px 10px;font-weight:700;font-size:.8rem;color:var(--purple);border-top:2px solid var(--border-c)">
+      🏠 אישי &nbsp;<span style="font-weight:400;color:var(--txt-m)">סה"כ: ${fmt(prvTotal)}</span>
+    </td></tr>` + rows(prv);
+
   const tot = document.getElementById('fixedTotalDisplay');
   if (tot) tot.textContent = fmt(fixedTotal());
 }
