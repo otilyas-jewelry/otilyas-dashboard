@@ -604,12 +604,15 @@ select.inp{direction:rtl;text-align:right}
   <div class="sec-title" style="margin-bottom:16px">⚙️ הגדרות — הוצאות קבועות</div>
 
   <div class="card" style="margin-bottom:16px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
       <div class="card-title" style="margin:0">הוצאות קבועות חודשיות</div>
-      <button class="btn btn-primary btn-sm" onclick="addFixedExpense()">+ הוסף</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" onclick="resetFixedToDefaults()">אפס לברירת מחדל</button>
+        <button class="btn btn-primary btn-sm" onclick="addFixedExpense()">+ הוסף</button>
+      </div>
     </div>
     <table class="fixed-table">
-      <thead><tr><th>ספק</th><th>קטגוריה</th><th>ע/א</th><th>סכום</th><th>מטבע</th><th>פעיל</th><th></th></tr></thead>
+      <thead><tr><th>ספק</th><th>קטגוריה</th><th>ע/א</th><th>סכום</th><th>מטבע</th><th>הערה</th><th>פעיל</th><th></th></tr></thead>
       <tbody id="settingsFixedBody"></tbody>
     </table>
     <div style="margin-top:12px;font-size:.8rem;color:var(--txt-m)">
@@ -657,20 +660,56 @@ select.inp{direction:rtl;text-align:right}
 // ══════════════════════════════════════════════
 const STORE_KEY = 'otilyas_financial_v1';
 
+function defaultFixedExpenses() {
+  return [
+    // ── עסקי — הוצאות קבועות ──
+    { id:'fe_arn',  name:'ארנונה',                  category:'עסקי - כללי',    biz:true,  amount:476,    currency:'ILS', active:true,  note:'₪951.41 כל חודשיים' },
+    { id:'fe_neg',  name:'נסיעות (EGG)',             category:'עסקי - כללי',    biz:true,  amount:242,    currency:'ILS', active:true,  note:'ממוצע' },
+    { id:'fe_elc',  name:'חשמל',                    category:'עסקי - כללי',    biz:true,  amount:200,    currency:'ILS', active:true,  note:'ממוצע' },
+    { id:'fe_btl',  name:'ביטוח לאומי',              category:'עסקי - כללי',    biz:true,  amount:253,    currency:'ILS', active:true,  note:'משתנה לפי הכנסות' },
+    { id:'fe_hyp',  name:'הייפ — מכשיר סליקה',      category:'עסקי - סליקה',   biz:true,  amount:149,    currency:'ILS', active:true,  note:'הו"ק בנק' },
+    { id:'fe_cas',  name:'כספיט — תוכנת סליקה',     category:'עסקי - סליקה',   biz:true,  amount:106.40, currency:'ILS', active:true,  note:'MAX' },
+    { id:'fe_sig',  name:'שילוט שנתי',               category:'עסקי - כללי',    biz:true,  amount:55.48,  currency:'ILS', active:true,  note:'₪665.77/שנה — ינואר — MAX' },
+    { id:'fe_par',  name:'פרטנר (עסקי)',             category:'עסקי - תקשורת',  biz:true,  amount:29.90,  currency:'ILS', active:true,  note:'' },
+    { id:'fe_acc',  name:'רואה חשבון',               category:'עסקי - כללי',    biz:true,  amount:526.50, currency:'ILS', active:true,  note:'₪450+מע"מ' },
+    // ── עסקי — מנויים שקלים ──
+    { id:'fe_gsu',  name:'Google Workspace',         category:'עסקי - מנוי',    biz:true,  amount:28,     currency:'ILS', active:true,  note:'' },
+    { id:'fe_spo',  name:'Spotify',                  category:'עסקי - מנוי',    biz:true,  amount:43.90,  currency:'ILS', active:true,  note:'MAX' },
+    { id:'fe_m36',  name:'Microsoft 365',            category:'עסקי - מנוי',    biz:true,  amount:35.83,  currency:'ILS', active:true,  note:'₪430/שנה — PayPal — Diners' },
+    // ── עסקי — Google Play ──
+    { id:'fe_go1',  name:'Google One AI Pro',        category:'עסקי - Google',  biz:true,  amount:74.90,  currency:'ILS', active:true,  note:'24 לחודש' },
+    { id:'fe_ig',   name:'Instagram Meta Verified',  category:'עסקי - Google',  biz:true,  amount:53.50,  currency:'ILS', active:true,  note:'10 לחודש' },
+    { id:'fe_cap',  name:'CapCut',                   category:'עסקי - Google',  biz:true,  amount:49.90,  currency:'ILS', active:true,  note:'7 לחודש' },
+    { id:'fe_yt',   name:'YouTube Premium',          category:'עסקי - Google',  biz:true,  amount:23.90,  currency:'ILS', active:true,  note:'18 לחודש' },
+    { id:'fe_moj',  name:'MOJO',                     category:'עסקי - Google',  biz:true,  amount:12.49,  currency:'ILS', active:true,  note:'₪149.90/שנה' },
+    { id:'fe_ins',  name:'InShot',                   category:'עסקי - Google',  biz:true,  amount:3.74,   currency:'ILS', active:true,  note:'₪44.90/שנה' },
+    { id:'fe_mob',  name:'מוביט',                    category:'עסקי - Google',  biz:true,  amount:2,      currency:'ILS', active:true,  note:'₪24/שנה' },
+    // ── עסקי — מנויים דולר ──
+    { id:'fe_cla',  name:'Claude (Anthropic)',        category:'עסקי - AI',      biz:true,  amount:100,    currency:'USD', active:true,  note:'' },
+    { id:'fe_shp',  name:'Shopify',                  category:'עסקי - מנוי',    biz:true,  amount:43.95,  currency:'USD', active:true,  note:'$39+$4.95 אפליקציה' },
+    { id:'fe_cnv',  name:'Canva Pro',                category:'עסקי - מנוי',    biz:true,  amount:30,     currency:'USD', active:true,  note:'' },
+    { id:'fe_mj',   name:'Midjourney',               category:'עסקי - AI',      biz:true,  amount:30,     currency:'USD', active:true,  note:'' },
+    { id:'fe_gpt',  name:'GPT-4 (OpenAI)',           category:'עסקי - AI',      biz:true,  amount:20,     currency:'USD', active:true,  note:'' },
+    // ── אישי ──
+    { id:'fe_slq',  name:'סלקום',                    category:'אישי - תקשורת',  biz:false, amount:215,    currency:'ILS', active:true,  note:'Diners' },
+    { id:'fe_vat',  name:'עמותת ותיק',               category:'אישי - כללי',    biz:false, amount:239,    currency:'ILS', active:true,  note:'בנק' },
+    { id:'fe_hmo',  name:'בריאות כללית (הראל)',      category:'אישי - ביטוח',   biz:false, amount:142,    currency:'ILS', active:true,  note:'בנק' },
+    { id:'fe_kal',  name:'ביטוח סיעודי כלל',         category:'אישי - ביטוח',   biz:false, amount:151,    currency:'ILS', active:true,  note:'בנק' },
+    { id:'fe_pnx',  name:'הפניקס (ביטוח)',           category:'אישי - ביטוח',   biz:false, amount:186,    currency:'ILS', active:true,  note:'עלה מ-₪182' },
+    { id:'fe_mgd',  name:'מגדל (ביטוח)',             category:'אישי - ביטוח',   biz:false, amount:127,    currency:'ILS', active:true,  note:'עלה מ-₪117' },
+    { id:'fe_sun',  name:'סאני Samsung',             category:'אישי - סלולאר',  biz:false, amount:69.80,  currency:'ILS', active:true,  note:'אחריות מורחבת' },
+    { id:'fe_din',  name:'דינמיקה/פרטנר (אישי)',    category:'אישי - תקשורת',  biz:false, amount:59.90,  currency:'ILS', active:true,  note:'Diners' },
+    { id:'fe_msl',  name:'ע.מסלול מורחב',            category:'אישי - בנק',     biz:false, amount:25,     currency:'ILS', active:true,  note:'בנק' },
+    { id:'fe_dmc',  name:'דמי כרטיס',                category:'אישי - בנק',     biz:false, amount:19.80,  currency:'ILS', active:true,  note:'2x₪9.90 — לבטל!' },
+    { id:'fe_wlt',  name:'Wolt+',                    category:'אישי - מנוי',    biz:false, amount:29,     currency:'ILS', active:true,  note:'Diners — לבטל?' },
+  ];
+}
+
 function defaultData() {
   return {
     usdRate: null,
     usdFetched: null,
-    fixedExpenses: [
-      { id:'fe1', name:'חברת חשמל', category:'שירותים', biz:false, amount:200, currency:'ILS', active:true },
-      { id:'fe2', name:'כספיט (סליקה)', category:'עסקי', biz:true, amount:106.40, currency:'ILS', active:true },
-      { id:'fe3', name:'EGG (תחבורה)', category:'תחבורה', biz:false, amount:242, currency:'ILS', active:true },
-      { id:'fe4', name:'סאני Samsung', category:'סלולאר', biz:false, amount:69.80, currency:'ILS', active:true },
-      { id:'fe5', name:'Microsoft 365', category:'עסקי', biz:true, amount:36, currency:'ILS', active:true },
-      { id:'fe6', name:'Canva Pro', category:'עיצוב', biz:true, amount:30, currency:'USD', active:true },
-      { id:'fe7', name:'Shopify', category:'חנות', biz:true, amount:43.95, currency:'USD', active:true },
-      { id:'fe8', name:'Wolt+', category:'אוכל', biz:false, amount:29, currency:'ILS', active:true },
-    ],
+    fixedExpenses: defaultFixedExpenses(),
     months: {}
   };
 }
@@ -696,7 +735,19 @@ let currentMonth = '';  // 'YYYY-MM'
 function load() {
   try { DATA = JSON.parse(localStorage.getItem(STORE_KEY)) || defaultData(); }
   catch(e) { DATA = defaultData(); }
-  if (!DATA.fixedExpenses) DATA.fixedExpenses = defaultData().fixedExpenses;
+  if (!DATA.fixedExpenses || DATA.fixedExpenses.length <= 8) {
+    DATA.fixedExpenses = defaultFixedExpenses();
+    save();
+  }
+}
+
+function resetFixedToDefaults() {
+  DATA.fixedExpenses = defaultFixedExpenses();
+  save();
+  renderSettingsFixed();
+  renderFixedTable();
+  renderOverview();
+  toast('הוצאות קבועות אופסו לברירת מחדל');
 }
 
 function save() {
@@ -819,10 +870,11 @@ function renderFixedTable() {
 function renderSettingsFixed() {
   const tbody = document.getElementById('settingsFixedBody');
   if (!tbody) return;
-  tbody.innerHTML = DATA.fixedExpenses.map((f,i) => `
-    <tr>
-      <td><input style="border:1px solid var(--border);border-radius:4px;padding:3px 6px;width:120px;font-size:.8rem" value="${f.name}" onchange="updateFixed(${i},'name',this.value)"></td>
-      <td><input style="border:1px solid var(--border);border-radius:4px;padding:3px 6px;width:80px;font-size:.8rem" value="${f.category}" onchange="updateFixed(${i},'category',this.value)"></td>
+  tbody.innerHTML = DATA.fixedExpenses.map((f,i) => {
+    const noteWarn = f.note && (f.note.includes('לבטל') || f.note.includes('⚠️'));
+    return `<tr style="${f.active?'':'opacity:.4'}">
+      <td><input style="border:1px solid var(--border);border-radius:4px;padding:3px 6px;width:130px;font-size:.8rem" value="${f.name}" onchange="updateFixed(${i},'name',this.value)"></td>
+      <td><input style="border:1px solid var(--border);border-radius:4px;padding:3px 6px;width:90px;font-size:.8rem" value="${f.category}" onchange="updateFixed(${i},'category',this.value)"></td>
       <td><select style="border:1px solid var(--border);border-radius:4px;padding:3px;font-size:.8rem" onchange="updateFixed(${i},'biz',this.value==='true')">
         <option value="true" ${f.biz?'selected':''}>עסקי</option>
         <option value="false" ${!f.biz?'selected':''}>אישי</option>
@@ -832,9 +884,11 @@ function renderSettingsFixed() {
         <option ${f.currency==='ILS'?'selected':''}>ILS</option>
         <option ${f.currency==='USD'?'selected':''}>USD</option>
       </select></td>
+      <td style="font-size:.72rem;color:${noteWarn?'var(--red)':'var(--txt-d)'}">${f.note||''}</td>
       <td style="text-align:center"><input type="checkbox" ${f.active?'checked':''} onchange="updateFixed(${i},'active',this.checked)"></td>
       <td><button class="del" onclick="removeFixed(${i})">✕</button></td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
   const tot = DATA.fixedExpenses.filter(f=>f.active).reduce((s,f)=>s+(f.currency==='USD'?usd(f.amount):f.amount),0);
   const el = document.getElementById('settingsFixedTotal');
   if (el) el.textContent = fmt(tot);
