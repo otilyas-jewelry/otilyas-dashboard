@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מחשבון השקעות חכם — OTILYAS</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:          #05080f;
+  --bg2:         #090d1c;
+  --surface:     rgba(255,255,255,0.033);
+  --surface-h:   rgba(255,255,255,0.055);
+  --border:      rgba(255,255,255,0.07);
+  --border-c:    rgba(0,210,255,0.28);
+  --cyan:        #00d2ff;
+  --cyan-d:      rgba(0,210,255,0.13);
+  --gold:        #f5c534;
+  --gold-d:      rgba(245,197,52,0.13);
+  --green:       #00e4a0;
+  --green-d:     rgba(0,228,160,0.11);
+  --red:         #ff4b68;
+  --red-d:       rgba(255,75,104,0.11);
+  --txt:         #dde5f5;
+  --txt-m:       #8e9db8;
+  --txt-d:       #59687f;
+  --r:           14px;
+  --rs:          10px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font-family:'Segoe UI','Arial Hebrew',Arial,sans-serif;
+  min-height:100vh;
+  direction:rtl;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 85% 0%,rgba(0,100,220,0.09) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 40% at 15% 100%,rgba(0,210,255,0.05) 0%,transparent 55%);
+}
+
+/* ---- HEADER ---- */
+.hdr{
+  background:rgba(9,13,28,0.88);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:14px 26px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.hdr-brand{display:flex;align-items:center;gap:12px}
+.hdr-icon{
+  width:38px;height:38px;border-radius:11px;
+  background:linear-gradient(135deg,#00d2ff,#0066ff);
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;box-shadow:0 0 18px rgba(0,120,255,0.35);
+}
+.hdr-title{font-size:1rem;font-weight:800;letter-spacing:-.01em}
+.hdr-sub{font-size:.72rem;color:var(--txt-d);margin-top:2px}
+.btn-print{
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--txt-m);padding:8px 16px;border-radius:9px;
+  cursor:pointer;font-size:.82rem;transition:all .2s;
+  display:flex;align-items:center;gap:6px;font-family:inherit;
+}
+.btn-print:hover{background:var(--surface-h);border-color:var(--cyan);color:var(--cyan)}
+
+/* ---- LAYOUT ---- */
+.main{display:grid;grid-template-columns:350px 1fr;min-height:calc(100vh - 65px)}
+.sidebar{
+  background:rgba(9,13,28,0.55);
+  border-left:1px solid var(--border);
+  padding:22px 18px;
+  overflow-y:auto;
+  max-height:calc(100vh - 65px);
+  position:sticky;top:65px;
+}
+.content{padding:24px;overflow-y:auto}
+
+/* ---- SECTION HEADERS ---- */
+.sec-title{
+  font-size:.68rem;font-weight:800;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--cyan);
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.ctrl-sec{margin-bottom:22px}
+
+/* ---- LABELS ---- */
+.lbl{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:8px;font-size:.8rem;color:var(--txt-m);
+}
+.lbl-val{font-weight:700;color:var(--txt);font-size:.88rem}
+
+/* ---- AGE BOXES ---- */
+.age-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+.age-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--rs);padding:12px 10px;text-align:center;
+  transition:border-color .2s;
+}
+.age-box:focus-within{border-color:var(--cyan)}
+.age-box label{display:block;font-size:.68rem;color:var(--txt-d);margin-bottom:5px}
+.age-box input[type=number]{
+  background:transparent;border:none;outline:none;
+  color:var(--txt);font-size:1.5rem;font-weight:800;
+  width:100%;text-align:center;padding:0;font-family:inherit;
+  -moz-appearance:textfield;
+}
+.age-box input::-webkit-inner-spin-button{-webkit-appearance:none}
+.age-badge{font-size:.68rem;color:var(--cyan);margin-top:4px}
+
+/* ---- SLIDERS ---- */
+input[type=range]{
+  width:100%;height:4px;border-radius:4px;
+  background:var(--border);outline:none;cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+  background:var(--cyan);box-shadow:0 0 0 3px rgba(0,210,255,.2);
+  cursor:pointer;transition:box-shadow .2s;
+}
+input[type=range]::-webkit-slider-thumb:hover{box-shadow:0 0 0 7px rgba(0,210,255,.25)}
+
+/* ---- NUMBER INPUTS ---- */
+input[type=number].field{
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--txt);padding:8px 12px;border-radius:9px;
+  font-size:.88rem;width:100%;outline:none;
+  transition:border-color .2s;text-align:left;direction:ltr;
+  font-family:inherit;-moz-appearance:textfield;
+}
+input[type=number].field::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number].field:focus{border-color:var(--cyan)}
+
+/* ---- CURRENCY TOGGLE ---- */
+.cur-row{display:flex;gap:6px;margin-bottom:14px}
+.cur-btn{
+  flex:1;padding:9px;border:1px solid var(--border);
+  background:var(--surface);color:var(--txt-m);
+  border-radius:9px;cursor:pointer;font-size:.85rem;
+  font-weight:700;transition:all .2s;font-family:inherit;text-align:center;
+}
+.cur-btn.on{background:var(--cyan-d);border-color:var(--cyan);color:var(--cyan)}
+
+/* ---- TRACKS ---- */
+.tracks{display:flex;flex-direction:column;gap:6px}
+.track-btn{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 13px;border:1px solid var(--border);
+  background:var(--surface);color:var(--txt-m);
+  border-radius:10px;cursor:pointer;font-size:.8rem;
+  transition:all .2s;font-family:inherit;width:100%;text-align:right;
+}
+.track-btn:hover{background:var(--surface-h);color:var(--txt)}
+.track-btn.on{background:var(--cyan-d);border-color:var(--cyan);color:var(--cyan)}
+.track-pct{font-weight:800;font-size:.76rem;color:var(--green)}
+.custom-row{display:none;align-items:center;gap:8px;margin-top:8px}
+.custom-row.show{display:flex}
+.custom-row span{font-size:.8rem;color:var(--txt-d)}
+.custom-row input{max-width:80px}
+
+/* ---- SCENARIO TABS ---- */
+.scen-tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.scen-tab{
+  padding:10px 6px;border:1px solid var(--border);
+  background:var(--surface);border-radius:10px;
+  cursor:pointer;text-align:center;transition:all .2s;
+}
+.scen-tab .si{font-size:1.15rem;display:block;margin-bottom:2px}
+.scen-tab .sn{font-size:.7rem;color:var(--txt-d);display:block;margin-bottom:2px}
+.scen-tab .sd{font-size:.7rem;font-weight:800;display:block}
+.scen-tab.on-opt{background:var(--green-d);border-color:var(--green)}
+.scen-tab.on-opt .sn{color:var(--green)}
+.scen-tab.on-rea{background:var(--cyan-d);border-color:var(--cyan)}
+.scen-tab.on-rea .sn{color:var(--cyan)}
+.scen-tab.on-pes{background:var(--red-d);border-color:var(--red)}
+.scen-tab.on-pes .sn{color:var(--red)}
+
+/* ---- TOGGLE ---- */
+.tog-row{display:flex;align-items:center;justify-content:space-between}
+.tog-wrap{direction:ltr;flex-shrink:0}
+.tog{position:relative;width:44px;height:24px;display:inline-block}
+.tog input{opacity:0;width:0;height:0}
+.tog-sl{
+  position:absolute;inset:0;background:rgba(255,255,255,.1);
+  border-radius:24px;cursor:pointer;transition:.3s;border:1px solid transparent;
+}
+.tog-sl::before{
+  content:'';position:absolute;width:18px;height:18px;
+  border-radius:50%;background:var(--txt-d);
+  top:2px;left:3px;transition:.3s;
+}
+.tog input:checked+.tog-sl{background:var(--cyan-d);border-color:var(--cyan)}
+.tog input:checked+.tog-sl::before{background:var(--cyan);left:22px}
+
+/* ---- RESULT CARDS ---- */
+.res-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.res-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:18px 16px;
+  position:relative;overflow:hidden;
+}
+.res-card::before{content:'';position:absolute;top:0;right:0;left:0;height:2.5px}
+.res-card.c-gr::before{background:linear-gradient(90deg,var(--cyan),#0066ff)}
+.res-card.c-ne::before{background:linear-gradient(90deg,var(--gold),#e0902a)}
+.res-card.c-in::before{background:rgba(255,255,255,.15)}
+.res-card.c-re::before{background:linear-gradient(90deg,var(--green),#00b4d8)}
+.res-lbl{font-size:.7rem;color:var(--txt-d);margin-bottom:10px}
+.res-val{font-size:1.5rem;font-weight:800;line-height:1;margin-bottom:5px}
+.res-card.c-gr .res-val{color:var(--cyan)}
+.res-card.c-ne .res-val{color:var(--gold)}
+.res-card.c-in .res-val{color:var(--txt-m)}
+.res-card.c-re .res-val{color:var(--green)}
+.res-sub{font-size:.7rem;color:var(--txt-d)}
+.res-mult{
+  display:inline-block;background:var(--green-d);border:1px solid rgba(0,228,160,.2);
+  padding:2px 7px;border-radius:5px;font-size:.68rem;font-weight:800;
+  color:var(--green);margin-top:7px;
+}
+
+/* ---- CHART CARDS ---- */
+.chart-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:22px;margin-bottom:18px;
+}
+.chart-title{
+  font-size:.82rem;font-weight:700;color:var(--txt);
+  margin-bottom:18px;display:flex;align-items:center;gap:8px;
+}
+.ct-icon{
+  width:28px;height:28px;background:var(--cyan-d);
+  border:1px solid var(--border-c);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+}
+.charts-row{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}
+.chart-wrap{position:relative}
+
+/* ---- TABLE ---- */
+.tbl-sec{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;margin-bottom:20px;
+}
+.tbl-hdr{
+  padding:15px 22px;display:flex;align-items:center;
+  justify-content:space-between;cursor:pointer;
+  border-bottom:1px solid transparent;transition:all .2s;
+}
+.tbl-hdr:hover{background:var(--surface-h)}
+.tbl-hdr.open{border-bottom-color:var(--border)}
+.tbl-arrow{color:var(--txt-d);transition:transform .3s;font-size:1rem;line-height:1}
+.tbl-hdr.open .tbl-arrow{transform:rotate(180deg)}
+.tbl-body{display:none;overflow-x:auto}
+.tbl-body.vis{display:block}
+table{width:100%;border-collapse:collapse;font-size:.79rem}
+thead th{
+  background:rgba(0,210,255,.04);color:var(--txt-d);
+  font-weight:700;padding:11px 15px;text-align:right;
+  border-bottom:1px solid var(--border);white-space:nowrap;
+}
+tbody td{
+  padding:9px 15px;border-bottom:1px solid rgba(255,255,255,.025);
+  color:var(--txt-m);
+}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--surface-h)}
+tbody tr.milestone td{background:rgba(0,210,255,.025);font-weight:700;color:var(--txt)}
+.td-c{color:var(--cyan)!important}
+.td-g{color:var(--gold)!important;font-weight:700}
+.td-p{color:var(--green)!important;font-weight:600}
+
+/* ---- SCROLLBARS ---- */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:rgba(0,210,255,.25)}
+
+/* ---- RESPONSIVE ---- */
+@media(max-width:1200px){.res-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:960px){
+  .main{grid-template-columns:1fr}
+  .sidebar{position:static;max-height:none;border-left:none;border-bottom:1px solid var(--border)}
+  .charts-row{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .res-grid{grid-template-columns:1fr 1fr}
+  .res-val{font-size:1.2rem}
+}
+
+/* ---- PRINT ---- */
+@media print{
+  .sidebar,.btn-print,.hdr{display:none!important}
+  .main{display:block}
+  .content{padding:0}
+  body{background:#fff;color:#000}
+  .res-card,.chart-card,.tbl-sec{border:1px solid #ccc}
+}
+
+/* ---- ANIMATIONS ---- */
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.res-card{animation:fadeIn .4s ease both}
+.res-card:nth-child(1){animation-delay:.05s}
+.res-card:nth-child(2){animation-delay:.1s}
+.res-card:nth-child(3){animation-delay:.15s}
+.res-card:nth-child(4){animation-delay:.2s}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-brand">
+    <div class="hdr-icon">📈</div>
+    <div>
+      <div class="hdr-title">מחשבון השקעות חכם</div>
+      <div class="hdr-sub">סימולטור להשקעות לטווח ארוך · כולל מס / אינפלציה / דמי ניהול</div>
+    </div>
+  </div>
+  <button class="btn-print" onclick="window.print()">🖨️ הדפסה / שתף</button>
+</header>
+
+<div class="main">
+
+<!-- ====== SIDEBAR ====== -->
+<aside class="sidebar">
+
+  <!-- AGE -->
+  <div class="ctrl-sec">
+    <div class="sec-title">גיל ותקופה</div>
+    <div class="age-row">
+      <div class="age-box">
+        <label>הגיל שלי</label>
+        <input type="number" id="curAge" value="47" min="18" max="80" oninput="recalc()">
+        <div class="age-badge" id="yrsBadge">18 שנים</div>
+      </div>
+      <div class="age-box">
+        <label>גיל יציאה</label>
+        <input type="number" id="tgtAge" value="65" min="20" max="90" oninput="recalc()">
+        <div class="age-badge" style="color:var(--gold)">יעד 🎯</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AMOUNTS -->
+  <div class="ctrl-sec">
+    <div class="sec-title">סכומי השקעה</div>
+    <!-- Currency -->
+    <div class="cur-row">
+      <button class="cur-btn on" id="btnILS" onclick="setCur('ILS')">₪ שקל</button>
+      <button class="cur-btn"   id="btnUSD" onclick="setCur('USD')">$ דולר</button>
+    </div>
+    <!-- Monthly -->
+    <div class="lbl">
+      <span>הפקדה חודשית</span>
+      <span class="lbl-val" id="lblMonthly">₪1,000</span>
+    </div>
+    <input type="range" id="slMonthly" min="100" max="20000" step="100" value="1000" oninput="syncM('s')">
+    <div style="margin-top:8px">
+      <input type="number" class="field" id="inMonthly" value="1000" min="0" oninput="syncM('i')">
+    </div>
+
+    <!-- Lump sum -->
+    <div class="lbl" style="margin-top:14px">
+      <span>סכום חד-פעמי היום</span>
+      <span class="lbl-val" id="lblLump">₪0</span>
+    </div>
+    <input type="range" id="slLump" min="0" max="500000" step="1000" value="0" oninput="syncL('s')">
+    <div style="margin-top:8px">
+      <input type="number" class="field" id="inLump" value="0" min="0" oninput="syncL('i')">
+    </div>
+  </div>
+
+  <!-- TRACKS -->
+  <div class="ctrl-sec">
+    <div class="sec-title">מסלול השקעה</div>
+    <div class="tracks">
+      <button class="track-btn on" id="tr-qqq"   onclick="setTrack('qqq')">  <span>QQQ — נאסד&quot;ק 100</span><span class="track-pct">14%</span>  </button>
+      <button class="track-btn"   id="tr-sp500" onclick="setTrack('sp500')"><span>S&amp;P 500</span>            <span class="track-pct">10.5%</span></button>
+      <button class="track-btn"   id="tr-msci"  onclick="setTrack('msci')"> <span>MSCI World</span>            <span class="track-pct">9%</span>  </button>
+      <button class="track-btn"   id="tr-mixed" onclick="setTrack('mixed')"><span>מניות + אג&quot;ח 70/30</span><span class="track-pct">8%</span>  </button>
+      <button class="track-btn"   id="tr-bonds" onclick="setTrack('bonds')"><span>אג&quot;ח בלבד</span>          <span class="track-pct">4%</span>  </button>
+      <button class="track-btn"   id="tr-cust"  onclick="setTrack('cust')"> <span>מותאם אישית</span>          <span class="track-pct" id="custPctLbl">10%</span></button>
+    </div>
+    <div class="custom-row" id="custRow">
+      <span>תשואה שנתית:</span>
+      <input type="number" class="field" id="inCust" value="10" min="0" max="50" step="0.5" oninput="recalc()">
+      <span>%</span>
+    </div>
+  </div>
+
+  <!-- MARKET PARAMS -->
+  <div class="ctrl-sec">
+    <div class="sec-title">פרמטרי שוק</div>
+
+    <div class="lbl"><span>אינפלציה שנתית</span><span class="lbl-val" id="lblInflation">3%</span></div>
+    <input type="range" id="slInflation" min="0" max="10" step="0.5" value="3" oninput="recalc()" style="margin-bottom:14px">
+
+    <div class="lbl"><span>דמי ניהול שנתיים</span><span class="lbl-val" id="lblFees">0.20%</span></div>
+    <input type="range" id="slFees" min="0" max="2" step="0.05" value="0.2" oninput="recalc()" style="margin-bottom:14px">
+
+    <div class="tog-row">
+      <div>
+        <div style="font-size:.8rem;color:var(--txt-m)">מס רווחי הון (25%)</div>
+        <div style="font-size:.68rem;color:var(--txt-d);margin-top:2px">על הרווח בלבד — ישראל</div>
+      </div>
+      <div class="tog-wrap">
+        <label class="tog">
+          <input type="checkbox" id="togTax" checked onchange="recalc()">
+          <span class="tog-sl"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENARIO -->
+  <div class="ctrl-sec">
+    <div class="sec-title">תרחיש שוק</div>
+    <div class="scen-tabs">
+      <div class="scen-tab" id="sc-opt" onclick="setScen('opt')">
+        <span class="si">🚀</span>
+        <span class="sn">אופטימי</span>
+        <span class="sd" style="color:var(--green)">+3%</span>
+      </div>
+      <div class="scen-tab on-rea" id="sc-rea" onclick="setScen('rea')">
+        <span class="si">⚖️</span>
+        <span class="sn">ריאלי</span>
+        <span class="sd" style="color:var(--cyan)">±0%</span>
+      </div>
+      <div class="scen-tab" id="sc-pes" onclick="setScen('pes')">
+        <span class="si">⛈️</span>
+        <span class="sn">פסימי</span>
+        <span class="sd" style="color:var(--red)">-3%</span>
+      </div>
+    </div>
+  </div>
+
+</aside>
+
+<!-- ====== CONTENT ====== -->
+<main class="content">
+
+  <!-- RESULT CARDS -->
+  <div class="res-grid">
+    <div class="res-card c-gr">
+      <div class="res-lbl">💼 סכום ברוטו</div>
+      <div class="res-val" id="vGross" data-raw="0">₪0</div>
+      <div class="res-sub">לפני מס</div>
+      <div class="res-mult" id="vMult">×0 על ההשקעה</div>
+    </div>
+    <div class="res-card c-ne">
+      <div class="res-lbl">✅ סכום נטו</div>
+      <div class="res-val" id="vNet" data-raw="0">₪0</div>
+      <div class="res-sub">אחרי מס רווחי הון</div>
+    </div>
+    <div class="res-card c-in">
+      <div class="res-lbl">💰 סה"כ הפקדות</div>
+      <div class="res-val" id="vInvested" data-raw="0">₪0</div>
+      <div class="res-sub">הכסף שהכנסת</div>
+    </div>
+    <div class="res-card c-re">
+      <div class="res-lbl">📊 ערך ריאלי</div>
+      <div class="res-val" id="vReal" data-raw="0">₪0</div>
+      <div class="res-sub">מותאם לאינפלציה</div>
+    </div>
+  </div>
+
+  <!-- GROWTH CHART -->
+  <div class="chart-card">
+    <div class="chart-title"><div class="ct-icon">📈</div>צמיחת התיק לאורך הזמן — שלושת התרחישים</div>
+    <div style="height:280px"><canvas id="cGrowth"></canvas></div>
+  </div>
+
+  <!-- COMPARE + PIE -->
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-title"><div class="ct-icon">📊</div>השוואת מסלולי השקעה (נטו)</div>
+      <div style="height:280px"><canvas id="cCompare"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title"><div class="ct-icon">🥧</div>פירוט התיק</div>
+      <div style="height:280px"><canvas id="cPie"></canvas></div>
+    </div>
+  </div>
+
+  <!-- YEAR TABLE -->
+  <div class="tbl-sec">
+    <div class="tbl-hdr" id="tblHdr" onclick="toggleTbl()">
+      <div class="chart-title" style="margin:0"><div class="ct-icon">🗓️</div>טבלת צמיחה שנתית מפורטת</div>
+      <span class="tbl-arrow">▼</span>
+    </div>
+    <div class="tbl-body" id="tblBody">
+      <table>
+        <thead><tr>
+          <th>שנה</th><th>גיל</th><th>סה"כ הפקדות</th>
+          <th>שווי ברוטו</th><th>רווח נצבר</th>
+          <th>שווי נטו</th><th>ערך ריאלי</th>
+        </tr></thead>
+        <tbody id="tblRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+// ================================================================
+// STATE
+// ================================================================
+const S = {
+  curAge: 47, tgtAge: 65,
+  monthly: 1000, lump: 0,
+  cur: 'ILS',
+  track: 'qqq',
+  custRet: 10,
+  inflation: 3,
+  fees: 0.2,
+  taxOn: true,
+  taxRate: 25,
+  scen: 'rea'
+};
+
+const TRACKS = {
+  qqq:   { label: 'QQQ נאסד"ק',     ret: 14   },
+  sp500: { label: 'S&P 500',          ret: 10.5 },
+  msci:  { label: 'MSCI World',       ret: 9    },
+  mixed: { label: 'מניות+אג"ח 70/30',ret: 8    },
+  bonds: { label: 'אג"ח',            ret: 4    },
+  cust:  { label: 'מותאם',           ret: 10   }
+};
+
+const SCEN_D = { opt: 3, rea: 0, pes: -3 };
+const SYM = { ILS: '₪', USD: '$' };
+
+// ================================================================
+// MATH
+// ================================================================
+function effRate(baseRet, sd) {
+  return Math.max(baseRet + sd - S.fees, 0);
+}
+
+// Simulate month by month (precise)
+function sim(annRate, years) {
+  const r = annRate / 100 / 12;
+  let bal = S.lump;
+  const rows = [];
+  for (let y = 1; y <= years; y++) {
+    for (let m = 0; m < 12; m++) {
+      bal = r === 0 ? bal + S.monthly : bal * (1 + r) + S.monthly;
+    }
+    const invested = S.lump + S.monthly * 12 * y;
+    const gains = Math.max(bal - invested, 0);
+    const tax = S.taxOn ? gains * (S.taxRate / 100) : 0;
+    const net = bal - tax;
+    const real = net / Math.pow(1 + S.inflation / 100, y);
+    rows.push({ y, age: S.curAge + y, invested, gross: bal, gains, tax, net, real });
+  }
+  return rows;
+}
+
+function proj(sd) {
+  const yrs = S.tgtAge - S.curAge;
+  if (yrs <= 0) return { gross:0, net:0, invested:0, real:0, gains:0, tax:0 };
+  const baseRet = S.track === 'cust' ? S.custRet : TRACKS[S.track].ret;
+  const rows = sim(effRate(baseRet, sd), yrs);
+  return rows[rows.length - 1];
+}
+
+// ================================================================
+// FORMATTING
+// ================================================================
+function fmt(n) {
+  const sym = SYM[S.cur];
+  if (isNaN(n) || n == null) return sym + '0';
+  if (Math.abs(n) >= 1e6) return sym + (n / 1e6).toFixed(2) + 'M';
+  return sym + Math.round(n).toLocaleString('he-IL');
+}
+
+// ================================================================
+// ANIMATED COUNTER
+// ================================================================
+function animNum(el, target) {
+  const start = parseFloat(el.dataset.raw) || 0;
+  el.dataset.raw = target;
+  const dur = 550, t0 = performance.now();
+  const sym = SYM[S.cur];
+  const tick = now => {
+    const p = Math.min((now - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    const v = start + (target - start) * e;
+    if (Math.abs(v) >= 1e6) el.textContent = sym + (v / 1e6).toFixed(2) + 'M';
+    else el.textContent = sym + Math.round(v).toLocaleString('he-IL');
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+// ================================================================
+// CHARTS
+// ================================================================
+let gGrowth, gCompare, gPie;
+
+Chart.defaults.color = '#59687f';
+Chart.defaults.font.family = "'Segoe UI','Arial Hebrew',Arial,sans-serif";
+
+function mkGrowth() {
+  const ctx = document.getElementById('cGrowth').getContext('2d');
+  gGrowth = new Chart(ctx, {
+    type: 'line',
+    data: { labels: [], datasets: [] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: '#8e9db8', font: { size: 11 }, boxWidth: 14, padding: 16 } },
+        tooltip: {
+          backgroundColor: 'rgba(9,13,28,.96)', borderColor: 'rgba(0,210,255,.25)', borderWidth: 1,
+          titleColor: '#dde5f5', bodyColor: '#8e9db8',
+          callbacks: { label: c => ` ${c.dataset.label}: ${fmt(c.raw)}` }
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { maxTicksLimit: 10 } },
+        y: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { callback: v => fmt(v) } }
+      }
+    }
+  });
+}
+
+function mkCompare() {
+  const ctx = document.getElementById('cCompare').getContext('2d');
+  gCompare = new Chart(ctx, {
+    type: 'bar',
+    data: { labels: [], datasets: [] },
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(9,13,28,.96)', borderColor: 'rgba(0,210,255,.25)', borderWidth: 1,
+          callbacks: { label: c => ` ${fmt(c.raw)}` }
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { callback: v => fmt(v) } },
+        y: { grid: { color: 'rgba(255,255,255,.04)' } }
+      }
+    }
+  });
+}
+
+function mkPie() {
+  const ctx = document.getElementById('cPie').getContext('2d');
+  gPie = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['הפקדות', 'רווחים', 'מס'],
+      datasets: [{ data: [0,0,0], backgroundColor: ['#2d3748','#00e4a0','#ff4b68'], borderWidth: 0, hoverOffset: 10 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#8e9db8', font: { size: 11 }, padding: 14, boxWidth: 13 } },
+        tooltip: {
+          backgroundColor: 'rgba(9,13,28,.96)', borderColor: 'rgba(0,210,255,.25)', borderWidth: 1,
+          callbacks: { label: c => ` ${fmt(c.raw)}` }
+        }
+      },
+      cutout: '62%'
+    }
+  });
+}
+
+// ================================================================
+// UPDATE CHARTS
+// ================================================================
+function updCharts(mainProj) {
+  const yrs = S.tgtAge - S.curAge;
+  if (yrs <= 0) return;
+  const baseRet = S.track === 'cust' ? S.custRet : TRACKS[S.track].ret;
+
+  // Growth chart — all 3 scenarios
+  const rOpt = sim(effRate(baseRet, SCEN_D.opt), yrs);
+  const rRea = sim(effRate(baseRet, SCEN_D.rea), yrs);
+  const rPes = sim(effRate(baseRet, SCEN_D.pes), yrs);
+  const labels = rRea.map(r => `גיל ${r.age}`);
+
+  gGrowth.data.labels = labels;
+  gGrowth.data.datasets = [
+    { label: '🚀 אופטימי', data: rOpt.map(r=>r.net), borderColor:'#00e4a0', backgroundColor:'rgba(0,228,160,.05)', fill:false, tension:.4, borderWidth:2, pointRadius:0, pointHoverRadius:4 },
+    { label: '⚖️ ריאלי',  data: rRea.map(r=>r.net), borderColor:'#00d2ff', backgroundColor:'rgba(0,210,255,.07)', fill:true,  tension:.4, borderWidth:2.5, pointRadius:0, pointHoverRadius:4 },
+    { label: '⛈️ פסימי',  data: rPes.map(r=>r.net), borderColor:'#ff4b68', backgroundColor:'rgba(255,75,104,.04)', fill:false, tension:.4, borderWidth:2, borderDash:[5,3], pointRadius:0, pointHoverRadius:4 },
+    { label: '💰 הפקדות', data: rRea.map(r=>r.invested), borderColor:'#374151', backgroundColor:'rgba(55,65,81,.12)', fill:true, tension:0, borderWidth:1.5, borderDash:[4,2], pointRadius:0, pointHoverRadius:3 }
+  ];
+  gGrowth.update('none');
+
+  // Compare chart — all tracks, current scenario
+  const sd = SCEN_D[S.scen];
+  const tkKeys = ['qqq','sp500','msci','mixed','bonds'];
+  const cVals = tkKeys.map(k => {
+    const r = TRACKS[k].ret;
+    const rows = sim(effRate(r, sd), yrs);
+    return rows.length ? rows[rows.length-1].net : 0;
+  });
+  const maxV = Math.max(...cVals, 1);
+  const cColors = cVals.map(v => {
+    const ratio = v / maxV;
+    if (ratio > .85) return '#00e4a0';
+    if (ratio > .6)  return '#00d2ff';
+    if (ratio > .4)  return '#f5c534';
+    return '#ff4b68';
+  });
+  gCompare.data.labels = tkKeys.map(k => TRACKS[k].label);
+  gCompare.data.datasets = [{
+    data: cVals,
+    backgroundColor: cColors.map(c => c + '22'),
+    borderColor: cColors, borderWidth: 2, borderRadius: 6
+  }];
+  gCompare.update('none');
+
+  // Pie
+  const gains = Math.max(mainProj.gross - mainProj.invested, 0);
+  const tax = S.taxOn ? gains * (S.taxRate/100) : 0;
+  const profit = gains - tax;
+  gPie.data.datasets[0].data = [mainProj.invested, Math.max(profit,0), tax];
+  gPie.update('none');
+}
+
+// ================================================================
+// TABLE
+// ================================================================
+function updTable() {
+  const yrs = S.tgtAge - S.curAge;
+  if (yrs <= 0) { document.getElementById('tblRows').innerHTML = ''; return; }
+  const baseRet = S.track === 'cust' ? S.custRet : TRACKS[S.track].ret;
+  const rows = sim(effRate(baseRet, SCEN_D[S.scen]), yrs);
+  document.getElementById('tblRows').innerHTML = rows.map(r => `
+    <tr class="${r.age % 5 === 0 ? 'milestone' : ''}">
+      <td>${r.y}</td>
+      <td class="td-c">${r.age}</td>
+      <td>${fmt(r.invested)}</td>
+      <td class="td-c">${fmt(r.gross)}</td>
+      <td class="td-p">+${fmt(r.gains)}</td>
+      <td class="td-g">${fmt(r.net)}</td>
+      <td>${fmt(r.real)}</td>
+    </tr>
+  `).join('');
+}
+
+// ================================================================
+// MAIN RECALC
+// ================================================================
+let chartTimer = null;
+
+function recalc() {
+  // Read inputs
+  S.curAge    = parseInt(document.getElementById('curAge').value)    || 47;
+  S.tgtAge    = parseInt(document.getElementById('tgtAge').value)    || 65;
+  S.monthly   = parseFloat(document.getElementById('inMonthly').value) || 0;
+  S.lump      = parseFloat(document.getElementById('inLump').value)    || 0;
+  S.inflation = parseFloat(document.getElementById('slInflation').value) || 0;
+  S.fees      = parseFloat(document.getElementById('slFees').value)    || 0;
+  S.taxOn     = document.getElementById('togTax').checked;
+  S.custRet   = parseFloat(document.getElementById('inCust').value)   || 10;
+
+  const yrs = Math.max(S.tgtAge - S.curAge, 0);
+  document.getElementById('yrsBadge').textContent = `${yrs} שנים`;
+
+  // Labels
+  document.getElementById('lblMonthly').textContent  = SYM[S.cur] + S.monthly.toLocaleString('he-IL');
+  document.getElementById('lblLump').textContent      = SYM[S.cur] + S.lump.toLocaleString('he-IL');
+  document.getElementById('lblInflation').textContent = S.inflation + '%';
+  document.getElementById('lblFees').textContent      = S.fees.toFixed(2) + '%';
+  if (S.track === 'cust') document.getElementById('custPctLbl').textContent = S.custRet + '%';
+
+  // Projections
+  const sd = SCEN_D[S.scen];
+  const mainProj = proj(sd);
+
+  // Animate cards
+  animNum(document.getElementById('vGross'),    mainProj.gross);
+  animNum(document.getElementById('vNet'),      mainProj.net);
+  animNum(document.getElementById('vInvested'), mainProj.invested);
+  animNum(document.getElementById('vReal'),     mainProj.real);
+
+  const mult = mainProj.invested > 0 ? (mainProj.net / mainProj.invested).toFixed(1) : '0';
+  document.getElementById('vMult').textContent = `×${mult} על ההשקעה`;
+
+  // Charts (debounced)
+  clearTimeout(chartTimer);
+  chartTimer = setTimeout(() => {
+    updCharts(mainProj);
+    updTable();
+  }, 60);
+}
+
+// ================================================================
+// SYNC SLIDERS ↔ INPUTS
+// ================================================================
+function syncM(src) {
+  if (src === 's') document.getElementById('inMonthly').value  = document.getElementById('slMonthly').value;
+  else             document.getElementById('slMonthly').value  = Math.min(+document.getElementById('inMonthly').value, 20000);
+  recalc();
+}
+function syncL(src) {
+  if (src === 's') document.getElementById('inLump').value     = document.getElementById('slLump').value;
+  else             document.getElementById('slLump').value     = Math.min(+document.getElementById('inLump').value, 500000);
+  recalc();
+}
+
+// ================================================================
+// UI CONTROLS
+// ================================================================
+function setCur(c) {
+  S.cur = c;
+  document.getElementById('btnILS').classList.toggle('on', c==='ILS');
+  document.getElementById('btnUSD').classList.toggle('on', c==='USD');
+  recalc();
+}
+
+function setTrack(t) {
+  S.track = t;
+  document.querySelectorAll('.track-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('tr-' + t).classList.add('on');
+  document.getElementById('custRow').classList.toggle('show', t === 'cust');
+  recalc();
+}
+
+function setScen(s) {
+  S.scen = s;
+  ['opt','rea','pes'].forEach(sc => {
+    const el = document.getElementById('sc-' + sc);
+    el.className = 'scen-tab';
+    if (sc === s) el.classList.add('on-' + sc);
+  });
+  recalc();
+}
+
+function toggleTbl() {
+  document.getElementById('tblHdr').classList.toggle('open');
+  document.getElementById('tblBody').classList.toggle('vis');
+}
+
+// ================================================================
+// INIT
+// ================================================================
+mkGrowth();
+mkCompare();
+mkPie();
+recalc();
+</script>
+</body>
+</html>
