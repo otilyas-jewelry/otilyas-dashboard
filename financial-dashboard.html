@@ -628,13 +628,21 @@ select.inp{direction:rtl;text-align:right}
 
   <div class="card">
     <div class="card-title">שער דולר</div>
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
       <div>
         <div style="font-size:.75rem;color:var(--txt-d);margin-bottom:4px">שער עדכני</div>
-        <div style="font-size:1.4rem;font-weight:700" id="settingsUsd">—</div>
+        <div style="font-size:1.4rem;font-weight:700;color:var(--pink)" id="settingsUsd">—</div>
+        <div style="font-size:.72rem;color:var(--txt-d);margin-top:2px" id="settingsUsdTime">—</div>
       </div>
-      <div style="font-size:.78rem;color:var(--txt-d)" id="settingsUsdTime">—</div>
-      <button class="btn btn-ghost btn-sm" onclick="fetchUsdRate(true)">רענן עכשיו</button>
+      <div style="width:1px;height:48px;background:var(--border)"></div>
+      <div>
+        <div style="font-size:.75rem;color:var(--txt-d);margin-bottom:4px">הזנה ידנית (אם API לא עובד)</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input type="number" id="manualUsdRate" class="inp" style="width:100px;padding:6px 10px" placeholder="3.65" step="0.001">
+          <button class="btn btn-ghost btn-sm" onclick="setManualRate()">קבע</button>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="fetchUsdRate(true)" style="margin-right:auto">🔄 רענן אוטומטי</button>
     </div>
   </div>
 
@@ -779,19 +787,42 @@ async function fetchUsdRate(force=false) {
   if (!force && DATA.usdRate && DATA.usdFetched && (now - DATA.usdFetched) < 3600000) {
     renderUsd(); return;
   }
-  try {
-    const r = await fetch('https://api.frankfurter.app/latest?base=USD&symbols=ILS');
-    const j = await r.json();
-    DATA.usdRate = j.rates.ILS;
-    DATA.usdFetched = now;
-    save();
-    toast('שער USD עודכן: ₪' + DATA.usdRate.toFixed(3));
-  } catch(e) {
-    if (!DATA.usdRate) DATA.usdRate = 3.72;
+  const apis = [
+    { url:'https://open.er-api.com/v6/latest/USD', get: j => j.rates?.ILS },
+    { url:'https://api.exchangerate-api.com/v4/latest/USD', get: j => j.rates?.ILS },
+    { url:'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json', get: j => j.usd?.ils },
+  ];
+  for (const api of apis) {
+    try {
+      const r = await fetch(api.url);
+      const j = await r.json();
+      const rate = api.get(j);
+      if (rate && rate > 2 && rate < 10) {
+        DATA.usdRate = rate;
+        DATA.usdFetched = now;
+        save();
+        toast('שער USD עודכן: ₪' + rate.toFixed(3));
+        break;
+      }
+    } catch(e) { continue; }
   }
+  if (!DATA.usdRate) DATA.usdRate = 3.65;
   renderUsd();
   renderFixedTable();
   renderSettingsFixed();
+}
+
+function setManualRate() {
+  const val = parseFloat(document.getElementById('manualUsdRate')?.value);
+  if (!val || val < 2 || val > 10) { toast('שער לא תקין'); return; }
+  DATA.usdRate = val;
+  DATA.usdFetched = Date.now();
+  save();
+  renderUsd();
+  renderFixedTable();
+  renderSettingsFixed();
+  renderOverview();
+  toast('שער USD עודכן ידנית: ₪' + val.toFixed(3));
 }
 
 function renderUsd() {
