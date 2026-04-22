@@ -403,7 +403,7 @@ select.inp{direction:rtl;text-align:right}
     <div class="grid-2">
       <!-- MAX Business -->
       <div class="card">
-        <div class="card-title">💳 MAX — <span class="badge-biz">עסקי</span></div>
+        <div class="card-title">💳 MAX 1116 — <span class="badge-biz">עסקי</span></div>
         <div id="maxExpenses"></div>
         <button class="btn btn-ghost btn-sm" style="margin-top:6px;width:100%" onclick="addExpense('max')">+ הוסף הוצאה</button>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">
@@ -413,7 +413,7 @@ select.inp{direction:rtl;text-align:right}
       </div>
       <!-- Diners + Visa Personal -->
       <div class="card">
-        <div class="card-title">💳 Diners + Visa — <span class="badge-prv">אישי</span></div>
+        <div class="card-title">💳 Diners 0112 + Visa 8953 — <span class="badge-prv">אישי</span></div>
         <div id="prvExpenses"></div>
         <button class="btn btn-ghost btn-sm" style="margin-top:6px;width:100%" onclick="addExpense('personal')">+ הוסף הוצאה</button>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">
@@ -1076,15 +1076,35 @@ function renderExpenses() {
   if (at) at.textContent = fmt(maxT + prvT + fixed);
 }
 
+const CATS_BIZ = ['מלאי/ייצור','תפעול','שיווק','תוכנות','מיסים/אגרות','ביטוח','תחבורה','שונות'];
+const CATS_PRV = ['מסעדות','מזון','אופנה','בריאות','ביטוח','מנויים','תחבורה','בית','פנאי','תשלומים','חינוך','שונות','העברות'];
+const CAT_CLR = {
+  'מסעדות':'#d45a9a','מזון':'#5aab7a','אופנה':'#7c6bbf','בריאות':'#5ba8a0',
+  'ביטוח':'#c8922a','מנויים':'#5ba8a0','תחבורה':'#7d8a99','בית':'#a07060',
+  'פנאי':'#9b59b6','תשלומים':'#e05070','חינוך':'#2e86c1','שונות':'#aaa','העברות':'#bbb',
+  'מלאי/ייצור':'#d45a9a','תפעול':'#7c6bbf','שיווק':'#c8922a','תוכנות':'#5ba8a0','מיסים/אגרות':'#e05070'
+};
+
 function renderExpenseList(type, list, containerId) {
   const el = document.getElementById(containerId);
   if (!el) return;
-  el.innerHTML = list.map((e,i) => `
+  const cats = type === 'max' ? CATS_BIZ : CATS_PRV;
+  // category summary
+  const catMap = {};
+  list.forEach(e => { const c = e.cat||'שונות'; catMap[c] = (catMap[c]||0) + (+e.amount||0); });
+  const summaryHtml = Object.keys(catMap).length > 1 ? `
+    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px">
+      ${Object.entries(catMap).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`
+        <span style="background:${CAT_CLR[c]||'#aaa'}22;color:${CAT_CLR[c]||'#aaa'};border:1px solid ${CAT_CLR[c]||'#aaa'}44;border-radius:12px;padding:2px 8px;font-size:.7rem;font-weight:600">${c} ₪${Math.round(v).toLocaleString()}</span>
+      `).join('')}
+    </div>` : '';
+  el.innerHTML = summaryHtml + list.map((e,i) => `
     <div class="expense-row">
+      <span style="width:8px;height:8px;border-radius:50%;background:${CAT_CLR[e.cat]||'#aaa'};flex-shrink:0"></span>
       <input value="${e.name||''}" placeholder="תיאור" onchange="updateExpense('${type}',${i},'name',this.value)">
       <input class="inp-amount" type="number" value="${e.amount||''}" placeholder="₪" onchange="updateExpense('${type}',${i},'amount',this.value)" style="direction:ltr">
       <select onchange="updateExpense('${type}',${i},'cat',this.value)" style="border:1px solid var(--border);border-radius:5px;padding:4px;font-size:.75rem;color:var(--txt-m)">
-        ${['כללי','מלאי','שיווק','פיתוח','ספק','שירותים','אחר'].map(c=>`<option ${e.cat===c?'selected':''}>${c}</option>`).join('')}
+        ${cats.map(c=>`<option ${e.cat===c?'selected':''}>${c}</option>`).join('')}
       </select>
       <button class="del" onclick="removeExpense('${type}',${i})">✕</button>
     </div>`).join('');
