@@ -298,6 +298,32 @@ select.inp{direction:rtl;text-align:right}
     </div>
   </div>
 
+  <!-- Credit Settlements -->
+  <div class="sec-header" style="margin-top:20px">
+    <div class="sec-title">💳 זיכויים עתידיים — סליקת אשראי</div>
+    <div style="font-size:.75rem;color:var(--txt-d)">כסף בדרך שעוד לא בבנק</div>
+  </div>
+  <div class="grid-2">
+    <div class="card" style="border-color:rgba(91,168,160,0.4);background:var(--teal-d)">
+      <div class="card-title" style="color:var(--teal)">⏳ זיכוי ב-3 לחודש (₪)</div>
+      <input type="number" class="inp" id="creditSettlement3" placeholder="0" oninput="saveField('creditSettlement3',this.value);renderOverview()">
+      <div class="card-sub" id="settlement3days" style="margin-top:6px;color:var(--teal)"></div>
+    </div>
+    <div class="card" style="border-color:rgba(91,168,160,0.4);background:var(--teal-d)">
+      <div class="card-title" style="color:var(--teal)">⏳ זיכוי ב-10 לחודש (₪)</div>
+      <input type="number" class="inp" id="creditSettlement10" placeholder="0" oninput="saveField('creditSettlement10',this.value);renderOverview()">
+      <div class="card-sub" id="settlement10days" style="margin-top:6px;color:var(--teal)"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:10px;padding:12px 16px;display:flex;gap:24px;flex-wrap:wrap;align-items:center">
+    <div>
+      <div style="font-size:.72rem;color:var(--txt-d);margin-bottom:2px">סה"כ זיכויים בדרך</div>
+      <div style="font-size:1.2rem;font-weight:700;color:var(--teal)" id="ov-settlements">₪0</div>
+    </div>
+    <div style="font-size:.78rem;color:var(--txt-m)">נזילות כולל זיכויים: <strong id="ov-liquid-with-settlements">—</strong></div>
+    <div style="font-size:.75rem;color:var(--txt-d);margin-right:auto">הסכומים תלויים במכירות — עדכני לפי פעילות בפועל</div>
+  </div>
+
   <!-- Inventory -->
   <div class="sec-header" style="margin-top:20px">
     <div class="sec-title">📦 מלאי ושווי סחורה</div>
@@ -654,6 +680,8 @@ function defaultMonth() {
     bankDiscount: '', bankInternational: '',
     cardMax: '', cardDiners: '', cardVisa: '',
     inventoryValue: '',
+    creditSettlement3: '',
+    creditSettlement10: '',
     income: { store:0, maskit:0, wix:0, imj:0, israelMuseum:0, jewishMuseum:0 },
     expensesMax: [],
     expensesPersonal: [],
@@ -1016,18 +1044,20 @@ function calcTotals() {
   const totalBank = bankDiscount + bankInt;
   const totalCards = (+m.cardMax||0) + (+m.cardDiners||0) + (+m.cardVisa||0);
   const liquid = totalBank - totalCards;
+  const settlements = (+m.creditSettlement3||0) + (+m.creditSettlement10||0);
+  const liquidWithSettlements = liquid + settlements;
   const balance = totalIncome - totalExp;
   const dailyExp = totalExp > 0 ? totalExp / 30 : 0;
-  const coverDays = dailyExp > 0 ? Math.round(liquid / dailyExp) : 999;
-  const investable = Math.max(0, liquid - fixed * 1.5);
-  return { totalIncome, totalExp, totalBank, totalCards, liquid, balance, coverDays, investable, maxExp, prvExp, fixed };
+  const coverDays = dailyExp > 0 ? Math.round(liquidWithSettlements / dailyExp) : 999;
+  const investable = Math.max(0, liquidWithSettlements - fixed * 1.5);
+  return { totalIncome, totalExp, totalBank, totalCards, liquid, liquidWithSettlements, settlements, balance, coverDays, investable, maxExp, prvExp, fixed };
 }
 
 function renderOverview() {
   const t = calcTotals();
   const m = getMonth(currentMonth);
   // fill inputs
-  ['bankDiscount','bankInternational','cardMax','cardDiners','cardVisa','inventoryValue'].forEach(id=>{
+  ['bankDiscount','bankInternational','cardMax','cardDiners','cardVisa','inventoryValue','creditSettlement3','creditSettlement10'].forEach(id=>{
     const el = document.getElementById(id);
     if (el && document.activeElement !== el) el.value = m[id]||'';
   });
@@ -1041,6 +1071,24 @@ function renderOverview() {
   setEl('ov-days', daysLeftInMonth() + ' ימים');
   setEl('ov-cover', t.coverDays >= 999 ? '∞' : t.coverDays + ' יום', t.coverDays>30?'pos':t.coverDays>14?'':'neg');
   setEl('ov-investable', fmt(t.investable), 'pos');
+
+  // settlements
+  const today = new Date();
+  const [cy, cm] = currentMonth.split('-').map(Number);
+  function daysUntil(day) {
+    const target = new Date(cy, cm-1, day);
+    if (target < today) target.setMonth(target.getMonth()+1);
+    return Math.ceil((target - today) / 86400000);
+  }
+  const d3 = daysUntil(3), d10 = daysUntil(10);
+  const el3 = document.getElementById('settlement3days');
+  const el10 = document.getElementById('settlement10days');
+  if (el3) el3.textContent = d3===0 ? '⚡ נכנס היום!' : `עוד ${d3} ימים`;
+  if (el10) el10.textContent = d10===0 ? '⚡ נכנס היום!' : `עוד ${d10} ימים`;
+  const ov_s = document.getElementById('ov-settlements');
+  if (ov_s) ov_s.textContent = fmt(t.settlements);
+  const ov_ls = document.getElementById('ov-liquid-with-settlements');
+  if (ov_ls) { ov_ls.textContent = fmt(t.liquidWithSettlements); ov_ls.style.color = t.liquidWithSettlements>=0?'var(--green)':'var(--red)'; }
 
   // health badge
   const badge = document.getElementById('healthBadge');
