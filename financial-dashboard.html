@@ -241,6 +241,7 @@ select.inp{direction:rtl;text-align:right}
     <div class="sum-item">
       <label>מאזן החודש</label>
       <div class="val" id="ov-balance">—</div>
+      <div id="ov-balance-sub" style="font-size:.72rem;margin-top:2px;color:var(--text-secondary)">—</div>
     </div>
     <div class="sum-divider"></div>
     <div class="sum-item">
@@ -352,10 +353,27 @@ select.inp{direction:rtl;text-align:right}
 <!-- ══════════════════ INCOME TAB ══════════════════ -->
 <div class="tab-pane" id="tab-income">
 
-  <div class="sec-title" style="margin-bottom:16px">💵 הכנסות — <span id="incomeMonthLabel" style="color:var(--pink)"></span></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div class="sec-title">💵 הכנסות — <span id="incomeMonthLabel" style="color:var(--pink)"></span></div>
+    <button id="oferToggleBtn" onclick="toggleOfer()" style="padding:6px 14px;border-radius:20px;border:2px solid #00b894;background:var(--green-bg);color:#00b894;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit">👤 עופר כלול ✓</button>
+  </div>
 
   <div class="grid-3" id="incomeSources">
     <!-- rendered by JS -->
+  </div>
+
+  <!-- עופר — הכנסה אישית קבועה -->
+  <div class="card" style="margin-top:12px;background:linear-gradient(135deg,#edfff8,#defcf0);border:2px solid #00b894;border-radius:12px;padding:14px 16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-size:.75rem;color:#636e72;margin-bottom:2px">👤 עופר — העברה חודשית קבועה</div>
+        <div style="font-size:1.5rem;font-weight:800;color:#00b894">₪10,000</div>
+      </div>
+      <div style="text-align:left">
+        <div id="ofer-status-line" style="font-size:.78rem;color:#636e72"></div>
+        <div id="ofer-balance-impact" style="font-size:.85rem;font-weight:700;margin-top:4px"></div>
+      </div>
+    </div>
   </div>
 
   <div class="divider"></div>
@@ -744,6 +762,8 @@ function defaultMonth() {
 
 let DATA = {};
 let currentMonth = '';  // 'YYYY-MM'
+let includeOfer = true;      // toggle: כולל/לא כולל העברת עופר ₪10K
+const OFER_AMOUNT = 10000;   // העברה חודשית קבועה מעופר
 
 function load() {
   try { DATA = JSON.parse(localStorage.getItem(STORE_KEY)) || defaultData(); }
@@ -1016,9 +1036,11 @@ function renderIncomeSources() {
     </div>`;
   }).join('');
 
-  const tot = INCOME_SOURCES.reduce((s,src)=>s+(+m.income[src.key]||0),0);
+  const bizOnly = INCOME_SOURCES.reduce((s,src)=>s+(+m.income[src.key]||0),0);
+  const oferAmt = includeOfer ? OFER_AMOUNT : 0;
+  const tot = bizOnly + oferAmt;
   const biz = INCOME_SOURCES.filter(s=>s.biz).reduce((s,src)=>s+(+m.income[src.key]||0),0);
-  const prv = tot - biz;
+  const prv = oferAmt; // עופר counts as personal income
   const td = document.getElementById('totalIncomeDisplay');
   if (td) td.textContent = fmt(tot);
   const ib = document.getElementById('incBreakdown');
@@ -1028,6 +1050,23 @@ function renderIncomeSources() {
   if (ibiz) ibiz.textContent = fmt(biz);
   if (iprv) iprv.textContent = fmt(prv);
   renderIncomeDonut(biz, prv);
+  // update עופר card
+  const ofBtn = document.getElementById('oferToggleBtn');
+  if (ofBtn) {
+    ofBtn.textContent = includeOfer ? '👤 עופר כלול ✓' : '👤 עופר לא כלול';
+    ofBtn.style.background = includeOfer ? 'var(--green-bg)' : '#f5f5f5';
+    ofBtn.style.borderColor = includeOfer ? '#00b894' : '#b2bec3';
+    ofBtn.style.color = includeOfer ? '#00b894' : '#636e72';
+  }
+  const osl = document.getElementById('ofer-status-line');
+  const obi = document.getElementById('ofer-balance-impact');
+  if (osl) osl.textContent = includeOfer ? '✅ נכלל בחישוב המאזן' : '⏸️ לא נכלל — לחץ לכלול';
+  if (obi) {
+    const t = calcTotals();
+    const diff = t.balance - t.balanceWithoutOfer;
+    obi.textContent = includeOfer ? `תרומה למאזן: +₪${diff.toLocaleString('he-IL')}` : `השפעה אם ייכלל: +₪${OFER_AMOUNT.toLocaleString('he-IL')}`;
+    obi.style.color = '#00b894';
+  }
 }
 
 function saveIncome(key, val) {
@@ -1173,7 +1212,9 @@ function renderExpenseBreakChart() {
 // ══════════════════════════════════════════════
 function calcTotals() {
   const m = getMonth(currentMonth);
-  const totalIncome = INCOME_SOURCES.reduce((s,src)=>s+(+m.income[src.key]||0),0);
+  const bizIncome = INCOME_SOURCES.reduce((s,src)=>s+(+m.income[src.key]||0),0);
+  const oferIncome = includeOfer ? OFER_AMOUNT : 0;
+  const totalIncome = bizIncome + oferIncome;
   const maxExp = (m.expensesMax||[]).reduce((s,e)=>s+(+e.amount||0),0);
   const prvExp = (m.expensesPersonal||[]).reduce((s,e)=>s+(+e.amount||0),0);
   const fixed = fixedTotal();
@@ -1186,10 +1227,16 @@ function calcTotals() {
   const settlements = (+m.creditSettlement3||0) + (+m.creditSettlement10||0);
   const liquidWithSettlements = liquid + settlements;
   const balance = totalIncome - totalExp;
+  const balanceWithoutOfer = bizIncome - totalExp;
   const dailyExp = totalExp > 0 ? totalExp / 30 : 0;
   const coverDays = dailyExp > 0 ? Math.round(liquidWithSettlements / dailyExp) : 999;
   const investable = Math.max(0, liquidWithSettlements - fixed * 1.5);
-  return { totalIncome, totalExp, totalBank, totalCards, liquid, liquidWithSettlements, settlements, balance, coverDays, investable, maxExp, prvExp, fixed };
+  return { totalIncome, bizIncome, oferIncome, totalExp, totalBank, totalCards, liquid, liquidWithSettlements, settlements, balance, balanceWithoutOfer, coverDays, investable, maxExp, prvExp, fixed };
+}
+
+function toggleOfer() {
+  includeOfer = !includeOfer;
+  renderAll();
 }
 
 function renderOverview() {
@@ -1207,6 +1254,20 @@ function renderOverview() {
   setEl('ov-income', fmt(t.totalIncome));
   setEl('ov-expenses', fmt(t.totalExp));
   setEl('ov-balance', fmt(t.balance), t.balance>=0?'pos':'neg');
+  // sub-label: show alternate balance
+  const balSub = document.getElementById('ov-balance-sub');
+  if (balSub) {
+    if (includeOfer) {
+      balSub.textContent = `ללא עופר: ${fmt(t.balanceWithoutOfer)}`;
+      balSub.style.color = t.balanceWithoutOfer>=0?'var(--green)':'var(--red)';
+    } else {
+      balSub.textContent = `עם עופר: ${fmt(t.balanceWithoutOfer + OFER_AMOUNT)}`;
+      balSub.style.color = (t.balanceWithoutOfer+OFER_AMOUNT)>=0?'var(--green)':'var(--red)';
+    }
+  }
+  // update toggle button label
+  const ofBtn = document.getElementById('oferToggleBtn');
+  if (ofBtn) ofBtn.textContent = includeOfer ? '👤 עופר כלול ✓' : '👤 עופר לא כלול';
   setEl('ov-days', daysLeftInMonth() + ' ימים');
   setEl('ov-cover', t.coverDays >= 999 ? '∞' : t.coverDays + ' יום', t.coverDays>30?'pos':t.coverDays>14?'':'neg');
   setEl('ov-investable', fmt(t.investable), 'pos');
