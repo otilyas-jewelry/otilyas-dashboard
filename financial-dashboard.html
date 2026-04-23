@@ -347,6 +347,18 @@ select.inp{direction:rtl;text-align:right}
       <div class="card-sub">לאחר כיסוי הוצאות קבועות</div>
     </div>
   </div>
+  <div class="grid-2" style="margin-top:12px">
+    <div class="card">
+      <div class="card-title">🏷️ הכנסה פוטנציאלית ממכירת המלאי</div>
+      <div class="card-value pos" id="ov-inventory-potential">—</div>
+      <div class="card-sub">הערכה לפי ×5 על עלות ישירה</div>
+    </div>
+    <div class="card">
+      <div class="card-title">📈 רווח נקי פוטנציאלי</div>
+      <div class="card-value pos" id="ov-inventory-profit">—</div>
+      <div class="card-sub">הכנסה פוטנציאלית פחות עלות המלאי</div>
+    </div>
+  </div>
 
   <!-- Notes -->
   <div class="sec-header" style="margin-top:20px">
@@ -1376,6 +1388,13 @@ function renderOverview() {
   setEl('ov-days', daysLeftInMonth() + ' ימים');
   setEl('ov-cover', t.coverDays >= 999 ? '∞' : t.coverDays + ' יום', t.coverDays>30?'pos':t.coverDays>14?'':'neg');
   setEl('ov-investable', fmt(t.investable), 'pos');
+
+  // inventory potential
+  const invCost = parseFloat(m.inventoryValue) || 0;
+  const invPotential = invCost * 5;
+  const invProfit = invPotential - invCost;
+  setEl('ov-inventory-potential', invCost > 0 ? fmt(invPotential) : '—', invCost > 0 ? 'pos' : '');
+  setEl('ov-inventory-profit',    invCost > 0 ? fmt(invProfit)    : '—', invCost > 0 ? 'pos' : '');
 
   // settlements
   const today = new Date();
