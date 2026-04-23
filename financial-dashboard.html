@@ -1330,7 +1330,7 @@ function renderFuturePending() {
   const projected = t.balance - pending;
   if (summary) {
     summary.innerHTML = pending > 0
-      ? `⏳ סה"כ ממתין לתשלום: <strong style="color:#e17055">₪${pending.toLocaleString('he-IL')}</strong> &nbsp;|&nbsp; מאזן חזוי אחרי תשלום: <strong style="color:${projected>=0?'#00b894':'#e17055'}">₪${projected.toLocaleString('he-IL')}</strong>`
+      ? `⏳ סה"כ ממתין לתשלום: <strong style="color:#e17055">₪${Math.round(pending).toLocaleString('he-IL')}</strong> &nbsp;|&nbsp; מאזן חזוי אחרי תשלום: <strong style="color:${projected>=0?'#00b894':'#e17055'}">₪${Math.round(projected).toLocaleString('he-IL')}</strong>`
       : `✅ אין הוצאות עתידיות ממתינות לחודש זה`;
   }
 }
