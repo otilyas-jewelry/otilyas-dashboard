@@ -245,6 +245,12 @@ select.inp{direction:rtl;text-align:right}
     </div>
     <div class="sum-divider"></div>
     <div class="sum-item">
+      <label>מאזן חזוי (אחרי עתידיות)</label>
+      <div class="val" id="ov-projected">—</div>
+      <div id="ov-projected-sub" style="font-size:.72rem;margin-top:2px;color:var(--text-secondary)">—</div>
+    </div>
+    <div class="sum-divider"></div>
+    <div class="sum-item">
       <label>ימים עד סוף חודש</label>
       <div class="val" id="ov-days">—</div>
     </div>
@@ -347,6 +353,19 @@ select.inp{direction:rtl;text-align:right}
     <div class="sec-title">📝 הערות לחודש</div>
   </div>
   <textarea class="notes-area" id="monthNotes" placeholder="הערות, תזכורות, תכניות לחודש..." oninput="saveField('notes',this.value)"></textarea>
+
+  <!-- הוצאות עתידיות / ממתינות לתשלום -->
+  <div class="sec-header" style="margin-top:24px">
+    <div class="sec-title">🔮 הוצאות עתידיות — ממתינות לתשלום</div>
+  </div>
+  <div id="futurePendingList" style="margin-bottom:10px"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+    <input id="fp-name"   class="inp" style="flex:2;min-width:130px" placeholder="ספק / תיאור">
+    <input id="fp-amount" class="inp" type="number" style="flex:1;min-width:80px" placeholder="סכום ₪">
+    <input id="fp-date"   class="inp" type="date" style="flex:1;min-width:120px">
+    <button class="btn" style="white-space:nowrap" onclick="addFuturePending()">+ הוסף</button>
+  </div>
+  <div id="fp-summary" style="font-size:.82rem;color:var(--txt-d);padding:6px 0"></div>
 
 </div>
 
@@ -1239,6 +1258,83 @@ function toggleOfer() {
   renderAll();
 }
 
+// ══════════════════════════════════════════════
+//  הוצאות עתידיות / ממתינות לתשלום
+// ══════════════════════════════════════════════
+function getFuturePending() {
+  const m = getMonth(currentMonth);
+  if (!m.futurePending) m.futurePending = [];
+  return m.futurePending;
+}
+
+function addFuturePending() {
+  const name   = document.getElementById('fp-name')?.value?.trim();
+  const amount = +document.getElementById('fp-amount')?.value || 0;
+  const date   = document.getElementById('fp-date')?.value || '';
+  if (!name || !amount) return;
+  getFuturePending().push({ name, amount, date, paid: false });
+  save();
+  document.getElementById('fp-name').value   = '';
+  document.getElementById('fp-amount').value = '';
+  document.getElementById('fp-date').value   = '';
+  renderFuturePending();
+  renderOverview();
+}
+
+function removeFuturePending(idx) {
+  getFuturePending().splice(idx, 1);
+  save(); renderFuturePending(); renderOverview();
+}
+
+function markFuturePaid(idx) {
+  const fp = getFuturePending();
+  fp[idx].paid = true;
+  save(); renderFuturePending(); renderOverview();
+}
+
+function undoFuturePaid(idx) {
+  getFuturePending()[idx].paid = false;
+  save(); renderFuturePending(); renderOverview();
+}
+
+function futurePendingTotal() {
+  return getFuturePending().filter(f=>!f.paid).reduce((s,f)=>s+(+f.amount||0),0);
+}
+
+function renderFuturePending() {
+  const list = document.getElementById('futurePendingList');
+  const summary = document.getElementById('fp-summary');
+  if (!list) return;
+  const fp = getFuturePending();
+  if (!fp.length) {
+    list.innerHTML = '<div style="color:var(--txt-d);font-size:.82rem;padding:8px 0">אין הוצאות עתידיות רשומות לחודש זה.</div>';
+  } else {
+    list.innerHTML = fp.map((f,i) => `
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:${f.paid?'#f0fff4':'#fff8f0'};border:1px solid ${f.paid?'#00b894':'#e17055'};margin-bottom:6px;flex-wrap:wrap">
+        <div style="flex:1;min-width:120px">
+          <div style="font-weight:600;font-size:.88rem;${f.paid?'text-decoration:line-through;color:var(--txt-d)':''}">${f.name}</div>
+          ${f.date?`<div style="font-size:.72rem;color:var(--txt-d)">📅 ${f.date}</div>`:''}
+        </div>
+        <div style="font-weight:700;font-size:1rem;color:${f.paid?'#00b894':'#e17055'}">${f.paid?'✅ שולם':'⏳'} ₪${(+f.amount).toLocaleString('he-IL')}</div>
+        <div style="display:flex;gap:6px">
+          ${f.paid
+            ? `<button onclick="undoFuturePaid(${i})" style="padding:3px 8px;border-radius:6px;border:1px solid #b2bec3;background:#f5f5f5;font-size:.72rem;cursor:pointer">↩ בטל</button>`
+            : `<button onclick="markFuturePaid(${i})" style="padding:3px 8px;border-radius:6px;border:1px solid #00b894;background:#edfff8;color:#00b894;font-size:.72rem;cursor:pointer">✓ שולם</button>`
+          }
+          <button onclick="removeFuturePending(${i})" style="padding:3px 8px;border-radius:6px;border:1px solid #e17055;background:#fff5f2;color:#e17055;font-size:.72rem;cursor:pointer">✕</button>
+        </div>
+      </div>`).join('');
+  }
+  const pending = futurePendingTotal();
+  const t = calcTotals();
+  const projected = t.balance - pending;
+  if (summary) {
+    summary.innerHTML = pending > 0
+      ? `⏳ סה"כ ממתין לתשלום: <strong style="color:#e17055">₪${pending.toLocaleString('he-IL')}</strong> &nbsp;|&nbsp; מאזן חזוי אחרי תשלום: <strong style="color:${projected>=0?'#00b894':'#e17055'}">₪${projected.toLocaleString('he-IL')}</strong>`
+      : `✅ אין הוצאות עתידיות ממתינות לחודש זה`;
+  }
+}
+
 function renderOverview() {
   const t = calcTotals();
   const m = getMonth(currentMonth);
@@ -1268,6 +1364,15 @@ function renderOverview() {
   // update toggle button label
   const ofBtn = document.getElementById('oferToggleBtn');
   if (ofBtn) ofBtn.textContent = includeOfer ? '👤 עופר כלול ✓' : '👤 עופר לא כלול';
+  // projected balance (after future pending)
+  const fpTotal = futurePendingTotal();
+  const projected = t.balance - fpTotal;
+  setEl('ov-projected', fmt(projected), projected>=0?'pos':'neg');
+  const projSub = document.getElementById('ov-projected-sub');
+  if (projSub) {
+    projSub.textContent = fpTotal > 0 ? `⏳ ממתין: ₪${fpTotal.toLocaleString('he-IL')}` : 'אין הוצאות עתידיות';
+    projSub.style.color = fpTotal > 0 ? 'var(--red)' : 'var(--text-secondary)';
+  }
   setEl('ov-days', daysLeftInMonth() + ' ימים');
   setEl('ov-cover', t.coverDays >= 999 ? '∞' : t.coverDays + ' יום', t.coverDays>30?'pos':t.coverDays>14?'':'neg');
   setEl('ov-investable', fmt(t.investable), 'pos');
@@ -1572,6 +1677,7 @@ function toast(msg) {
 function renderAll() {
   renderMonthLabel();
   renderOverview();
+  renderFuturePending();
   // re-render active tab
   const active = document.querySelector('.tab-pane.active')?.id?.replace('tab-','');
   if (active) switchTab(active);
