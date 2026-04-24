@@ -4,51 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>דשבורד פיננסי — OTILYAS</title>
-<script>
-(function(){
-  const HASH='90b0aa0f9c562beb90ce7071f3b4d6548d58ffef855b54cccda2a4bafb55b4aa';
-  if(sessionStorage.getItem('otilyas_auth')==='1')return;
-  document.addEventListener('DOMContentLoaded',function(){
-    const ov=document.createElement('div');
-    ov.id='pwd-overlay';
-    ov.style.cssText='position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#2d1b4e,#1a1a2e);display:flex;align-items:center;justify-content:center;font-family:inherit';
-    ov.innerHTML=`
-      <div style="background:#fff;border-radius:20px;padding:40px 36px;max-width:340px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)">
-        <div style="font-size:2.2rem;margin-bottom:8px">💎</div>
-        <div style="font-size:1.2rem;font-weight:700;color:#2d1b4e;margin-bottom:4px">OTILYAS Financial</div>
-        <div style="font-size:.82rem;color:#888;margin-bottom:24px">הכנס סיסמה להמשך</div>
-        <input id="pwd-input" type="password" placeholder="סיסמה" autocomplete="current-password"
-          style="width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:1rem;text-align:center;outline:none;box-sizing:border-box;font-family:inherit"
-          onkeydown="if(event.key==='Enter')checkPwd()">
-        <div id="pwd-err" style="color:#e17055;font-size:.78rem;margin-top:8px;min-height:18px"></div>
-        <button onclick="checkPwd()"
-          style="width:100%;margin-top:12px;padding:12px;background:linear-gradient(135deg,#d45a9a,#7c6bbf);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit">
-          כניסה
-        </button>
-      </div>`;
-    document.body.prepend(ov);
-    setTimeout(()=>document.getElementById('pwd-input')?.focus(),100);
-  });
-  async function checkPwd(){
-    const v=document.getElementById('pwd-input').value;
-    const d=new TextEncoder().encode(v);
-    const b=await crypto.subtle.digest('SHA-256',d);
-    const h=Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
-    if(h===HASH){
-      sessionStorage.setItem('otilyas_auth','1');
-      document.getElementById('pwd-overlay').remove();
-    } else {
-      const err=document.getElementById('pwd-err');
-      err.textContent='סיסמה שגויה. נסי שוב.';
-      const inp=document.getElementById('pwd-input');
-      inp.style.borderColor='#e17055';
-      inp.value='';
-      setTimeout(()=>{inp.style.borderColor='#e0e0e0';err.textContent='';},2000);
-    }
-  }
-  window.checkPwd=checkPwd;
-})();
-</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root {
@@ -229,6 +184,47 @@ select.inp{direction:rtl;text-align:right}
 </style>
 </head>
 <body>
+<!-- PASSWORD OVERLAY — always in HTML, removed by JS if already authenticated -->
+<div id="pwd-overlay" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#2d1b4e,#1a1a2e);display:flex;align-items:center;justify-content:center;font-family:inherit">
+  <div style="background:#fff;border-radius:20px;padding:40px 36px;max-width:340px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)">
+    <div style="font-size:2.2rem;margin-bottom:8px">💎</div>
+    <div style="font-size:1.2rem;font-weight:700;color:#2d1b4e;margin-bottom:4px">OTILYAS Financial</div>
+    <div style="font-size:.82rem;color:#888;margin-bottom:24px">הכניסי סיסמה להמשך</div>
+    <input id="pwd-input" type="password" placeholder="סיסמה" autocomplete="current-password"
+      style="width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:1rem;text-align:center;outline:none;box-sizing:border-box;font-family:inherit"
+      onkeydown="if(event.key==='Enter')checkPwd()">
+    <div id="pwd-err" style="color:#e17055;font-size:.78rem;margin-top:8px;min-height:18px"></div>
+    <button onclick="checkPwd()"
+      style="width:100%;margin-top:12px;padding:12px;background:linear-gradient(135deg,#d45a9a,#7c6bbf);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit">
+      כניסה
+    </button>
+  </div>
+</div>
+<script>
+// Remove overlay immediately if already authenticated in this session
+if(sessionStorage.getItem('otilyas_auth')==='1'){
+  document.getElementById('pwd-overlay').style.display='none';
+}
+const _PHASH='90b0aa0f9c562beb90ce7071f3b4d6548d58ffef855b54cccda2a4bafb55b4aa';
+async function checkPwd(){
+  const v=document.getElementById('pwd-input').value;
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));
+  const h=Array.from(new Uint8Array(buf)).map(x=>x.toString(16).padStart(2,'0')).join('');
+  if(h===_PHASH){
+    sessionStorage.setItem('otilyas_auth','1');
+    document.getElementById('pwd-overlay').style.display='none';
+    document.getElementById('pwd-input').value='';
+  } else {
+    const err=document.getElementById('pwd-err');
+    const inp=document.getElementById('pwd-input');
+    err.textContent='סיסמה שגויה. נסי שוב.';
+    inp.style.borderColor='#e17055';
+    inp.value='';
+    setTimeout(()=>{inp.style.borderColor='#e0e0e0';err.textContent='';},2000);
+  }
+}
+document.getElementById('pwd-input').focus();
+</script>
 
 <!-- HEADER -->
 <div class="header">
