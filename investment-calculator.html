@@ -326,13 +326,13 @@ tbody tr.milestone td{background:rgba(200,150,220,.08);font-weight:700;color:var
   </div>
 </div>
 <script>
-if(sessionStorage.getItem('otilyas_auth_invest')==='1'){document.getElementById('pwd-overlay').style.display='none';}
+
 const _PHASH='088405be1b0d2772bc5cb7420436ac40279378b32ed58dba49525a20322e8ef9';
 async function checkPwd(){
   const v=document.getElementById('pwd-input').value;
   const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));
   const h=Array.from(new Uint8Array(buf)).map(x=>x.toString(16).padStart(2,'0')).join('');
-  if(h===_PHASH){sessionStorage.setItem('otilyas_auth_invest','1');document.getElementById('pwd-overlay').style.display='none';document.getElementById('pwd-input').value='';}
+  if(h===_PHASH){document.getElementById('pwd-overlay').style.display='none';document.getElementById('pwd-input').value='';}
   else{const e=document.getElementById('pwd-err'),i=document.getElementById('pwd-input');e.textContent='סיסמה שגויה. נסי שוב.';i.style.borderColor='#e17055';i.value='';setTimeout(()=>{i.style.borderColor='#e0e0e0';e.textContent='';},2000);}
 }
 document.getElementById('pwd-input').focus();

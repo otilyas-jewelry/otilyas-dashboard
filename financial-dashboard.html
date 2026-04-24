@@ -202,16 +202,14 @@ select.inp{direction:rtl;text-align:right}
 </div>
 <script>
 // Remove overlay immediately if already authenticated in this session
-if(sessionStorage.getItem('otilyas_auth')==='1'){
-  document.getElementById('pwd-overlay').style.display='none';
-}
+
 const _PHASH='90b0aa0f9c562beb90ce7071f3b4d6548d58ffef855b54cccda2a4bafb55b4aa';
 async function checkPwd(){
   const v=document.getElementById('pwd-input').value;
   const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));
   const h=Array.from(new Uint8Array(buf)).map(x=>x.toString(16).padStart(2,'0')).join('');
   if(h===_PHASH){
-    sessionStorage.setItem('otilyas_auth','1');
+    
     document.getElementById('pwd-overlay').style.display='none';
     document.getElementById('pwd-input').value='';
   } else {
