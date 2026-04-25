@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>OTILYAS — Financial Hub</title>
+<title>OTILYAS — Operations Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root {
   --bg: #f8f7fc;
@@ -113,29 +112,6 @@ body {
   border-color: var(--bg-header);
 }
 
-/* KPI */
-.kpi-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.kpi {
-  background: var(--bg-card);
-  border-radius: var(--radius);
-  padding: 16px;
-  text-align: center;
-  box-shadow: var(--shadow);
-  transition: transform .2s;
-}
-.kpi:hover { transform: translateY(-2px); }
-.kpi .label { font-size: .72em; color: var(--gold); margin-bottom: 4px; font-weight: 600; letter-spacing: .3px; }
-.kpi .value { font-family: var(--font-display); font-size: 1.5em; font-weight: 700; }
-.kpi .sub { font-size: .68em; color: var(--text-muted); margin-top: 2px; }
-.positive { color: var(--green); }
-.negative { color: var(--red); }
-.neutral { color: var(--text); }
-
 /* Alert */
 .alert {
   background: #fff8f0;
@@ -173,7 +149,6 @@ body {
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 @media(max-width:768px) {
   .grid-2 { grid-template-columns: 1fr; }
-  .kpi-row { grid-template-columns: repeat(2,1fr); }
   .scenario-grid { grid-template-columns: 1fr !important; }
 }
 
@@ -194,54 +169,12 @@ tr:hover { background: var(--bg-hover); }
 .tag-new { background: var(--blue-bg); color: var(--blue); }
 .tag-done { background: var(--green-bg); color: var(--green); }
 
-/* Chart */
-.chart-container { position: relative; height: 250px; }
-@media(max-width:640px) { .chart-container { height: 200px; } }
-
 /* Tabs */
 .tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
 .tab { padding: 7px 14px; border: none; background: var(--gold-pale); border-radius: 8px; cursor: pointer; font-size: .8em; font-weight: 600; color: var(--text); font-family: var(--font-body); }
 .tab.active { background: var(--bg-header); color: #fff; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-
-/* Sub rows */
-.sub-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid #f0ece8; }
-.sub-name { font-weight: 600; font-size: .86em; }
-.sub-price { font-family: var(--font-mono); font-weight: 700; font-size: .86em; min-width: 85px; text-align: left; }
-.sub-card { font-size: .7em; color: var(--text-muted); }
-.sub-total { background: var(--gold-pale); border-radius: 8px; padding: 9px 12px; margin-top: 6px; }
-
-/* Action items */
-.action-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0ece8; }
-.action-saving { font-family: var(--font-mono); font-weight: 700; color: var(--green); min-width: 95px; text-align: left; }
-
-/* Timeline */
-.timeline-item { position: relative; padding: 10px 0 10px 24px; border-right: 3px solid var(--gold-pale); margin-right: 8px; }
-.timeline-item::before { content:''; position: absolute; right: -8px; top: 14px; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); border: 2px solid #fff; }
-.timeline-item .tl-date { font-size: .76em; color: var(--gold); font-weight: 600; }
-.timeline-item .tl-title { font-size: .86em; font-weight: 600; margin: 2px 0; }
-.timeline-item .tl-detail { font-size: .76em; color: var(--text-secondary); }
-
-/* Cards */
-.bank-card { border: 2px solid var(--gold-pale); border-radius: var(--radius); padding: 16px; }
-.cc-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0ece8; }
-.cc-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .68em; color: #fff; flex-shrink: 0; }
-.cc-info { flex: 1; }
-.cc-name { font-weight: 600; font-size: .9em; }
-.cc-detail { font-size: .73em; color: var(--text-secondary); }
-.cc-amount { font-family: var(--font-mono); font-weight: 700; font-size: .9em; text-align: left; white-space: nowrap; }
-
-/* Scenario */
-.scenario-card { border: 2px solid var(--gold-pale); border-radius: var(--radius); padding: 16px; text-align: center; transition: border-color .2s; }
-.scenario-card:hover { border-color: var(--gold); }
-.scenario-card h3 { font-family: var(--font-display); font-size: .95em; margin-bottom: 6px; color: var(--gold); }
-.scenario-card .big { font-family: var(--font-display); font-size: 1.5em; font-weight: 700; margin: 4px 0; }
-.scenario-card .sub { font-size: .72em; color: var(--text-muted); }
-
-/* Progress */
-.progress-bar { height: 7px; background: #eee; border-radius: 4px; overflow: hidden; margin-top: 4px; }
-.progress-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
 
 /* Countdown */
 .countdown-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0ece8; }
@@ -252,6 +185,13 @@ tr:hover { background: var(--bg-hover); }
 .cd-ok { background: var(--green-bg); color: var(--green); }
 .cd-done { background: #eee; color: #999; text-decoration: line-through; }
 
+/* Scenario */
+.scenario-card { border: 2px solid var(--gold-pale); border-radius: var(--radius); padding: 16px; text-align: center; transition: border-color .2s; }
+.scenario-card:hover { border-color: var(--gold); }
+.scenario-card h3 { font-family: var(--font-display); font-size: .95em; margin-bottom: 6px; color: var(--gold); }
+.scenario-card .big { font-family: var(--font-display); font-size: 1.5em; font-weight: 700; margin: 4px 0; }
+.scenario-card .sub { font-size: .72em; color: var(--text-muted); }
+
 /* Footer */
 .footer { text-align: center; padding: 20px; color: var(--text-muted); font-size: .76em; }
 .footer .mono { font-family: var(--font-mono); font-size: .9em; }
@@ -259,6 +199,10 @@ tr:hover { background: var(--bg-hover); }
 /* Reveal animation */
 .reveal { opacity: 0; transform: translateY(12px); transition: opacity .5s, transform .5s; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+.neutral { color: var(--text); }
 </style>
 </head>
 <body>
@@ -292,220 +236,6 @@ document.getElementById('pwd-input').focus();
 <script>
 const DATA = {
   lastUpdated: '2026-03-26 (שחר)',
-  usdRate: 3.65,
-
-  // Income by channel
-  income: {
-    months: ['ינואר', 'פברואר', 'מרץ'],
-    channels: {
-      'הייפ (חנות+יריד)': { data: [18116, 4875, 0], target: 5500, label: 'Hyp' },
-      'WIX':               { data: [3702, 2695, 0],  target: 3000, label: 'WIX' },
-      'MASKIT':             { data: [1338, 1240, 0],  target: 1300, label: 'MASKIT' },
-      'מוזיאון ישראל':     { data: [0, 427, 0],      target: 400,  label: 'Museum' },
-      'MUZA':               { data: [0, 0, 0],        target: 200,  label: 'MUZA' },
-      'לקוחות ישירים':     { data: [0, 0, 3850],     target: 0,    label: 'Direct' },
-    },
-    fairMonth: [true, false, false],
-    marchNote: '⚠️ מרץ 2026 — ידוע: ₪3,850 (לקוחות ישירים) | ממתין: WIX, הייפ, MASKIT, מוזיאון',
-    targetRegular: 10400,
-  },
-
-  // Fixed business expenses
-  fixedBusiness: {
-    'רו"ח (עמית)': { price: 527, desc: 'amit@ab2014-cpa.co.il — דוחות חודשיים, מע"מ, שנתי' },
-    'ארנונה': { price: 476, desc: 'עירית תל אביב — חנות שינקין 13 מ"ר' },
-    'ביטוח לאומי': { price: 253, desc: 'דמי ביטוח לאומי לעצמאית' },
-    'נסיעות': { price: 242, desc: 'דלק/תחבורה — נסיעות לחנות ולספקים' },
-    'חשמל': { price: 200, desc: 'חברת חשמל — חנות שינקין' },
-    'הייפ מכשיר': { price: 149, desc: 'מסופון אשראי Hyp — השכרה חודשית' },
-    'הייפ תוכנה (כספיט)': { price: 106, desc: 'תוכנת קופה/ניהול מלאי Hyp' },
-    'שילוט': { price: 55, desc: 'שלט חנות — תשלום חודשי' },
-    'פרטנר עסקי': { price: 30, desc: 'קו אינטרנט/טלפון עסקי' },
-  },
-
-  // Personal fixed expenses
-  fixedPersonal: {
-    'סלקום': { price: 215, desc: 'טלפון סלולרי — חבילה אישית' },
-    'עמותת ותיק (אל על)': { price: 239, desc: 'דמי חברות ותיקי אל על — כולל הטבות ביטוח' },
-    'כללית (מושלם פלטינום)': { price: 142, desc: 'שב"ן — שירותי בריאות נוספים, רמה גבוהה' },
-    'הפניקס ביטוח': { price: 186, desc: 'חבילת כיסויים קבוצתי — 8 כיסויים בריאות' },
-    'הראל שיניים': { price: 170, desc: 'ביטוח שיניים ותיקי אל על — טלי+יובל+גיא' },
-    'ביטוח סיעודי (כלל/הראל)': { price: 151, desc: 'ביטוח סיעודי — קצבה חודשית במצב סיעודי' },
-    'מנורה קרן אור TOP': { price: 143, desc: 'מחלות קשות — ₪200,000 פיצוי אחיד. החליף מגדל מ-01/05/2026' },
-    'הפניקס שיניים': { price: 75, desc: 'ביטוח שיניים קבוצתי — כפל ביטוח!' },
-    'סאני Samsung 360': { price: 70, desc: 'הוראת קבע — תקשורת/מכשיר' },
-    'דינמיקה סלולר': { price: 60, desc: 'קו סלולרי נוסף / פרטנר' },
-    'מסלול מורחב': { price: 25, desc: 'עמלת חשבון בנק דיסקונט' },
-    'דמי כרטיס': { price: 30, desc: 'דיינרס ₪10 + ויזה ₪20 — לבטל!' },
-  },
-
-  // USD subscriptions
-  subsUSD: {
-    'Claude': { price: 100, card: 'MAX 1116' },
-    'Shopify': { price: 43.95, card: 'Diners 0112' },
-    'Canva (Pro from 14/04)': { price: 13, card: 'credit card' },
-    'Midjourney': { price: 30, card: 'credit card' },
-    'GPT4': { price: 20, card: 'credit card', cancel: true },
-  },
-
-  // ILS subscriptions
-  subsILS: {
-    'Google Play (all)': { price: 220, card: 'various' },
-    'Spotify': { price: 43.90, card: 'Diners 0112' },
-    'Google Workspace': { price: 25.60, card: 'Diners 0112 (EUR)' },
-    'Wolt+': { price: 49, card: 'Diners 0112', cancel: true, cancelBy: '16/04' },
-    'Microsoft 365': { price: 36, card: 'Diners (annual)' },
-    'Instagram Verified': { price: 54, card: 'Google Play', cancel: true },
-    'Google One': { price: 74.90, card: 'Google Play' },
-  },
-
-  // Standing orders (horaot keva) on Diners
-  standingOrders: {
-    'סלקום': { price: 215.43, card: 'Diners 0112' },
-    'הפניקס ביטוח': { price: 185.82, card: 'Diners 0112' },
-    'ביטוח סיעודי כלל': { price: 151, card: 'Bank' },
-    'בריאות כללית': { price: 142, card: 'Bank' },
-    'מנורה קרן אור TOP': { price: 143, card: 'Diners 0112' },
-    'סאני Samsung': { price: 69.80, card: 'Diners 0112' },
-    'דינמיקה/פרטנר': { price: 59.90, card: 'Diners 0112' },
-    'עמותת ותיק': { price: 239, card: 'Bank' },
-    'מסלול מורחב': { price: 25, card: 'Bank' },
-    'דמי כרטיס': { price: 29.80, card: 'Diners+Visa', cancel: true },
-  },
-
-  // Variable expenses
-  varBusiness: {
-    'חומרי גלם': { actual: [5514, 12383], budget: 5000 },
-    'אריזות': { actual: [1845, 0], budget: 500 },
-    'משלוחים': { actual: [339, 320], budget: 350 },
-    'סליקה (עמלות)': { actual: [232, 232], budget: 250 },
-    'סחורה/מוצרים': { actual: [258, 601], budget: 300 },
-    'ציוד': { actual: [817, 0], budget: 200 },
-    'ציוד משרדי': { actual: [278, 0], budget: 100 },
-  },
-  varPersonal: {
-    'סופר/מכולת': { actual: 5400, budget: 3000 },
-    'WOLT': { actual: 1610, budget: 600 },
-    'מסעדות/קפה': { actual: 870, budget: 600 },
-    'ביגוד/קניות': { actual: 673, budget: 400 },
-    'בית מרקחת': { actual: 435, budget: 350 },
-    'דלק': { actual: 490, budget: 500 },
-    'טיפולי יופי': { actual: 750, budget: 300 },
-    'העברות BIT': { actual: 988, budget: 300 },
-    'שונות': { actual: 100, budget: 100 },
-  },
-
-  // Installments (BOTH end April!)
-  installments: [
-    { name: 'פריסת דיסקונט', amount: 620, payment: '23/24', endsDate: '2026-04-15', pct: 96 },
-    { name: 'כללית סמייל (שיניים)', amount: 944, payment: '2/3', endsDate: '2026-04-15', pct: 67 },
-    { name: 'ברכת הזהב', amount: 1449, payment: 'done', endsDate: '2026-03-01', pct: 100 },
-  ],
-
-  oferTransfer: 10000,
-  annualReserve: 2000,
-
-  // Credit cards — actual Feb data from Cal
-  creditCards: {
-    diners: {
-      name: 'Diners 0112', total: 13708, dueDate: '15/04/2026',
-      breakdown: {
-        'סופר (Bol, שופרסל)': 5400, 'WOLT': 1610, 'BIT העברות': 988,
-        'שיניים (2/3)': 944, 'טיפולי יופי': 750, 'פריסה (23/24)': 620,
-        'דלק (פז)': 490, 'בית מרקחת': 435, 'תקשורת': 345,
-        'ביטוח (מגדל+הפניקס)': 313, 'קניות': 673, 'מנויים+דמי כרטיס': 103,
-      }
-    },
-    visa: {
-      name: 'Visa 8953', total: 1172, dueDate: '02/04/2026',
-      breakdown: {
-        'צדקה': 403, 'אופנה': 367, 'כושר': 210,
-        'אוכל': 157, 'מסעדות': 32, 'בית': 13, 'דמי כרטיס': 20,
-      }
-    },
-  },
-
-  // Bank accounts
-  banks: {
-    business: { name: 'בינלאומי', branch: 105, account: '...31', limit: 10000, card: 'MAX 1116' },
-    personal: { name: 'דיסקונט', branch: 100, account: '...0739', limit: 15000, used: 12866, validUntil: '30/06/2026',
-      interestRates: { upTo7500: '9.8%', from7500: '10.6%', overLimit: '19.75%' },
-      overLimitNote: 'חריגה 19-23/03: ₪1,147 מעל מסגרת. עלות: ₪5 אגרה + ~₪2.50 ריבית = ~₪7.50 סה"כ. הוסדר 23/03.' },
-  },
-
-  // Bank snapshot — UPDATED 23/03/2026 (from app screenshots)
-  bankSnapshot: {
-    date: '26/03/2026',
-    business: {
-      balance: 8837,        // 2342 (23/03) + 2695 WIX (25/03) + 3800 יסמין (26/03)
-      withdrawable: 18837,  // balance + ₪10,000 credit line
-      pendingOut: 3425,     // MAX credit card charge 03/04
-      pendingIn: 2711,      // MASKIT ₪1,240 + Museum ₪427 + MUZA ₪1,044 (WIX ✅ התקבל 25/03)
-      creditPending: 817,   // זיכוי: ₪506 ב-03/04 + ₪311 ב-03/05
-      customerPending: 0,   // ✅ יסמין לוקץ' שילמה ₪3,800 ב-26/03
-      projected: 7120,      // 6142 + 5406 + 817 - 3425 - 820 - 1000 (ops)
-    },
-    personal: {
-      balance: -9152,       // actual from app
-      limit: 15000,
-      overLimit: 0,         // resolved 23/03 ✅
-      pendingCards: 5291,   // ⚠️ ACTUAL accumulated March cards (Diners+Visa) as of 23/03
-      oferApril: 10000,
-      cardsApril: 5870,     // updated: ₪5,291 + ~₪580 (8 days remaining) = ~₪5,870
-      projected: [-9952, -11363, -1363, 2437, 2037, -2663, -2548, 4452],
-      targetGap: -5548,     // GAP to ₪10K target (₪10K - ₪4,452 projected end April)
-    },
-    recentTransactions: [
-      { date: '26/03', desc: 'יסמין לוקץ\' — תשלום סחורה (עסקי)', amount: 3800, type: 'in' },
-      { date: '25/03', desc: 'WIX — תשלום פברואר 2026 (עסקי)', amount: 2695, type: 'in' },
-      { date: '23/03', desc: 'הפקדה — הסדרת חריגה', amount: 7000, type: 'in' },
-      { date: '20/03', desc: 'אגרת התראה חריגת מסגרת', amount: -5, type: 'out' },
-      { date: '16/03', desc: 'ביטוח לאומי ילדים', amount: 115, type: 'in' },
-      { date: '15/03', desc: 'חיוב דיינרס 0112', amount: -13708, type: 'out' },
-      { date: '15/03', desc: 'הפקדה לפיקדון', amount: -100, type: 'out' },
-      { date: '10/03', desc: 'שירותי ברי', amount: -111, type: 'out' },
-      { date: '10/03', desc: 'סעוד הראל-כללית', amount: -142, type: 'out' },
-      { date: '04/03', desc: 'העברה מעופר', amount: 10000, type: 'in' },
-      { date: '02/03', desc: 'חיוב ויזה 8953', amount: -1172, type: 'out' },
-      { date: '01/03', desc: 'עמותת ותיק', amount: -338, type: 'out' },
-    ],
-    // Cash flow forecast — Discount (personal) — UPDATED 23/03/2026
-    forecastPersonal: [
-      { date: '23/03', label: 'יתרה נוכחית (בפועל)', amount: 0, balance: -9152, icon: '📍' },
-      { date: '31/03', label: 'הוצאות שוטפות (שאר מרץ)', amount: -800, balance: -9952, icon: '🛒' },
-      { date: '01/04', label: 'עמותת ותיק', amount: -239, balance: -10191, icon: '📄' },
-      { date: '02/04', label: 'חיוב ויזה 8953 (מרץ)', amount: -1172, balance: -11363, icon: '💳' },
-      { date: '04/04', label: 'העברת עופר', amount: 10000, balance: -1363, icon: '💚' },
-      { date: '10/04', label: 'הוראות קבע (ביטוח+בריאות)', amount: -400, balance: -1763, icon: '🏥' },
-      { date: '15/04', label: '⚠️ חיוב דיינרס מרץ (מעודכן)', amount: -4700, balance: -6463, icon: '💳' },
-      { date: '16/04', label: 'ביטוח לאומי ילדים', amount: 115, balance: -6348, icon: '👶' },
-      { date: '23/04', label: 'העברה שלך (עסקי)', amount: 7000, balance: 652, icon: '💰' },
-      { date: '30/04', label: '🎯 יעד ₪10K | פער: -₪9,348', amount: 0, balance: 652, icon: '🎯' },
-    ],
-    // Cash flow forecast — International (business) — UPDATED 23/03/2026
-    forecastBusiness: [
-      { date: '25/03', label: '✅ WIX פברואר — ₪2,695 התקבל בבנק בינלאומי', amount: 2695, balance: 5037, icon: '✅' },
-      { date: '26/03', label: '✅ יסמין לוקץ\' — ₪3,800 התקבל (סחורה פבר׳)', amount: 3800, balance: 8837, icon: '✅' },
-      { date: '28/03', label: 'MASKIT + מוזיאון (ממתין)', amount: 1667, balance: 10504, icon: '⏳' },
-      { date: '31/03', label: 'הוצאות שוטפות עסקי', amount: -800, balance: 9704, icon: '🏪' },
-      { date: '01/04', label: 'חיובי USD (~$224)', amount: -820, balance: 8884, icon: '💵' },
-      { date: '03/04', label: 'חיוב MAX 1116 (שקלים)', amount: -3425, balance: 5459, icon: '💳' },
-      { date: '03/04', label: 'זיכוי עסקי (ממתין)', amount: 506, balance: 5965, icon: '💚' },
-      { date: '10/04', label: 'ארנונה + חשמל', amount: -676, balance: 5289, icon: '🏪' },
-      { date: '15/04', label: 'רו"ח + ביט"ל + הייפ', amount: -882, balance: 4407, icon: '📄' },
-      { date: '20/04', label: 'MUZA ₪1,044 (אם ישולם)', amount: 1044, balance: 5451, icon: '⏳' },
-      { date: '23/04', label: 'העברה לפרטי', amount: -7000, balance: -1549, icon: '💸' },
-      { date: '03/05', label: 'זיכוי עסקי (ממתין)', amount: 311, balance: -1238, icon: '💚' },
-    ],
-  },
-
-  // WOLT analysis
-  wolt: {
-    grocery: 1230, restaurant: 380,
-    jan: { orders: 11, total: 2105 },
-    feb: { orders: 8, total: 2003, diners: 1610 },
-    mar: { orders: 1, total: 294.18, note: 'וולט מרקט — טופ דן, 21/03' },
-  },
 
   // Key dates
   keyDates: [
@@ -521,29 +251,53 @@ const DATA = {
     { date: '2026-05-01', label: 'יעד: איזון!', type: 'good' },
   ],
 
-  // Savings actions
-  savingsActions: [
-    { label: 'WOLT: לקנות בסופר רגיל', save: 1010, tag: 'עכשיו', urgent: true },
-    { label: 'פריסה נגמרת', save: 620, tag: 'אפריל' },
-    { label: 'שיניים נגמר (היה יוני!)', save: 944, tag: 'אפריל' },
-    { label: 'ביטול GPT4', save: 73, tag: 'עכשיו', urgent: true },
-    { label: 'Google One downgrade', save: 65, tag: 'אפריל' },
-    { label: 'Canva Teams→Pro (בוצע 20/03!)', save: 55, tag: 'בוצע ✅' },
-    { label: 'ביטול Instagram Verified', save: 54, tag: 'עכשיו', urgent: true },
-    { label: 'ביטול Wolt+', save: 49, tag: '16/04' },
-    { label: 'ביטול דמי כרטיס', save: 30, tag: 'עכשיו', urgent: true },
-  ],
-
-  cancelled: ['PayPlus', 'Etsy', 'VELO', 'INSTORIES', 'מפעל הפיס', 'n8n'],
-
-  // Shop
-  shop: { location: 'שינקין, ת"א', size: '13 מ"ר', estRent: 7000 },
-
-  // Credit inquiries
-  creditInquiries: [
-    { date: '08/08/2024', company: 'Max IT Finance Ltd', via: 'BDI Coface' },
-    { date: '06/03/2024', company: 'First International Bank', via: 'LAI Credit Bureau' },
-  ],
+  // Open tasks from all agents
+  openTasks: {
+    'פיננסי (ריף)': [
+      { task: 'לברר העברות 99400 — ₪8,163 ב-2 חודשים', priority: 'medium' },
+      { task: 'MUZA חוב 2025 ₪1,044 — מייל לאולגה נשלח 26/03. דדליין עיבוד עבר! לעקוב: 03-7455727', priority: 'critical' },
+      { task: '⚠️ להנפיק קבלה EZcount ל-WIX — ₪2,695, חשבונית 10013, וויקס וואט ח.פ. 516110996', priority: 'high' },
+      { task: 'דמי כרטיס ₪19.80 — לבטל', priority: 'high' },
+      { task: 'דוח רו"ח עמית ינואר+פברואר — ממתין מטלי', priority: 'medium' },
+      { task: 'לבטל GPT4 ($20/חודש)', priority: 'high' },
+      { task: 'Canva הורד ל-Pro ($30→$15) — בוצע 20/03 ✅', priority: 'done' },
+      { task: 'לבטל Instagram Verified (₪53.50)', priority: 'high' },
+      { task: 'לבטל Wolt+ (עד 16/04)', priority: 'medium' },
+      { task: 'Google Workspace — לבדוק אם באמת צריך', priority: 'low' },
+      { task: 'הסכם בנק דיסקונט — ריבית חריגה: 19.75%/שנה מעל מסגרת. עלות מרץ: ₪7.50 (₪5 אגרה + ₪2.50 ריבית) ✅', priority: 'done' },
+      { task: 'חריגת מסגרת דיסקונט מרץ — הוצאה לא צפויה ₪7.50 (תחויב בחיוב הבא)', priority: 'info' },
+      { task: '⚠️ כרטיסי אשראי מרץ: ₪5,291 כבר צבורים (23/03) — צפי סופי ~₪5,870. ההערכה הקודמת ₪3,288 הייתה נמוכה ב-₪2,600!', priority: 'critical' },
+      { task: '✅ יסמין לוקץ\' שילמה ₪3,800 (26/03) — חשבון עסקי. פער ל-10K: -₪9,348 (צפי אפריל: +₪652).', priority: 'done' },
+      { task: 'בנק דיסקונט: הצעת הלוואה עד ₪19,000 (פופ-אפ באפליקציה). לא מומלץ לנקות — לבדוק רק אם אין ברירה', priority: 'info' },
+    ],
+    'ביטוחים (שירה)': [
+      { task: 'הפניקס מבנה — חודש! פוליסה חדשה 26/096/171/1664874 פעילה 01/04/2026. אהרונסון 29 ת"א. ₪934/שנה.', priority: 'done' },
+      { task: '🦷 תביעת שיניים הפניקס — צלילה שפריצר (ת"ז 054119532). פנייה 20864970 (שיניים) + 20863601 (פוליסות). נשלח 25/03. ממתינים לחיה רפאלוב (ChayaH@fnx.co.il). לעקוב!', priority: 'high' },
+      { task: 'תביעת שיניים הראל (507551298) — חסר מידע! יש לצרף צילומי רנטגן לפני ואחרי הטיפול. מייל טיוטה נוצר 25/03. הפנייה 6438070.', priority: 'high' },
+      { task: 'מנורה קרן אור TOP ✅ הוגש 19/04/2026. מגדל 22945374 בוטל מ-01/05/2026. לאשר: (1) מספר פוליסה רשמי ממנורה (2) תאריך כניסה 01/05 מסונכרן (3) לתקן מצב משפחתי ב"רווק" בטפסים (4) לברר מנורה 347368110 מהר הביטוח', priority: 'high' },
+      { task: 'הפניקס חבילה מסתיימת 9/2026 — לבדוק חלופות', priority: 'medium' },
+      { task: 'כללית סמייל נגמר יוני — לא לחדש (חיסכון ₪142)', priority: 'medium' },
+      { task: 'כפל שיניים — לבדוק אם אפשר לוותר על הפניקס שיניים', priority: 'medium' },
+      { task: '6 פוליסות כללי בפורטל — למפות', priority: 'low' },
+      { task: 'עופר — לבדוק כיסוי שיניים', priority: 'low' },
+      { task: 'מנורה מבנה ותכולה — עדיין פעיל?', priority: 'low' },
+      { task: 'בדיקת הפניקס/מגדל עליית מחיר (15/04)', priority: 'medium' },
+    ],
+    'תפעול (אנג\'ל)': [
+      { task: 'עיבוד חשבוניות מרץ — ממתין לסוף החודש', priority: 'medium' },
+      { task: 'טבלת הוצאות מאוחדת ינואר+פברואר — ממתין לפיזיות', priority: 'medium' },
+      { task: 'Etsy — מעקב סגירה', priority: 'low' },
+      { task: '⚠️ Shopify $5.00 (26/03) — חיוב חריג! חויב על Diners 0112 (לא MAX 1116). שם חנות "My Store". לברר מה זה.', priority: 'high' },
+      { task: '✅ egg ₪48 (26/03) — נרשם בהוצאות מרץ. תחבורה ציבורית 25/02–24/03.', priority: 'done' },
+    ],
+    'משפטי (ניצן)': [
+      { task: '🚨 ציות משפטי 31/03/2026 — לפרסם מדיניות פרטיות + TikTok Pixel ב-Shopify! 5 ימים!', priority: 'critical' },
+      { task: 'אימות דומיין otilyas.com — הושלם ✅', priority: 'done' },
+    ],
+    'שיווק (ליהי)': [
+      { task: 'Meta Ads — להתחיל קמפיין ראשון', priority: 'low' },
+    ],
+  },
 
   // Insurance
   insurance: {
@@ -647,122 +401,29 @@ const DATA = {
     },
   },
 
-  // Open tasks from all agents
-  openTasks: {
-    'פיננסי (ריף)': [
-      { task: 'לברר העברות 99400 — ₪8,163 ב-2 חודשים', priority: 'medium' },
-      { task: 'MUZA חוב 2025 ₪1,044 — מייל לאולגה נשלח 26/03. דדליין עיבוד עבר! לעקוב: 03-7455727', priority: 'critical' },
-      { task: '⚠️ להנפיק קבלה EZcount ל-WIX — ₪2,695, חשבונית 10013, וויקס וואט ח.פ. 516110996', priority: 'high' },
-      { task: 'דמי כרטיס ₪19.80 — לבטל', priority: 'high' },
-      { task: 'דוח רו"ח עמית ינואר+פברואר — ממתין מטלי', priority: 'medium' },
-      { task: 'לבטל GPT4 ($20/חודש)', priority: 'high' },
-      { task: 'Canva הורד ל-Pro ($30→$15) — בוצע 20/03 ✅', priority: 'done' },
-      { task: 'לבטל Instagram Verified (₪53.50)', priority: 'high' },
-      { task: 'לבטל Wolt+ (עד 16/04)', priority: 'medium' },
-      { task: 'Google Workspace — לבדוק אם באמת צריך', priority: 'low' },
-
-      { task: 'הסכם בנק דיסקונט — ריבית חריגה: 19.75%/שנה מעל מסגרת. עלות מרץ: ₪7.50 (₪5 אגרה + ₪2.50 ריבית) ✅', priority: 'done' },
-      { task: 'חריגת מסגרת דיסקונט מרץ — הוצאה לא צפויה ₪7.50 (תחויב בחיוב הבא)', priority: 'info' },
-      { task: '⚠️ כרטיסי אשראי מרץ: ₪5,291 כבר צבורים (23/03) — צפי סופי ~₪5,870. ההערכה הקודמת ₪3,288 הייתה נמוכה ב-₪2,600!', priority: 'critical' },
-      { task: '✅ יסמין לוקץ\' שילמה ₪3,800 (26/03) — חשבון עסקי. פער ל-10K: -₪9,348 (צפי אפריל: +₪652).', priority: 'done' },
-      { task: 'בנק דיסקונט: הצעת הלוואה עד ₪19,000 (פופ-אפ באפליקציה). לא מומלץ לנקות — לבדוק רק אם אין ברירה', priority: 'info' },
-    ],
-    'ביטוחים (שירה)': [
-      { task: 'הפניקס מבנה — חודש! פוליסה חדשה 26/096/171/1664874 פעילה 01/04/2026. אהרונסון 29 ת"א. ₪934/שנה.', priority: 'done' },
-      { task: '🦷 תביעת שיניים הפניקס — צלילה שפריצר (ת"ז 054119532). פנייה 20864970 (שיניים) + 20863601 (פוליסות). נשלח 25/03. ממתינים לחיה רפאלוב (ChayaH@fnx.co.il). לעקוב!', priority: 'high' },
-      { task: 'תביעת שיניים הראל (507551298) — חסר מידע! יש לצרף צילומי רנטגן לפני ואחרי הטיפול. מייל טיוטה נוצר 25/03. הפנייה 6438070.', priority: 'high' },
-      { task: 'מנורה קרן אור TOP ✅ הוגש 19/04/2026. מגדל 22945374 בוטל מ-01/05/2026. לאשר: (1) מספר פוליסה רשמי ממנורה (2) תאריך כניסה 01/05 מסונכרן (3) לתקן מצב משפחתי ב"רווק" בטפסים (4) לברר מנורה 347368110 מהר הביטוח', priority: 'high' },
-      { task: 'הפניקס חבילה מסתיימת 9/2026 — לבדוק חלופות', priority: 'medium' },
-      { task: 'כללית סמייל נגמר יוני — לא לחדש (חיסכון ₪142)', priority: 'medium' },
-      { task: 'כפל שיניים — לבדוק אם אפשר לוותר על הפניקס שיניים', priority: 'medium' },
-      { task: '6 פוליסות כללי בפורטל — למפות', priority: 'low' },
-      { task: 'עופר — לבדוק כיסוי שיניים', priority: 'low' },
-      { task: 'מנורה מבנה ותכולה — עדיין פעיל?', priority: 'low' },
-      { task: 'בדיקת הפניקס/מגדל עליית מחיר (15/04)', priority: 'medium' },
-    ],
-    'תפעול (אנג\'ל)': [
-      { task: 'עיבוד חשבוניות מרץ — ממתין לסוף החודש', priority: 'medium' },
-      { task: 'טבלת הוצאות מאוחדת ינואר+פברואר — ממתין לפיזיות', priority: 'medium' },
-      { task: 'Etsy — מעקב סגירה', priority: 'low' },
-      { task: '⚠️ Shopify $5.00 (26/03) — חיוב חריג! חויב על Diners 0112 (לא MAX 1116). שם חנות "My Store". לברר מה זה.', priority: 'high' },
-      { task: '✅ egg ₪48 (26/03) — נרשם בהוצאות מרץ. תחבורה ציבורית 25/02–24/03.', priority: 'done' },
-    ],
-    'משפטי (ניצן)': [
-      { task: '🚨 ציות משפטי 31/03/2026 — לפרסם מדיניות פרטיות + TikTok Pixel ב-Shopify! 5 ימים!', priority: 'critical' },
-      { task: 'אימות דומיין otilyas.com — הושלם ✅', priority: 'done' },
-    ],
-    'שיווק (ליהי)': [
-      { task: 'Meta Ads — להתחיל קמפיין ראשון', priority: 'low' },
-    ],
-  },
+  // Strategy
+  shop: { location: 'שינקין, ת"א', size: '13 מ"ר', estRent: 7000 },
+  oferTransfer: 10000,
 };
 
-// ══════════════════════════════════════════════
-// CALCULATION ENGINE
-// ══════════════════════════════════════════════
-const CALC = (() => {
-  const c = {};
-  const today = new Date();
-  c.today = today;
-
-  // Totals
-  c.fixedBizTotal = Object.values(DATA.fixedBusiness).reduce((a,b) => a+(typeof b==='object'?b.price:b), 0);
-  c.subsUSDTotal = Object.values(DATA.subsUSD).reduce((a,s) => a+s.price, 0);
-  c.subsILSTotal = Object.values(DATA.subsILS).reduce((a,s) => a+s.price, 0);
-  c.subsUSDinILS = Math.round(c.subsUSDTotal * DATA.usdRate);
-  c.standingTotal = Object.values(DATA.standingOrders).reduce((a,s) => a+s.price, 0);
-  c.fixedPersonalTotal = Object.values(DATA.fixedPersonal).reduce((a,b) => a+(typeof b==='object'?b.price:b), 0);
-  c.varBizBudget = Object.values(DATA.varBusiness).reduce((a,v) => a+v.budget, 0);
-  c.varPersonalBudget = Object.values(DATA.varPersonal).reduce((a,v) => a+v.budget, 0);
-  c.varPersonalActual = Object.values(DATA.varPersonal).reduce((a,v) => a+v.actual, 0);
-
-  // Active installments
-  c.activeInstallments = DATA.installments.filter(i => new Date(i.endsDate) > today);
-  c.installmentsTotal = c.activeInstallments.reduce((a,i) => a+i.amount, 0);
-
-  // Expense groups
-  c.bizFixed = c.fixedBizTotal + c.subsILSTotal + c.subsUSDinILS;
-  c.personalFixed = c.standingTotal;
-  c.totalExpenses = c.bizFixed + c.varBizBudget + c.personalFixed + c.varPersonalBudget + c.installmentsTotal + DATA.annualReserve;
-
-  // Income
-  const channels = Object.values(DATA.income.channels);
-  const nm = DATA.income.months.length;
-  c.incomeByMonth = [];
-  for (let m = 0; m < nm; m++) c.incomeByMonth.push(channels.reduce((a,ch) => a+ch.data[m], 0));
-  c.incomeTarget = DATA.income.targetRegular;
-
-  // Gap
-  c.gap = c.incomeTarget + DATA.oferTransfer - c.totalExpenses;
-
-  // Savings
-  c.totalSavings = DATA.savingsActions.reduce((a,s) => a+s.save, 0);
-  c.gapAfterSavings = c.gap + c.totalSavings;
-
-  // Credit utilization
-  c.creditUsedPct = Math.round((DATA.banks.personal.used / DATA.banks.personal.limit) * 100);
-
-  // Countdowns
-  c.countdowns = DATA.keyDates.map(kd => {
-    const d = Math.ceil((new Date(kd.date) - today) / 86400000);
-    return { ...kd, days: d };
-  }).filter(kd => kd.days > -14).sort((a,b) => a.days - b.days);
-
-  return c;
-})();
+// Countdowns
+const today = new Date();
+const countdowns = DATA.keyDates.map(kd => {
+  const d = Math.ceil((new Date(kd.date) - today) / 86400000);
+  return { ...kd, days: d };
+}).filter(kd => kd.days > -14).sort((a,b) => a.days - b.days);
 
 function fmt(n) {
   const abs = Math.abs(Math.round(n));
   return (n < 0 ? '-' : '') + abs.toLocaleString('en-US');
 }
-function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
 </script>
 
 <!-- ═══ HEADER ═══ -->
 <div class="header">
   <div>
     <h1>OTILYAS</h1>
-    <div class="header-sub">Financial Dashboard</div>
+    <div class="header-sub">Operations Dashboard</div>
   </div>
   <div class="header-date">
     <div id="clock"></div>
@@ -774,219 +435,74 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
 
 <!-- Nav -->
 <nav class="section-nav">
-  <a href="#overview" class="nav-pill active">סקירה</a>
-  <a href="#income" class="nav-pill">הכנסות</a>
-  <a href="#cards" class="nav-pill">כרטיסים</a>
-  <a href="#expenses" class="nav-pill">הוצאות</a>
-  <a href="#subs" class="nav-pill">מנויים</a>
-  <a href="#emails" class="nav-pill">📧 מיילים</a>
-  <a href="#savings" class="nav-pill">חיסכון</a>
-  <a href="#insurance" class="nav-pill">ביטוחים</a>
+  <a href="#insurance" class="nav-pill active">ביטוחים</a>
+  <a href="#health" class="nav-pill">בריאות</a>
   <a href="#tasks" class="nav-pill">משימות</a>
-  <a href="#dates" class="nav-pill">תאריכים</a>
   <a href="#strategy" class="nav-pill">אסטרטגיה</a>
+  <a href="#dates" class="nav-pill">תאריכים</a>
+  <a href="#emails" class="nav-pill">📧 מיילים</a>
 </nav>
 
 <!-- Alerts (dynamic) -->
 <div id="alerts"></div>
 
-<!-- KPIs -->
-<section id="overview">
-<div class="kpi-row" id="kpis"></div>
-</section>
-
-<!-- Charts -->
-<div class="grid-2 reveal">
-  <div class="section"><h2>הכנסות לפי ערוץ</h2><div class="chart-container"><canvas id="incomeChart"></canvas></div></div>
-  <div class="section"><h2>פילוח הוצאות</h2><div class="chart-container"><canvas id="expenseChart"></canvas></div></div>
-</div>
-
-<!-- Income -->
-<section id="income" class="section reveal">
-  <h2>פירוט הכנסות</h2>
-  <table id="incomeTable"></table>
-</section>
-
-<!-- WOLT -->
-<section class="section reveal">
-  <h2>ניתוח WOLT <span class="updated">מרץ מעקב חי</span></h2>
-  <div class="grid-2">
-    <div>
-      <p style="font-size:1em;margin-bottom:8px;font-weight:700">WOLT פברואר: ₪1,610 (8 עסקאות)</p>
-      <p style="font-size:.82em;color:var(--text-secondary);margin-bottom:12px" id="woltInfo"></p>
-      <div id="woltMarBox" style="background:var(--amber-bg);border-radius:var(--radius);padding:10px 14px;margin-bottom:12px;border-right:3px solid var(--amber)">
-        <div style="font-size:.76em;font-weight:700;color:var(--amber)">מרץ 2026 — עד כה</div>
-        <div style="font-family:var(--font-display);font-size:1.5em;font-weight:700" id="woltMarTotal"></div>
-        <div style="font-size:.7em;color:var(--text-secondary)" id="woltMarNote"></div>
-      </div>
-      <div style="display:flex;gap:10px">
-        <div style="flex:1;text-align:center;padding:14px;background:var(--red-bg);border-radius:var(--radius)">
-          <div style="font-size:.76em;color:var(--red)">סופר דרך WOLT</div>
-          <div style="font-family:var(--font-display);font-size:1.4em;font-weight:700;color:var(--red)" id="woltGrocery"></div>
-          <div style="font-size:.68em;color:var(--text-muted)">+25% פרמיה מול סופר רגיל</div>
-        </div>
-        <div style="flex:1;text-align:center;padding:14px;background:var(--green-bg);border-radius:var(--radius)">
-          <div style="font-size:.76em;color:var(--green)">מסעדות</div>
-          <div style="font-family:var(--font-display);font-size:1.4em;font-weight:700;color:var(--green)" id="woltRest"></div>
-          <div style="font-size:.68em;color:var(--text-muted)">סביר</div>
-        </div>
-      </div>
+<!-- Insurance -->
+<section id="insurance" class="section reveal">
+  <h2>ביטוחים <span class="updated">מקור: שירה (סוכנת ביטוח) | עדכון: 19/04/2026</span></h2>
+  <div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap">
+    <div style="flex:1;min-width:140px;text-align:center;padding:14px;background:var(--gold-pale);border-radius:var(--radius)">
+      <div style="font-size:.72em;color:var(--gold);font-weight:600">סה"כ חודשי</div>
+      <div style="font-family:var(--font-display);font-size:1.5em;font-weight:700" id="insTotal"></div>
     </div>
-    <div class="chart-container" style="height:190px"><canvas id="woltChart"></canvas></div>
-  </div>
-</section>
-
-<!-- Bank Snapshot - Updated 23/03/2026 -->
-<section class="section reveal" style="border-right:4px solid var(--bg-header)">
-  <h2>מצב חשבונות — עדכון 23/03/2026 <span class="updated">מהאפליקציה</span></h2>
-  <div class="grid-2">
-    <!-- Business -->
-    <div class="bank-card" style="border-color:var(--bg-header)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div>
-          <div style="font-size:.7em;color:#fff;background:var(--bg-header);display:inline-block;padding:2px 10px;border-radius:10px">עסקי</div>
-          <div style="font-size:1.05em;font-weight:700;margin-top:4px">בינלאומי 095-268372</div>
-        </div>
-        <div style="text-align:left">
-          <div style="font-family:var(--font-display);font-size:1.8em;font-weight:700;color:var(--green)">+₪6,142</div>
-        </div>
-      </div>
-      <div style="font-size:.82em;color:var(--text-secondary);margin-bottom:8px">למשיכה: ₪16,142 | מסגרת: ₪10,000 ✅ בפלוס</div>
-      <div style="background:var(--amber-bg);padding:8px 12px;border-radius:8px;font-size:.82em;margin-top:8px">
-        <div style="display:flex;justify-content:space-between"><span>ממתין (WIX+MASKIT+מוזיאון+MUZA):</span><span style="color:var(--green);font-weight:700">+₪5,406</span></div>
-        <div style="display:flex;justify-content:space-between"><span>זיכוי עסקי (₪506 ב-03/04 + ₪311 ב-03/05):</span><span style="color:var(--green);font-weight:700">+₪817</span></div>
-        <div style="display:flex;justify-content:space-between"><span>חיוב MAX 1116 (03/04):</span><span style="color:var(--red);font-weight:700">-₪3,425</span></div>
-        <div style="display:flex;justify-content:space-between;border-top:1px solid var(--gold-pale);padding-top:4px;margin-top:4px"><span><strong>צפי לפני העברה לפרטי (20/04):</strong></span><span style="color:var(--green);font-weight:700">~+₪5,451</span></div>
-        <div style="font-size:.78em;color:var(--text-muted);margin-top:2px">⚠️ לאחר העברה לפרטי ₪7,000 → יתרה עסקי: -₪1,549</div>
-      </div>
+    <div style="flex:1;min-width:140px;text-align:center;padding:14px;background:var(--gold-pale);border-radius:var(--radius)">
+      <div style="font-size:.72em;color:var(--gold);font-weight:600">סה"כ שנתי</div>
+      <div style="font-family:var(--font-display);font-size:1.5em;font-weight:700" id="insYearly"></div>
     </div>
-    <!-- Personal -->
-    <div class="bank-card" style="border-color:var(--amber)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div>
-          <div style="font-size:.7em;color:#fff;background:var(--gold);display:inline-block;padding:2px 10px;border-radius:10px">אישי</div>
-          <div style="font-size:1.05em;font-weight:700;margin-top:4px">דיסקונט ...0739</div>
-        </div>
-        <div style="text-align:left">
-          <div style="font-family:var(--font-display);font-size:1.8em;font-weight:700;color:var(--red)">-₪9,152</div>
-        </div>
-      </div>
-      <div style="font-size:.82em;color:var(--green);font-weight:600;margin-bottom:6px">✅ חריגה הוסדרה 23/03 | מסגרת ₪15,000</div>
-      <div style="background:var(--red-light);padding:8px 12px;border-radius:8px;font-size:.82em;margin-bottom:8px">
-        <div style="font-weight:700;color:var(--red);margin-bottom:4px">⚠️ כרטיסי אשראי מרץ — צבורים עד כה:</div>
-        <div style="font-family:var(--font-mono);font-size:1.15em;font-weight:700;color:var(--red)">₪5,291</div>
-        <div style="font-size:.8em;color:var(--text-muted)">צפי סופי מרץ: ~₪5,870 (ההערכה הקודמת ₪3,288 הייתה נמוכה ב-₪2,600!)</div>
-      </div>
-      <div style="background:var(--bg);padding:10px 12px;border-radius:8px;font-size:.82em">
-        <div style="font-weight:700;margin-bottom:6px;color:var(--gold)">תחזית אפריל:</div>
-        <div style="display:flex;justify-content:space-between;padding:3px 0"><span>+ עופר (04/04)</span><span style="color:var(--green);font-weight:700">+₪10,000</span></div>
-        <div style="display:flex;justify-content:space-between;padding:3px 0"><span>- כרטיסים (ויזה+דיינרס)</span><span style="color:var(--red);font-weight:700">-₪5,870</span></div>
-        <div style="display:flex;justify-content:space-between;padding:3px 0"><span>- הוצאות קבועות</span><span style="color:var(--red);font-weight:700">-₪878</span></div>
-        <div style="display:flex;justify-content:space-between;padding:3px 0;border-top:1px solid var(--gold-pale);margin-top:3px;padding-top:6px"><span>+ העברה שלך (23/04)</span><span style="color:var(--green);font-weight:700">+₪7,000</span></div>
-        <div style="display:flex;justify-content:space-between;padding:5px 0;border-top:2px solid var(--amber);margin-top:4px"><span><strong>צפי סוף אפריל:</strong></span><span style="color:var(--amber);font-weight:700"><strong>+₪652</strong></span></div>
-      </div>
-      <div style="background:var(--red-light);padding:8px 12px;border-radius:8px;font-size:.82em;margin-top:8px;text-align:center">
-        <strong style="color:var(--red)">🎯 יעד ₪10K — פער: -₪9,348</strong><br>
-        <span style="font-size:.85em;color:var(--green)">✅ יסמין לוקץ' שילמה ₪3,800 ב-26/03 (חשבון עסקי)</span>
-      </div>
+    <div style="flex:1;min-width:140px;text-align:center;padding:14px;background:var(--red-light);border-radius:var(--radius)">
+      <div style="font-size:.72em;color:var(--red);font-weight:600">כפל שיניים!</div>
+      <div style="font-family:var(--font-display);font-size:1.5em;font-weight:700;color:var(--red)">₪387/חודש</div>
     </div>
   </div>
-  <!-- Recent Transactions -->
+  <div id="insuranceCategories"></div>
+  <div style="margin-top:14px" id="insuranceAlerts"></div>
   <div style="margin-top:14px">
-    <h3 style="font-size:.88em;color:var(--gold);margin-bottom:8px">תנועות אחרונות — דיסקונט (פרטי)</h3>
-    <div style="font-size:.82em">
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--gold-pale)"><span style="color:var(--green);font-weight:600">23/03 הפקדה — הסדרת חריגה</span><span style="color:var(--green);font-weight:700">+₪7,000</span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--gold-pale)"><span>20/03 אגרת התראה חריגת מסגרת</span><span style="color:var(--red);font-weight:700">-₪5</span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--gold-pale)"><span>16/03 ביטוח לאומי ילדים</span><span style="color:var(--green);font-weight:700">+₪115</span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--gold-pale)"><span>15/03 חיוב דיינרס 0112</span><span style="color:var(--red);font-weight:700">-₪13,708</span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--gold-pale)"><span style="color:var(--green);font-weight:600">04/03 העברה מעופר</span><span style="color:var(--green);font-weight:700">+₪10,000</span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0"><span>02/03 חיוב ויזה 8953</span><span style="color:var(--red);font-weight:700">-₪1,172</span></div>
-    </div>
+    <div id="insDriveFolder" style="margin-bottom:10px"></div>
+    <h3 style="font-size:.88em;color:var(--gold);margin-bottom:8px">שאלות פתוחות</h3>
+    <div id="insQuestions" style="font-size:.82em"></div>
+  </div>
+  <div style="margin-top:14px">
+    <h3 style="font-size:.88em;color:var(--gold);margin-bottom:8px">פנסיה וחיסכון</h3>
+    <div class="grid-2" id="pensionGrid"></div>
+  </div>
+  <div style="margin-top:14px">
+    <h3 style="font-size:.88em;color:var(--gold);margin-bottom:8px">סוכנויות ביטוח</h3>
+    <div id="insAgents" style="font-size:.82em"></div>
   </div>
 </section>
 
-<!-- Cash Flow Forecast -->
-<section class="section reveal" style="border-right:4px solid var(--green)">
-  <h2>צפי תזרים מזומנים <span class="updated">20/03 → סוף אפריל</span></h2>
-  <div class="tabs">
-    <button class="tab active" onclick="showTab(this,'forecastPers')">דיסקונט (אישי)</button>
-    <button class="tab" onclick="showTab(this,'forecastBiz')">בינלאומי (עסקי)</button>
-  </div>
-  <div id="forecastPers" class="tab-content active">
-    <div class="chart-container" style="height:280px"><canvas id="forecastChartPers"></canvas></div>
-    <div id="forecastTablePers" style="margin-top:12px"></div>
-  </div>
-  <div id="forecastBiz" class="tab-content">
-    <div class="chart-container" style="height:280px"><canvas id="forecastChartBiz"></canvas></div>
-    <div id="forecastTableBiz" style="margin-top:12px"></div>
-  </div>
+<!-- Health -->
+<section id="health" class="section reveal">
+  <h2>בריאות — מעקב אישי</h2>
+  <div id="healthContent"></div>
 </section>
 
-<!-- Bank & Credit Cards -->
-<section id="cards" class="section reveal">
-  <h2>חשבונות בנק וכרטיסי אשראי <span class="updated">actual from Cal 03/26</span></h2>
-  <div class="grid-2" id="bankCards"></div>
-  <!-- Diners breakdown -->
-  <div style="margin-top:16px">
-    <h3 style="font-size:.95em;color:var(--gold);margin-bottom:10px">Diners 0112 — פברואר בפועל: <span id="dinersTotal"></span></h3>
-    <div class="grid-2">
-      <div class="chart-container" style="height:240px"><canvas id="dinersChart"></canvas></div>
-      <div><table id="dinersTable"></table></div>
-    </div>
-  </div>
+<!-- Open Tasks -->
+<section id="tasks" class="section reveal">
+  <h2>משימות פתוחות — כל הסוכנים</h2>
+  <div id="tasksList"></div>
 </section>
 
-<!-- Visa breakdown -->
-<section class="section reveal">
-  <h2>Visa 8953 — פברואר: <span id="visaTotal"></span> <span class="updated">actual from Cal 03/26</span></h2>
-  <table id="visaTable"></table>
+<!-- Strategy -->
+<section id="strategy" class="section reveal">
+  <h2>תרחישים אסטרטגיים</h2>
+  <div class="scenario-grid" id="scenarioGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"></div>
+  <p style="margin-top:12px;font-size:.82em;color:var(--gold);text-align:center" id="shopInfo"></p>
 </section>
 
-<!-- Expenses -->
-<section id="expenses" class="reveal">
-  <!-- Business Fixed -->
-  <div class="section">
-    <h2>הוצאות קבועות עסקי <span class="updated">₪<span id="bizFixedTotal"></span>/חודש</span></h2>
-    <div class="grid-2">
-      <div class="chart-container" style="height:280px"><canvas id="bizFixedChart"></canvas></div>
-      <div id="bizFixedDetail"></div>
-    </div>
-    <div style="margin-top:12px;padding:10px 14px;background:var(--gold-pale);border-radius:8px;font-size:.82em">
-      <strong>+ מנויים USD:</strong> $<span id="bizUSDtotal"></span>/חודש ≈ ₪<span id="bizUSDils"></span> | <strong>+ מנויים ILS:</strong> ₪<span id="bizILStotal"></span>/חודש | <strong>סה"כ עסקי קבוע: ₪<span id="bizAllFixed"></span>/חודש</strong>
-    </div>
-  </div>
-
-  <!-- Personal Fixed -->
-  <div class="section">
-    <h2>הוצאות קבועות אישי <span class="updated">₪<span id="persFixedTotal"></span>/חודש</span></h2>
-    <div class="grid-2">
-      <div class="chart-container" style="height:280px"><canvas id="persFixedChart"></canvas></div>
-      <div id="persFixedDetail"></div>
-    </div>
-  </div>
-
-  <!-- Variable Expenses -->
-  <div class="section">
-    <h2>תקציב vs בפועל — הוצאות אישיות משתנות</h2>
-    <div class="chart-container"><canvas id="budgetChart"></canvas></div>
-  </div>
-</section>
-
-<!-- Subscriptions -->
-<section id="subs" class="section reveal">
-  <h2>מנויים פעילים <span class="updated">verified from Cal</span></h2>
-  <div class="tabs">
-    <button class="tab active" onclick="showTab(this,'tabUSD')">$ דולר</button>
-    <button class="tab" onclick="showTab(this,'tabILS')">₪ שקלים</button>
-    <button class="tab" onclick="showTab(this,'tabStanding')">הוראות קבע</button>
-    <button class="tab" onclick="showTab(this,'tabPending')">לטיפול</button>
-    <button class="tab" onclick="showTab(this,'tabCancelled')">בוטלו</button>
-  </div>
-  <div id="tabUSD" class="tab-content active"></div>
-  <div id="tabILS" class="tab-content"></div>
-  <div id="tabStanding" class="tab-content"></div>
-  <div id="tabPending" class="tab-content"></div>
-  <div id="tabCancelled" class="tab-content"></div>
+<!-- Key dates -->
+<section id="dates" class="section reveal">
+  <h2>תאריכים חשובים — ספירה לאחור</h2>
+  <div id="countdownList"></div>
 </section>
 
 <!-- Email Senders Reference -->
@@ -1060,94 +576,8 @@ function fmtSign(n) { return (n > 0 ? '+' : '') + fmt(n); }
   </div>
 </section>
 
-<!-- Installments -->
-<section class="section reveal">
-  <h2>פריסות ותשלומים <span class="updated">verified from Diners 03/26</span></h2>
-  <div class="grid-2" id="installGrid" style="gap:12px"></div>
-  <p id="installSummary" style="text-align:center;margin-top:12px;font-size:1.05em;font-weight:700;color:var(--green)"></p>
-</section>
-
-<!-- Savings -->
-<section id="savings" class="section reveal">
-  <h2>פעולות חיסכון</h2>
-  <div id="savingsList"></div>
-</section>
-
-<!-- Path to balance -->
-<section class="section reveal" style="background:linear-gradient(135deg,var(--green-light),#fff)">
-  <h2>מסלול לאיזון <span class="updated">corrected from Cal data</span></h2>
-  <div id="balancePath" style="max-width:480px;margin:0 auto"></div>
-</section>
-
-<!-- Key dates -->
-<section id="dates" class="section reveal">
-  <h2>תאריכים חשובים — ספירה לאחור</h2>
-  <div id="countdownList"></div>
-</section>
-
-<!-- Credit inquiries -->
-<section class="section reveal">
-  <h2>בירורי אשראי (BDI/LAI)</h2>
-  <p style="font-size:.8em;color:var(--text-secondary);margin-bottom:10px">בקשות לצפייה במידע האשראי שלך</p>
-  <table id="creditTable"></table>
-  <p style="font-size:.72em;color:var(--text-muted);margin-top:8px">2 בירורים ב-2 שנים. מספר נמוך = סימן חיובי.</p>
-</section>
-
-<!-- Insurance -->
-<section id="insurance" class="section reveal">
-  <h2>ביטוחים <span class="updated">מקור: שירה (סוכנת ביטוח) | עדכון: 19/04/2026</span></h2>
-  <div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap">
-    <div style="flex:1;min-width:140px;text-align:center;padding:14px;background:var(--gold-pale);border-radius:var(--radius)">
-      <div style="font-size:.72em;color:var(--gold);font-weight:600">סה"כ חודשי</div>
-      <div style="font-family:var(--font-display);font-size:1.5em;font-weight:700" id="insTotal"></div>
-    </div>
-    <div style="flex:1;min-width:140px;text-align:center;padding:14px;background:var(--gold-pale);border-radius:var(--radius)">
-      <div style="font-size:.72em;color:var(--gold);font-weight:600">סה"כ שנתי</div>
-      <div style="font-family:var(--font-display);font-size:1.5em;font-weight:700" id="insYearly"></div>
-    </div>
-    <div style="flex:1;min-width:140px;text-align:center;padding:14px;background:var(--red-light);border-radius:var(--radius)">
-      <div style="font-size:.72em;color:var(--red);font-weight:600">כפל שיניים!</div>
-      <div style="font-family:var(--font-display);font-size:1.5em;font-weight:700;color:var(--red)">₪387/חודש</div>
-    </div>
-  </div>
-  <div id="insuranceCategories"></div>
-  <div style="margin-top:14px" id="insuranceAlerts"></div>
-  <div style="margin-top:14px">
-    <div id="insDriveFolder" style="margin-bottom:10px"></div>
-    <h3 style="font-size:.88em;color:var(--gold);margin-bottom:8px">שאלות פתוחות</h3>
-    <div id="insQuestions" style="font-size:.82em"></div>
-  </div>
-  <div style="margin-top:14px">
-    <h3 style="font-size:.88em;color:var(--gold);margin-bottom:8px">פנסיה וחיסכון</h3>
-    <div class="grid-2" id="pensionGrid"></div>
-  </div>
-  <div style="margin-top:14px">
-    <h3 style="font-size:.88em;color:var(--gold);margin-bottom:8px">סוכנויות ביטוח</h3>
-    <div id="insAgents" style="font-size:.82em"></div>
-  </div>
-</section>
-
-<!-- Health -->
-<section id="health" class="section reveal">
-  <h2>בריאות — מעקב אישי</h2>
-  <div id="healthContent"></div>
-</section>
-
-<!-- Open Tasks -->
-<section id="tasks" class="section reveal">
-  <h2>משימות פתוחות — כל הסוכנים</h2>
-  <div id="tasksList"></div>
-</section>
-
-<!-- Strategy -->
-<section id="strategy" class="section reveal">
-  <h2>תרחישים אסטרטגיים</h2>
-  <div class="scenario-grid" id="scenarioGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"></div>
-  <p style="margin-top:12px;font-size:.82em;color:var(--gold);text-align:center" id="shopInfo"></p>
-</section>
-
 <div class="footer">
-  <div>OTILYAS Dashboard | Rif Agent</div>
+  <div>OTILYAS Dashboard | Operations Hub</div>
   <div class="mono" id="lastUpdate"></div>
 </div>
 </div>
@@ -1169,305 +599,21 @@ updateClock(); setInterval(updateClock, 30000);
 (function() {
   const el = document.getElementById('alerts');
   let html = '';
-  // Both installments end April
-  // Urgent dates
-  CALC.countdowns.filter(c => c.type === 'danger' && c.days <= 14 && c.days > 0).forEach(c => {
+  countdowns.filter(c => c.type === 'danger' && c.days <= 14 && c.days > 0).forEach(c => {
     html += `<div class="alert alert-red"><strong>דחוף:</strong> ${c.label} — בעוד ${c.days} ימים!</div>`;
   });
-
   el.innerHTML = html;
-})();
-
-// KPIs
-(function() {
-  const kpis = [
-    { label: 'הכנסות (יעד)', value: `₪${fmt(CALC.incomeTarget)}`, cls: 'neutral', sub: 'חודש רגיל' },
-    { label: 'הוצאות (תקציב)', value: `₪${fmt(CALC.totalExpenses)}`, cls: 'neutral', sub: 'עסקי + אישי' },
-    { label: 'העברת עופר', value: `₪${fmt(DATA.oferTransfer)}`, cls: 'positive', sub: 'חודשי' },
-    { label: 'פער (עם עופר)', value: `₪${fmtSign(CALC.gap)}`, cls: CALC.gap >= 0 ? 'positive' : 'negative', sub: 'חודש רגיל' },
-    { label: 'מסגרת אשראי', value: `₪${fmt(DATA.banks.personal.limit)}`, cls: 'neutral', sub: `משולב כל הכרטיסים` },
-    { label: 'ניצול אשראי', value: `₪${fmt(DATA.banks.personal.used)}`, cls: 'neutral', sub: `${CALC.creditUsedPct}% מהמסגרת` },
-  ];
-  document.getElementById('kpis').innerHTML = kpis.map(k => `
-    <div class="kpi"><div class="label">${k.label}</div><div class="value ${k.cls}">${k.value}</div><div class="sub">${k.sub}</div></div>
-  `).join('');
-})();
-
-// Income table
-(function() {
-  const months = DATA.income.months;
-  let html = `<thead><tr><th>ערוץ</th>`;
-  months.forEach(m => html += `<th class="num">${m}</th>`);
-  html += `<th class="num">יעד</th></tr></thead><tbody>`;
-  const totals = new Array(months.length).fill(0);
-  let tTarget = 0;
-  for (const [name, ch] of Object.entries(DATA.income.channels)) {
-    html += `<tr><td>${name}</td>`;
-    ch.data.forEach((v,i) => { totals[i] += v; html += `<td class="num">${v ? fmt(v) : '—'}</td>`; });
-    tTarget += ch.target;
-    html += `<td class="num">${fmt(ch.target)}</td></tr>`;
-  }
-  html += `<tr class="total-row"><td>סה"כ</td>`;
-  totals.forEach(t => html += `<td class="num">${fmt(t)}</td>`);
-  html += `<td class="num">${fmt(tTarget)}</td></tr></tbody>`;
-  document.getElementById('incomeTable').innerHTML = html;
-})();
-
-// WOLT
-document.getElementById('woltGrocery').textContent = `~${fmt(DATA.wolt.grocery)}/חודש`;
-document.getElementById('woltRest').textContent = `~${fmt(DATA.wolt.restaurant)}/חודש`;
-document.getElementById('woltInfo').textContent = `ינואר: ${DATA.wolt.jan.orders} הזמנות ₪${fmt(DATA.wolt.jan.total)} | פברואר: ${DATA.wolt.feb.orders} הזמנות ₪${fmt(DATA.wolt.feb.total)} | פברואר (דיינרס): ${fmt(DATA.wolt.feb.diners)}`;
-document.getElementById('woltMarTotal').textContent = `₪${DATA.wolt.mar.total.toFixed(2)} (${DATA.wolt.mar.orders} הזמנות)`;
-document.getElementById('woltMarNote').textContent = DATA.wolt.mar.note + ' | Diners 0112 | הוצאה אישית משתנה';
-
-// Bank cards
-(function() {
-  const b = DATA.banks;
-  document.getElementById('bankCards').innerHTML = `
-    <div class="bank-card" style="border-color:var(--bg-header)">
-      <div style="font-size:.7em;color:#fff;background:var(--bg-header);display:inline-block;padding:2px 10px;border-radius:10px;margin-bottom:8px">עסקי</div>
-      <div style="font-size:1.1em;font-weight:700">${b.business.name}</div>
-      <div style="font-size:.78em;color:var(--text-secondary)">סניף ${b.business.branch} | חשבון ${b.business.account}</div>
-      <div style="font-size:.78em;color:var(--text-secondary)">מסגרת: <strong>₪${fmt(b.business.limit)}</strong></div>
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #eee">
-        <div class="cc-row" style="border:none;padding:4px 0">
-          <div class="cc-icon" style="background:var(--bg-header)">MAX</div>
-          <div class="cc-info"><div class="cc-name">${b.business.card}</div><div class="cc-detail">כרטיס עסקי</div></div>
-        </div>
-      </div>
-    </div>
-    <div class="bank-card" style="border-color:var(--gold)">
-      <div style="font-size:.7em;color:#fff;background:var(--gold);display:inline-block;padding:2px 10px;border-radius:10px;margin-bottom:8px">אישי</div>
-      <div style="font-size:1.1em;font-weight:700">${b.personal.name}</div>
-      <div style="font-size:.78em;color:var(--text-secondary)">סניף ${b.personal.branch} | חשבון ${b.personal.account}</div>
-      <div style="font-size:.78em;color:var(--text-secondary)">מסגרת: <strong>₪${fmt(b.personal.limit)}</strong> | בשימוש: <strong>₪${fmt(b.personal.used)}</strong> (${CALC.creditUsedPct}%)</div>
-      <div style="font-size:.72em;color:var(--green);margin-top:2px">בתוקף עד ${b.personal.validUntil}</div>
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #eee">
-        <div class="cc-row">
-          <div class="cc-icon" style="background:#1a5276">DIN</div>
-          <div class="cc-info"><div class="cc-name">${DATA.creditCards.diners.name}</div><div class="cc-detail">חיוב פבר: ${fmt(DATA.creditCards.diners.total)} | מועד: ${DATA.creditCards.diners.dueDate}</div></div>
-          <div class="cc-amount negative">${fmt(DATA.creditCards.diners.total)}</div>
-        </div>
-        <div class="cc-row" style="border:none">
-          <div class="cc-icon" style="background:#6c3483">VISA</div>
-          <div class="cc-info"><div class="cc-name">${DATA.creditCards.visa.name}</div><div class="cc-detail">חיוב פבר: ${fmt(DATA.creditCards.visa.total)} | מועד: ${DATA.creditCards.visa.dueDate}</div></div>
-          <div class="cc-amount">${fmt(DATA.creditCards.visa.total)}</div>
-        </div>
-      </div>
-    </div>
-  `;
-})();
-
-// Diners breakdown
-(function() {
-  document.getElementById('dinersTotal').textContent = `₪${fmt(DATA.creditCards.diners.total)}`;
-  const bd = DATA.creditCards.diners.breakdown;
-  let html = '<tbody>';
-  for (const [k,v] of Object.entries(bd)) {
-    const isWolt = k === 'WOLT';
-    html += `<tr><td>${k}</td><td class="num" style="${isWolt?'color:var(--red);font-weight:700':''}">${fmt(v)}</td></tr>`;
-  }
-  html += `<tr class="total-row"><td>סה"כ</td><td class="num">${fmt(DATA.creditCards.diners.total)}</td></tr></tbody>`;
-  document.getElementById('dinersTable').innerHTML = html;
-})();
-
-// Visa breakdown
-(function() {
-  document.getElementById('visaTotal').textContent = `₪${fmt(DATA.creditCards.visa.total)}`;
-  const bd = DATA.creditCards.visa.breakdown;
-  let html = '<thead><tr><th>קטגוריה</th><th class="num">סכום</th></tr></thead><tbody>';
-  for (const [k,v] of Object.entries(bd)) html += `<tr><td>${k}</td><td class="num">${fmt(v)}</td></tr>`;
-  html += `<tr class="total-row"><td>סה"כ</td><td class="num">${fmt(DATA.creditCards.visa.total)}</td></tr></tbody>`;
-  document.getElementById('visaTable').innerHTML = html;
-})();
-
-// ═══ FIXED EXPENSES — Business ═══
-(function() {
-  const items = DATA.fixedBusiness;
-  let total = 0;
-  let html = '';
-  for (const [k,v] of Object.entries(items)) {
-    const price = typeof v === 'object' ? v.price : v;
-    const desc = typeof v === 'object' ? v.desc : '';
-    total += price;
-    html += `<div style="padding:8px 0;border-bottom:1px solid #f0ece8">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <span style="font-weight:600;font-size:.86em">${k}</span>
-        <span style="font-family:var(--font-mono);font-weight:700;font-size:.86em">₪${price}</span>
-      </div>
-      ${desc ? `<div style="font-size:.72em;color:var(--text-muted);margin-top:2px">${desc}</div>` : ''}
-    </div>`;
-  }
-  html += `<div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:700;font-size:.95em;border-top:2px solid var(--gold-pale);margin-top:4px"><span>סה"כ</span><span style="font-family:var(--font-mono)">₪${fmt(total)}</span></div>`;
-  document.getElementById('bizFixedDetail').innerHTML = html;
-  document.getElementById('bizFixedTotal').textContent = fmt(total);
-  document.getElementById('bizUSDtotal').textContent = CALC.subsUSDTotal;
-  document.getElementById('bizUSDils').textContent = fmt(CALC.subsUSDinILS);
-  document.getElementById('bizILStotal').textContent = fmt(CALC.subsILSTotal);
-  document.getElementById('bizAllFixed').textContent = fmt(CALC.bizFixed);
-})();
-
-// ═══ FIXED EXPENSES — Personal ═══
-(function() {
-  const items = DATA.fixedPersonal;
-  let total = 0;
-  let html = '';
-  for (const [k,v] of Object.entries(items)) {
-    const price = typeof v === 'object' ? v.price : v;
-    const desc = typeof v === 'object' ? v.desc : '';
-    const cancel = (desc && desc.includes('לבטל')) ? ' <span class="tag tag-urgent">לבטל</span>' : '';
-    const warn = (desc && desc.includes('כפל')) ? ' <span class="tag tag-urgent">כפל!</span>' : '';
-    const ending = (desc && desc.includes('מסתיים')) ? ' <span class="tag tag-april">מסתיים</span>' : '';
-    total += price;
-    html += `<div style="padding:8px 0;border-bottom:1px solid #f0ece8">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <span style="font-weight:600;font-size:.86em">${k}${cancel}${warn}${ending}</span>
-        <span style="font-family:var(--font-mono);font-weight:700;font-size:.86em">₪${price}</span>
-      </div>
-      ${desc ? `<div style="font-size:.72em;color:var(--text-muted);margin-top:2px">${desc}</div>` : ''}
-    </div>`;
-  }
-  html += `<div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:700;font-size:.95em;border-top:2px solid var(--gold-pale);margin-top:4px"><span>סה"כ</span><span style="font-family:var(--font-mono)">₪${fmt(total)}</span></div>`;
-  document.getElementById('persFixedDetail').innerHTML = html;
-  document.getElementById('persFixedTotal').textContent = fmt(total);
-})();
-
-// Subscriptions tabs
-(function() {
-  // USD
-  let html = '';
-  for (const [n,s] of Object.entries(DATA.subsUSD)) {
-    const c = s.cancel ? ' <span class="tag tag-urgent">לבטל</span>' : '';
-    html += `<div class="sub-row"><div><div class="sub-name">${n}${c}</div><div class="sub-card">${s.card}</div></div><div class="sub-price">$${s.price}/mo</div></div>`;
-  }
-  html += `<div class="sub-row sub-total"><div><strong>סה"כ USD</strong></div><div class="sub-price" style="font-size:1em">$${CALC.subsUSDTotal}/mo</div></div>`;
-  html += `<div style="font-size:.72em;color:var(--text-muted);margin-top:4px;text-align:left">≈ ₪${fmt(CALC.subsUSDinILS)} (שער ${DATA.usdRate})</div>`;
-  document.getElementById('tabUSD').innerHTML = html;
-
-  // ILS
-  html = '';
-  for (const [n,s] of Object.entries(DATA.subsILS)) {
-    const c = s.cancel ? ` <span class="tag ${s.cancelBy?'tag-april':'tag-urgent'}">${s.cancelBy||'לבטל'}</span>` : '';
-    html += `<div class="sub-row"><div><div class="sub-name">${n}${c}</div><div class="sub-card">${s.card}</div></div><div class="sub-price">₪${s.price}/mo</div></div>`;
-  }
-  html += `<div class="sub-row sub-total"><div><strong>סה"כ ILS</strong></div><div class="sub-price" style="font-size:1em">~₪${fmt(CALC.subsILSTotal)}/mo</div></div>`;
-  document.getElementById('tabILS').innerHTML = html;
-
-  // Standing
-  html = '<p style="font-size:.8em;color:var(--text-secondary);margin-bottom:8px">הוראות קבע מאומתות מדיינרס 0112 + בנק:</p>';
-  for (const [n,s] of Object.entries(DATA.standingOrders)) {
-    const c = s.cancel ? ' <span class="tag tag-urgent">לבטל</span>' : '';
-    html += `<div class="sub-row"><div><div class="sub-name">${n}${c}</div><div class="sub-card">${s.card}</div></div><div class="sub-price">₪${s.price.toFixed(s.price%1?2:0)}/mo</div></div>`;
-  }
-  html += `<div class="sub-row sub-total"><div><strong>סה"כ הוראות קבע</strong></div><div class="sub-price" style="font-size:1em">₪${fmt(CALC.standingTotal)}/mo</div></div>`;
-  document.getElementById('tabStanding').innerHTML = html;
-
-  // Pending
-  html = '';
-  const pending = [
-    ...Object.entries(DATA.subsUSD).filter(([,s])=>s.cancel).map(([n,s])=>({n,p:`$${s.price}/mo`,u:true})),
-    ...Object.entries(DATA.subsILS).filter(([,s])=>s.cancel).map(([n,s])=>({n:n+(s.cancelBy?` (עד ${s.cancelBy})`:''),p:`₪${s.price}/mo`,u:!s.cancelBy})),
-    ...Object.entries(DATA.standingOrders).filter(([,s])=>s.cancel).map(([n,s])=>({n,p:`₪${s.price}/mo`,u:true})),
-  ];
-  pending.forEach(p => {
-    html += `<div class="sub-row" style="background:${p.u?'var(--red-light)':'var(--amber-bg)'};border-radius:8px;padding:8px 12px;margin-bottom:4px"><div class="sub-name">${p.n} <span class="tag ${p.u?'tag-urgent':'tag-april'}">${p.u?'עכשיו':'בקרוב'}</span></div><div class="sub-price negative">${p.p}</div></div>`;
-  });
-  document.getElementById('tabPending').innerHTML = html;
-
-  // Cancelled
-  html = DATA.cancelled.map(n => `<div class="sub-row"><div class="sub-name" style="text-decoration:line-through;color:var(--text-muted)">${n}</div><div><span class="tag tag-cancelled">בוטל</span></div></div>`).join('');
-  document.getElementById('tabCancelled').innerHTML = html;
-})();
-
-// Installments
-(function() {
-  let html = '';
-  DATA.installments.forEach(inst => {
-    const done = inst.payment === 'done' || new Date(inst.endsDate) <= CALC.today;
-    const color = done ? 'var(--text-muted)' : 'var(--green)';
-    html += `<div style="border:2px solid ${color};border-radius:var(--radius);padding:16px;text-align:center;${done?'opacity:.5':''}">
-      <div style="font-size:.76em;color:${color};font-weight:600">${inst.name}</div>
-      <div style="font-family:var(--font-display);font-size:1.3em;font-weight:700;margin:4px 0">${fmt(inst.amount)}/חודש</div>
-      ${done ? '<div style="font-size:.85em">הושלם!</div>' : `<div style="font-size:.85em">תשלום <strong>${inst.payment}</strong></div>`}
-      ${!done ? `<div style="font-size:.92em;font-weight:700;color:var(--green);margin-top:4px">אחרון: אפריל!</div>` : ''}
-      <div class="progress-bar" style="margin-top:8px"><div class="progress-fill" style="width:${inst.pct}%;background:${color}"></div></div>
-      <div style="font-size:.7em;color:var(--text-muted);margin-top:2px">${inst.pct}% הושלם</div>
-    </div>`;
-  });
-  document.getElementById('installGrid').innerHTML = html;
-  const activeTotal = CALC.activeInstallments.reduce((a,i) => a+i.amount, 0);
-  document.getElementById('installSummary').textContent = activeTotal > 0 ? `שניהם נגמרים באפריל = ₪${fmt(activeTotal)}/חודש ישוחרר!` : 'כל הפריסות הושלמו!';
-})();
-
-// Savings
-(function() {
-  let html = '';
-  DATA.savingsActions.forEach(s => {
-    const cls = s.urgent ? 'tag-urgent' : 'tag-april';
-    const bg = s.urgent ? 'background:var(--red-light);' : '';
-    html += `<div class="action-item" style="${bg}padding:8px 10px;border-radius:8px;margin-bottom:4px"><div>${s.label} <span class="tag ${cls}">${s.tag}</span></div><div class="action-saving">${fmt(s.save)}/חודש</div></div>`;
-  });
-  html += `<div class="action-item" style="background:var(--gold-pale);padding:10px 12px;border-radius:8px;margin-top:6px"><div><strong>סה"כ חיסכון (קיצוצים + סיום פריסות)</strong></div><div class="action-saving" style="font-size:1.1em">${fmt(CALC.totalSavings)}/חודש</div></div>`;
-  document.getElementById('savingsList').innerHTML = html;
-})();
-
-// Balance path
-(function() {
-  const gap = CALC.gap;
-  const cuts = DATA.savingsActions.filter(s => !s.tag.includes('אפריל')).reduce((a,s) => a+s.save, 0);
-  const april = DATA.savingsActions.filter(s => s.tag.includes('אפריל') || s.tag.includes('04')).reduce((a,s) => a+s.save, 0) + CALC.installmentsTotal;
-
-  const steps = [
-    { label: 'פער נוכחי', value: gap, color: 'var(--red)' },
-    { label: `+ קיצוצים מיידיים (${fmt(cuts)})`, value: gap + cuts, color: gap+cuts >= 0 ? 'var(--green)' : '#ff9900' },
-    { label: `+ פריסות + קיצוצי אפריל (${fmt(april)})`, value: gap + cuts + april, color: 'var(--green)' },
-  ];
-
-  const min = steps[0].value;
-  const max = steps[steps.length-1].value;
-  const range = max - min || 1;
-
-  let html = steps.map((s,i) => {
-    const pct = i === 0 ? 0 : Math.round(((s.value - min) / range) * 100);
-    const cls = s.value >= 0 ? 'positive' : 'negative';
-    return `
-      <div style="display:flex;justify-content:space-between;font-size:.86em;margin-bottom:4px">
-        <span>${s.label}</span>
-        <span class="${cls}" style="font-family:var(--font-mono);font-weight:700">₪${fmtSign(s.value)}</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${s.color}"></div></div>
-      <div style="height:10px"></div>
-    `;
-  }).join('');
-
-  const final = steps[steps.length-1].value;
-  html += `<p style="text-align:center;margin-top:14px;font-family:var(--font-display);font-size:1.15em;font-weight:700;color:${final >= 0 ? 'var(--green)' : 'var(--red)'}">
-    ${final >= 0 ? 'איזון מאפריל 2026!' : `עדיין בגירעון: ₪${fmt(final)}`}
-  </p>
-  ${final >= 0 ? '<p style="text-align:center;font-size:.82em;color:var(--gold)">(חודש אחד מוקדם מהתכנון המקורי!)</p>' : ''}`;
-
-  document.getElementById('balancePath').innerHTML = html;
 })();
 
 // Countdowns
 (function() {
-  document.getElementById('countdownList').innerHTML = CALC.countdowns.map(c => {
+  document.getElementById('countdownList').innerHTML = countdowns.map(c => {
     let cls = 'cd-ok', txt = `${c.days} ימים`;
     if (c.days <= 0) { cls = 'cd-done'; txt = 'עבר'; }
     else if (c.days <= 7) { cls = 'cd-urgent'; }
     else if (c.days <= 21) { cls = 'cd-soon'; }
     return `<div class="countdown-item"><div style="font-size:.85em">${c.label}</div><div class="cd-badge ${cls}">${txt}</div></div>`;
   }).join('');
-})();
-
-// Credit inquiries
-(function() {
-  let html = '<thead><tr><th>תאריך</th><th>חברה</th><th>דרך</th><th>סטטוס</th></tr></thead><tbody>';
-  DATA.creditInquiries.forEach(ci => {
-    html += `<tr><td>${ci.date}</td><td>${ci.company}</td><td>${ci.via}</td><td><span class="tag tag-active">OK</span></td></tr>`;
-  });
-  html += '</tbody>';
-  document.getElementById('creditTable').innerHTML = html;
 })();
 
 // Scenarios
@@ -1485,7 +631,7 @@ document.getElementById('woltMarNote').textContent = DATA.wolt.mar.note + ' | Di
     return `<div class="scenario-card" style="${sc.best?'border-color:var(--green)':''}">
       <h3>${sc.title}</h3>
       <div style="font-size:.75em;color:var(--text-secondary)">הכנסות ${fmt(sc.income)} | הוצאות ${fmt(sc.expenses)}</div>
-      <div class="big ${net>=0?'positive':'negative'}">₪${fmtSign(net)}</div>
+      <div class="big ${net>=0?'positive':'negative'}">₪${net>=0?'+':''}${fmt(net)}</div>
       <div class="sub">עם העברת עופר ₪${fmt(DATA.oferTransfer)}</div>
     </div>`;
   }).join('');
@@ -1508,19 +654,12 @@ document.getElementById('woltMarNote').textContent = DATA.wolt.mar.note + ' | Di
   function badge(text, color, bg) {
     return `<span style="font-size:.72em;font-weight:700;background:${bg};color:${color};border-radius:4px;padding:2px 7px;letter-spacing:.3px">${text}</span>`;
   }
-  function statusDot(ok) {
-    return ok === 'red' ? '🔴' : ok === 'amber' ? '🟡' : '✅';
-  }
 
-  // ── Shared styles
   const tblStyle = 'width:100%;border-collapse:collapse;font-size:.8em;margin-top:8px';
   const thStyle  = 'background:var(--bg);padding:6px 10px;text-align:right;font-weight:600;color:var(--text-secondary);border-bottom:2px solid var(--gold-pale)';
   const tdStyle  = 'padding:6px 10px;border-bottom:1px solid #f0f0f0;vertical-align:top';
   const tdC      = tdStyle + ';text-align:center';
 
-  // ══════════════════════════════════════════════
-  // TAB 1 — התראות
-  // ══════════════════════════════════════════════
   let tabAlerts = `
     ${obsBtn(FILES.readme, 'פתח תיק בריאות ב-Obsidian')}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -1572,9 +711,6 @@ document.getElementById('woltMarNote').textContent = DATA.wolt.mar.note + ' | Di
       </div>
     </div>`;
 
-  // ══════════════════════════════════════════════
-  // TAB 2 — שד
-  // ══════════════════════════════════════════════
   let tabShad = `
     ${obsBtn(FILES.shad, 'בריאות-שד.md')}
     <div style="background:var(--red-bg);border-right:4px solid var(--red);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:.84em">
@@ -1615,19 +751,16 @@ document.getElementById('woltMarNote').textContent = DATA.wolt.mar.note + ' | Di
       <strong>רקע:</strong> שד סמיך — חובה US בנוסף לכל ממוגרפיה. קליפ מתכתי שד ימין מפרוצדורה 07/2023.
     </div>`;
 
-  // ══════════════════════════════════════════════
-  // TAB 3 — גינקולוגי
-  // ══════════════════════════════════════════════
   let tabGyn = `
     ${obsBtn(FILES.gyn, 'בריאות-גינקולוגית.md')}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
       <div>
         <div style="font-size:.83em;font-weight:600;color:var(--text-secondary);margin-bottom:6px">מידע בסיסי</div>
         ${[
-          ['HPV','שלילי','11.03.2020 + 06.09.2023',FILES.gyn],
-          ['BRCA1/BRCA2','שלילי','2024',FILES.gyn],
-          ['Mirena IUD','תקף עד 08/2027','הוחדר 08/2022',FILES.gyn],
-          ['ציסטות נבות — צוואר הרחם','~10 מ"מ (שפיר)','28.11.2023',FILES.gyn],
+          ['HPV','שלילי','11.03.2020 + 06.09.2023'],
+          ['BRCA1/BRCA2','שלילי','2024'],
+          ['Mirena IUD','תקף עד 08/2027','הוחדר 08/2022'],
+          ['ציסטות נבות — צוואר הרחם','~10 מ"מ (שפיר)','28.11.2023'],
         ].map(([k,v,d]) => `<div style="font-size:.81em;padding:6px 0;border-bottom:1px solid #f0f0f0">
           <span style="color:var(--green)">✓</span> <strong>${k}</strong><br>
           <span style="color:var(--text-secondary);padding-right:14px">${v} <span style="color:var(--text-muted);font-size:.9em">${d}</span></span>
@@ -1666,9 +799,6 @@ document.getElementById('woltMarNote').textContent = DATA.wolt.mar.note + ' | Di
       </tbody>
     </table>`;
 
-  // ══════════════════════════════════════════════
-  // TAB 4 — בדיקות דם
-  // ══════════════════════════════════════════════
   let tabBlood = `
     ${obsBtn(FILES.blood, 'בדיקות-דם.md')}
     <div style="background:var(--red-bg);border-right:4px solid var(--red);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:.84em">
@@ -1737,9 +867,6 @@ document.getElementById('woltMarNote').textContent = DATA.wolt.mar.note + ' | Di
       </div>
     </div>`;
 
-  // ══════════════════════════════════════════════
-  // TAB 5 — כללי
-  // ══════════════════════════════════════════════
   let tabGeneral = `
     ${obsBtn(FILES.general, 'בריאות-כללית.md')}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -1780,9 +907,6 @@ document.getElementById('woltMarNote').textContent = DATA.wolt.mar.note + ' | Di
       </div>
     </div>`;
 
-  // ══════════════════════════════════════════════
-  // ASSEMBLE TABS
-  // ══════════════════════════════════════════════
   const tabs = [
     { id: 'hTab1', label: '🚨 התראות', content: tabAlerts, active: true },
     { id: 'hTab2', label: '🫁 שד', content: tabShad },
@@ -1796,7 +920,6 @@ document.getElementById('woltMarNote').textContent = DATA.wolt.mar.note + ' | Di
     html += `<button class="tab${t.active?' active':''}" onclick="showTab(this,'${t.id}')" style="font-size:.8em;padding:5px 12px">${t.label}</button>`;
   });
   html += `</div>`;
-
   tabs.forEach(t => {
     html += `<div id="${t.id}" class="tab-content${t.active?' active':''}" style="display:${t.active?'block':'none'}">`;
     html += t.content;
@@ -1810,7 +933,6 @@ document.getElementById('woltMarNote').textContent = DATA.wolt.mar.note + ' | Di
 
   document.getElementById('healthContent').innerHTML = html;
 
-  // Fix tab switching for health section (tab-content display:block/none)
   document.querySelectorAll('#health .tab').forEach(btn => {
     btn.addEventListener('click', function() {
       document.querySelectorAll('#health .tab-content').forEach(t => t.style.display = 'none');
@@ -1852,127 +974,12 @@ const navObserver = new IntersectionObserver(entries => {
 }, { threshold: 0.3 });
 document.querySelectorAll('section[id]').forEach(s => navObserver.observe(s));
 
-// ═══ CHARTS ═══
-Chart.defaults.color = '#999';
-Chart.defaults.borderColor = 'rgba(0,0,0,.05)';
-Chart.defaults.font.family = 'Rubik';
-const legendOpts = { position:'bottom', labels:{ color:'#666', font:{size:11}, padding:12, usePointStyle:true, pointStyle:'circle' } };
-
-// Income chart
-new Chart(document.getElementById('incomeChart'), {
-  type: 'bar',
-  data: {
-    labels: Object.values(DATA.income.channels).map(c => c.label),
-    datasets: [
-      ...DATA.income.months.map((m,i) => ({
-        label: m + (DATA.income.fairMonth[i] ? ' (יריד)' : ''),
-        data: Object.values(DATA.income.channels).map(c => c.data[i]),
-        backgroundColor: i===0 ? '#6c5ce7' : '#a29bfe',
-        borderRadius: 5, barPercentage: .7,
-      })),
-      { label: 'יעד', data: Object.values(DATA.income.channels).map(c => c.target), backgroundColor: '#D8C9B8', borderRadius: 5, barPercentage: .7 },
-    ]
-  },
-  options: { responsive:true, maintainAspectRatio:false, plugins:{legend:legendOpts}, scales:{y:{beginAtZero:true}} }
-});
-
-// Expense doughnut
-new Chart(document.getElementById('expenseChart'), {
-  type: 'doughnut',
-  data: {
-    labels: ['עסקי קבוע', 'עסקי משתנה', 'אישי קבוע', 'אישי משתנה', 'פריסות', 'שנתיות'],
-    datasets: [{ data: [CALC.bizFixed, CALC.varBizBudget, CALC.personalFixed, CALC.varPersonalBudget, CALC.installmentsTotal, DATA.annualReserve],
-      backgroundColor: ['#6c5ce7','#a29bfe','#fd79a8','#ffeaa7','#55efc4','#dfe6e9'], borderWidth:2, borderColor:'#fff', hoverOffset:8 }]
-  },
-  options: { responsive:true, maintainAspectRatio:false, plugins:{legend:legendOpts}, cutout:'60%' }
-});
-
-// WOLT pie
-new Chart(document.getElementById('woltChart'), {
-  type: 'pie',
-  data: { labels:['סופר 76%','מסעדות 24%'], datasets:[{ data:[DATA.wolt.grocery, DATA.wolt.restaurant], backgroundColor:['#fd79a8','#55efc4'] }] },
-  options: { responsive:true, maintainAspectRatio:false, plugins:{legend:legendOpts} }
-});
-
-// Diners chart
-const dinersLabels = Object.keys(DATA.creditCards.diners.breakdown);
-const dinersValues = Object.values(DATA.creditCards.diners.breakdown);
-const dinersColors = ['#6c5ce7','#e17055','#a29bfe','#ffeaa7','#fd79a8','#81ecec','#fab1a0','#55efc4','#74b9ff','#fdcb6e','#dfe6e9','#b2bec3'];
-new Chart(document.getElementById('dinersChart'), {
-  type: 'bar',
-  data: { labels: dinersLabels, datasets: [{ label:'פבר (בפועל)', data: dinersValues, backgroundColor: dinersLabels.map((_,i) => dinersColors[i%dinersColors.length]), borderRadius:4, barPercentage:.65 }] },
-  options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true}} }
-});
-
-// ═══ CASH FLOW FORECAST ═══
-function renderForecast(forecastData, chartId, tableId, limitAmount) {
-  const labels = forecastData.map(f => f.date);
-  const balances = forecastData.map(f => f.balance);
-  const colors = balances.map(b => b >= 0 ? 'rgba(0,184,148,.6)' : (b < -limitAmount ? 'rgba(225,112,85,.9)' : 'rgba(225,112,85,.5)'));
-
-  new Chart(document.getElementById(chartId), {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'יתרה צפויה',
-        data: balances,
-        backgroundColor: colors,
-        borderRadius: 6,
-        barPercentage: .65,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => `₪${fmt(ctx.raw)}` } }
-      },
-      scales: {
-        y: {
-          beginAtZero: false,
-          grid: { color: 'rgba(0,0,0,.05)' },
-          ticks: { callback: v => '₪'+fmt(v) }
-        },
-        x: { grid: { display: false } }
-      }
-    }
-  });
-
-  // Table
-  let html = '<div style="font-size:.82em">';
-  forecastData.forEach((f, i) => {
-    const isFirst = i === 0;
-    const balColor = f.balance >= 0 ? 'var(--green)' : (f.balance < -limitAmount ? 'var(--red)' : 'var(--amber)');
-    const amtColor = f.amount > 0 ? 'var(--green)' : (f.amount < 0 ? 'var(--red)' : 'var(--text)');
-    const amtText = isFirst ? '—' : (f.amount > 0 ? '+₪'+fmt(f.amount) : '-₪'+fmt(Math.abs(f.amount)));
-    const overLimit = f.balance < -limitAmount;
-    html += `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f0ece8;${overLimit?'background:var(--red-light);margin:0 -8px;padding-right:8px;padding-left:8px;border-radius:4px':''}">
-      <span style="min-width:18px">${f.icon}</span>
-      <span style="min-width:42px;font-family:var(--font-mono);font-size:.85em;color:var(--text-muted)">${f.date}</span>
-      <span style="flex:1">${f.label}</span>
-      <span style="min-width:70px;text-align:left;font-family:var(--font-mono);font-weight:600;color:${amtColor}">${amtText}</span>
-      <span style="min-width:80px;text-align:left;font-family:var(--font-mono);font-weight:700;color:${balColor}">₪${fmt(f.balance)}</span>
-    </div>`;
-  });
-  const lastBalance = forecastData[forecastData.length-1].balance;
-  const emoji = lastBalance >= 0 ? '✅' : '⚠️';
-  html += `<div style="text-align:center;padding:12px;margin-top:8px;background:${lastBalance>=0?'var(--green-bg)':'var(--amber-bg)'};border-radius:8px;font-weight:700">
-    ${emoji} יתרה צפויה סוף אפריל: <span style="font-family:var(--font-mono);color:${lastBalance>=0?'var(--green)':'var(--red)'}">₪${fmt(lastBalance)}</span>
-  </div>`;
-  html += '</div>';
-  document.getElementById(tableId).innerHTML = html;
-}
-renderForecast(DATA.bankSnapshot.forecastPersonal, 'forecastChartPers', 'forecastTablePers', 15000);
-renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecastTableBiz', 10000);
-
 // ═══ INSURANCE ═══
 (function() {
   const ins = DATA.insurance;
   document.getElementById('insTotal').textContent = `₪${fmt(ins.total.monthly)}`;
   document.getElementById('insYearly').textContent = `₪${fmt(ins.total.yearly)}`;
 
-  // Categories with policies
   let html = '';
   ins.categories.forEach(cat => {
     html += `<div style="margin-bottom:14px;border:1px solid var(--gold-pale);border-radius:var(--radius);overflow:hidden">`;
@@ -1986,10 +993,10 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
       if (p.status === 'danger') statusTag = '<span class="tag tag-urgent">דחוף!</span>';
       else if (p.status === 'warning') statusTag = '<span class="tag tag-april">מסתיים בקרוב</span>';
       else if (p.status === 'duplicate') statusTag = '<span class="tag tag-urgent">כפל!</span>';
+      else if (p.status === 'cancelled') statusTag = '<span class="tag tag-cancelled">בוטל</span>';
       else statusTag = '<span class="tag tag-active">פעיל</span>';
 
       const portalBtn = p.portal ? `<a href="${p.portal}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:3px;font-size:.72em;padding:3px 8px;border-radius:6px;background:var(--gold-pale);color:var(--gold);text-decoration:none;font-weight:600;white-space:nowrap" title="פורטל ${p.company}">🔗 כניסה</a>` : '';
-      const esc = s => (s||'').replace(/"/g,'&quot;');
       const copyBtn = p.pdf
         ? `<a href="${p.pdf}" target="_blank" style="display:inline-flex;align-items:center;gap:3px;font-size:.72em;padding:3px 8px;border-radius:6px;background:#f3f0ff;color:#7c5cbf;text-decoration:none;font-weight:600;white-space:nowrap">📄 פוליסה</a>`
         : '';
@@ -1999,9 +1006,8 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
       let renewalRow = '';
       if (p.ends) {
         const endDate = new Date(p.ends.length === 7 ? p.ends + '-01' : p.ends);
-        const today = new Date('2026-03-28');
-        const days = Math.round((endDate - today) / 86400000);
-        const d = endDate.getDate ? endDate : null;
+        const todayRef = new Date('2026-03-28');
+        const days = Math.round((endDate - todayRef) / 86400000);
         const formatted = endDate.toLocaleDateString('he-IL', { day:'2-digit', month:'2-digit', year:'numeric' });
         let rColor, rIcon;
         if (days <= 75) { rColor = '#e17055'; rIcon = '🔴'; }
@@ -2028,7 +1034,6 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
         </div>
       </div>`;
     });
-    // Category alerts
     cat.alerts.forEach(a => {
       html += `<div style="font-size:.78em;padding:6px 8px;margin-top:6px;background:var(--amber-bg);border-radius:6px;color:var(--amber)">⚠️ ${a}</div>`;
     });
@@ -2036,18 +1041,15 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
   });
   document.getElementById('insuranceCategories').innerHTML = html;
 
-  // Drive folder link
   if (ins.driveFolder) {
     const dfEl = document.getElementById('insDriveFolder');
     if (dfEl) dfEl.innerHTML = `<a href="${ins.driveFolder}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--gold-pale);border-radius:8px;color:var(--gold);font-size:.84em;font-weight:600;text-decoration:none">📁 תיקיית ביטוחים 2026 ב-Drive</a>`;
   }
 
-  // Open questions
   document.getElementById('insQuestions').innerHTML = ins.openQuestions.map(q =>
     `<div style="padding:5px 0;border-bottom:1px solid #f0ece8">❓ ${q}</div>`
   ).join('');
 
-  // Pension
   let pHtml = '<div style="font-size:.84em"><div style="font-weight:700;margin-bottom:6px;color:var(--gold)">טלי</div>';
   ins.pension.tali.forEach(p => {
     pHtml += `<div style="padding:4px 0">${p.company} — ${p.type}</div>`;
@@ -2062,7 +1064,6 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
   pHtml += '</div>';
   document.getElementById('pensionGrid').innerHTML = pHtml;
 
-  // Agents
   document.getElementById('insAgents').innerHTML = ins.agents.map(a =>
     `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0ece8">
       <div><strong>${a.name}</strong>${a.contact ? ' · '+a.contact : ''}</div>
@@ -2073,12 +1074,12 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
 
 // ═══ OPEN TASKS ═══
 (function() {
-  const priorityMap = { critical: { label: 'קריטי', cls: 'tag-urgent', sort: 0 }, high: { label: 'גבוה', cls: 'tag-urgent', sort: 1 }, medium: { label: 'בינוני', cls: 'tag-april', sort: 2 }, low: { label: 'נמוך', cls: 'tag-active', sort: 3 }, done: { label: 'הושלם', cls: 'tag-done', sort: 4 } };
+  const priorityMap = { critical: { label: 'קריטי', cls: 'tag-urgent', sort: 0 }, high: { label: 'גבוה', cls: 'tag-urgent', sort: 1 }, medium: { label: 'בינוני', cls: 'tag-april', sort: 2 }, low: { label: 'נמוך', cls: 'tag-active', sort: 3 }, done: { label: 'הושלם', cls: 'tag-done', sort: 4 }, info: { label: 'מידע', cls: 'tag-new', sort: 5 } };
 
   let html = '';
   let totalOpen = 0;
   for (const [agent, tasks] of Object.entries(DATA.openTasks)) {
-    const openCount = tasks.filter(t => t.priority !== 'done').length;
+    const openCount = tasks.filter(t => t.priority !== 'done' && t.priority !== 'info').length;
     totalOpen += openCount;
     const sorted = [...tasks].sort((a,b) => (priorityMap[a.priority]?.sort||3) - (priorityMap[b.priority]?.sort||3));
 
@@ -2100,44 +1101,11 @@ renderForecast(DATA.bankSnapshot.forecastBusiness, 'forecastChartBiz', 'forecast
   html = `<div style="text-align:center;padding:8px;margin-bottom:12px;background:var(--amber-bg);border-radius:8px;font-weight:600;color:var(--amber)">${totalOpen} משימות פתוחות מכל הסוכנים</div>` + html;
   document.getElementById('tasksList').innerHTML = html;
 })();
-
-// Business fixed doughnut
-const bizFixedLabels = Object.keys(DATA.fixedBusiness);
-const bizFixedValues = Object.values(DATA.fixedBusiness).map(v => typeof v==='object'?v.price:v);
-const pastelColors = ['#6c5ce7','#a29bfe','#fd79a8','#ffeaa7','#55efc4','#74b9ff','#fab1a0','#81ecec','#fdcb6e','#dfe6e9','#e17055','#b2bec3'];
-new Chart(document.getElementById('bizFixedChart'), {
-  type: 'doughnut',
-  data: { labels: bizFixedLabels, datasets: [{ data: bizFixedValues, backgroundColor: pastelColors, borderWidth:2, borderColor:'#fff', hoverOffset:6 }] },
-  options: { responsive:true, maintainAspectRatio:false, cutout:'55%', plugins:{legend:{position:'bottom',labels:{color:'#666',font:{size:10},padding:8,usePointStyle:true,pointStyle:'circle'}}} }
-});
-
-// Personal fixed doughnut
-const persFixedLabels = Object.keys(DATA.fixedPersonal);
-const persFixedValues = Object.values(DATA.fixedPersonal).map(v => typeof v==='object'?v.price:v);
-new Chart(document.getElementById('persFixedChart'), {
-  type: 'doughnut',
-  data: { labels: persFixedLabels, datasets: [{ data: persFixedValues, backgroundColor: [...pastelColors].reverse(), borderWidth:2, borderColor:'#fff', hoverOffset:6 }] },
-  options: { responsive:true, maintainAspectRatio:false, cutout:'55%', plugins:{legend:{position:'bottom',labels:{color:'#666',font:{size:10},padding:8,usePointStyle:true,pointStyle:'circle'}}} }
-});
-
-// Budget vs actual
-const bLabels = Object.keys(DATA.varPersonal);
-new Chart(document.getElementById('budgetChart'), {
-  type: 'bar',
-  data: {
-    labels: bLabels,
-    datasets: [
-      { label:'בפועל', data: bLabels.map(k => DATA.varPersonal[k].actual), backgroundColor:'rgba(204,51,51,.5)', borderRadius:4, barPercentage:.55 },
-      { label:'תקציב', data: bLabels.map(k => DATA.varPersonal[k].budget), backgroundColor:'rgba(45,138,78,.5)', borderRadius:4, barPercentage:.55 },
-    ]
-  },
-  options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:legendOpts}, scales:{x:{beginAtZero:true}} }
-});
 </script>
 
 <!-- Policy Modal -->
 <div id="policyModal" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;direction:rtl">
-  <div style="background:#fff;border-radius:16px;padding:28px;max-width:480px;width:90%;max-height:80vh;overflow-y:auto;position:relative;font-family:var(--font-main)">
+  <div style="background:#fff;border-radius:16px;padding:28px;max-width:480px;width:90%;max-height:80vh;overflow-y:auto;position:relative;font-family:inherit">
     <button onclick="document.getElementById('policyModal').style.display='none'" style="position:absolute;top:12px;left:12px;background:none;border:none;font-size:1.4em;cursor:pointer;color:#999">✕</button>
     <div id="policyModalContent"></div>
     <button onclick="var t=document.getElementById('policyModalText').textContent;navigator.clipboard.writeText(t).then(()=>alert('הועתק!'))" style="margin-top:16px;width:100%;padding:10px;background:#f3f0ff;color:#7c5cbf;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.9em">📋 העתק פרטים</button>
