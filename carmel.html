@@ -591,6 +591,7 @@ function fmtSign(n) { return (n>=0?'+':'-') + '₪' + fmt(n); }
   <a href="#shikum">אגף שיקום</a>
   <a href="#appointments">תורים</a>
   <a href="#tzilaTeeth">🦷 צלילה</a>
+  <a href="#oncology">🩺 פגישת אונקולוגיה</a>
   <a href="#tasks">משימות</a>
 </nav>
 
@@ -723,6 +724,26 @@ function fmtSign(n) { return (n>=0?'+':'-') + '₪' + fmt(n); }
 <section id="driveSection" class="card reveal visible">
   <div class="card-title">Google Drive <span class="badge" style="background:var(--amber-bg);color:var(--amber)" id="driveBadge"></span></div>
   <div id="driveInfo"></div>
+</section>
+
+<!-- פגישת אונקולוגיה -->
+<section id="oncology" class="reveal visible">
+  <div class="card" style="border-top:4px solid #c53030">
+    <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <span>🩺 פגישה — ד"ר נועה הורביץ להמן | אונקולוגיה הדסה</span>
+      <span class="badge" id="oncoBadge" style="background:#fff5f5;color:#c53030"></span>
+    </div>
+    <div style="font-size:.78em;color:var(--text-sec);margin-bottom:12px;background:var(--blue-light);padding:8px 12px;border-radius:8px">
+      <b>נושא:</b> LBCL — Large B-Cell Lymphoma | לקראת PET-CT STAGING | כימו L6550+L6552 &nbsp;|&nbsp;
+      <b>PDF:</b> <a href="#" onclick="alert('קובץ: C:\\Users\\otily\\Downloads\\שאלות-לפגישה-אונקולוגיה-כרמל.pdf')" style="color:var(--blue)">הורד PDF מלא ←</a>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <button onclick="oncoCheckAll()" style="font-family:var(--font);font-size:.78em;padding:5px 12px;border:1px solid var(--border);border-radius:8px;background:var(--green-bg);color:var(--green);cursor:pointer;font-weight:600">✓ סמן הכל</button>
+      <button onclick="oncoClearAll()" style="font-family:var(--font);font-size:.78em;padding:5px 12px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text-sec);cursor:pointer">נקה הכל</button>
+      <button onclick="oncoExport()" style="font-family:var(--font);font-size:.78em;padding:5px 12px;border:1px solid var(--border);border-radius:8px;background:var(--blue-light);color:var(--blue);cursor:pointer;font-weight:600">📋 העתק סיכום</button>
+    </div>
+    <div id="oncoChecklist"></div>
+  </div>
 </section>
 
 <!-- Tasks -->
@@ -1023,6 +1044,131 @@ updateClock(); setInterval(updateClock, 30000);
       <div style="${t.done?'color:var(--text-muted);text-decoration:line-through':''}">${t.text}</div>
     </div>
   `).join('');
+})();
+
+// ═══ ONCOLOGY CHECKLIST ═══
+(function(){
+  const STORAGE_KEY = 'carmel_onco_v1';
+  const cats = [
+    { emoji:'🔴', title:'א — על האבחנה', color:'#c53030', qs:[
+      { id:'a1', q:'מה בדיוק האבחנה? איזה תת-סוג של LBCL?', hint:'Diffuse Large B-Cell / Double-hit / אחר? — חשוב לפרוגנוזה ולטיפול' },
+      { id:'a2', q:'מאיפה מקור הגידול — ראשוני (Primary) או התפשטות?', hint:'CT מ-07/04: מסה C2-C5 + ממצא בכליה שמאל — מה הקשר?' },
+      { id:'a3', q:'מה הסטטוס של ממצא הכליה שמאל (RCC)?', hint:'קשור ל-LBCL או מחלה נפרדת? PET-CT יענה?' },
+      { id:'a4', q:'הביופסיה — מאיזה אתר? הפתולוגיה סופית?', hint:'ממתינים לתוצאות FISH (L4991)?' },
+    ]},
+    { emoji:'🟠', title:'ב — PET-CT', color:'#dd6b20', qs:[
+      { id:'b1', q:'האם ניתן לעשות PET-CT עם טישטוש / הרדמה קלה?', hint:'אבא לא יכול לשכב דומם — כאבים + חרדה (PTSD)' },
+      { id:'b2', q:'איך נראית מכונת ה-PET-CT? כמו MRI (צינור סגור)?', hint:'כמה זמן? רעש? חשוב בגלל PTSD' },
+      { id:'b3', q:'מה לוח הזמנים מהיום עד תחילת כימותרפיה?', hint:'PET-CT → תוצאות → Tumor Board → מחזור ראשון?' },
+      { id:'b4', q:'מה ההכנות לפני PET-CT?', hint:'צום? הפסקת תרופות? קנאביס? הפיקליין — מוזרק FDG דרכו?' },
+    ]},
+    { emoji:'🟡', title:'ג — הכימותרפיה', color:'#b7791f', qs:[
+      { id:'c1', q:'מה הפרוטוקול L6550 + L6552?', hint:'R-CHOP? CHOP? כמה מחזורים? אשפוז יום / מלא?' },
+      { id:'c2', q:'מלבד כימו — יש טיפולים נוספים?', hint:'ביולוגי (Rituximab)? כדורים פומיים? קרינה? CAR-T?' },
+      { id:'c3', q:'האם ניתן לשלב טיפול הומוטוקסיקולוגי / משלים?', hint:'אינטראקציות עם כימו/Rituximab? האם הדסה מספקת ייעוץ רפואה משלימה?' },
+      { id:'c4', q:'תופעות לוואי — בהינתן תרופות אבא', hint:'Seroquel + Lyrica + קנאביס — אינטראקציות? הערכת לב: אקו/ECG?' },
+    ]},
+    { emoji:'🔴', title:'ד — פיקליין + אנטיביוטיקה', color:'#c53030', qs:[
+      { id:'d1', q:'האם ניתן להתחיל כימו בעוד אבא על אנטיביוטיקה IV?', hint:'פניצילין HOME IV עד 26/05 — לחכות? להקדים?' },
+      { id:'d2', q:'הפיקליין הנוכחי — מתאים גם לכימו?', hint:'חשש Line infection בדיכוי חיסוני? מי אחראי — הדסה / קופ"ח?' },
+    ]},
+    { emoji:'🟢', title:'ה — שיקום פיזי ותזונה', color:'#276749', qs:[
+      { id:'e1', q:'שיקום פיזי — ניתן להתחיל לפני / במקביל לכימו?', hint:'ירד 30 ק"ג, כמעט לא קם, חולשה קשה. פיזיותרפיה בהדסה?' },
+      { id:'e2', q:'תזונה — אבא כמעט לא אוכל, ירד 30 ק"ג', hint:'דיאטנית אונקולוגית? שייקים / פורמולה? סף משקל לכימו?' },
+    ]},
+    { emoji:'🟣', title:'ו — שיקום נפשי', color:'#6b46c1', qs:[
+      { id:'f1', q:'האם הדסה מספקת תמיכה פסיכולוגית לחולי אונקולוגיה?', hint:'PTSD 50% + חרדה + אבחנת סרטן. ליווי רגשי מובנה?' },
+      { id:'f2', q:'האם ניתן לשלב עם פסיכיאטר נוכחי (ד"ר גרישין)?', hint:'Seroquel + Lyrica — צריכות התאמה בזמן כימו?' },
+    ]},
+    { emoji:'🔵', title:'ז — CIDP ולימפומה', color:'#2b6cb0', qs:[
+      { id:'g1', q:'האם יש קשר ידוע בין CIDP ללימפומה מסוג B-Cell?', hint:'ד"ר דראושה חשד ל-CIDP (23/03). האם תסמיני CIDP = ביטוי נוירולוגי של הלימפומה?' },
+      { id:'g2', q:'האם הכימו עשויה לפתור גם את הבעיה הנוירולוגית?', hint:'האם LP שד"ר דראושה המליץ עליו — עדיין נדרש?' },
+    ]},
+    { emoji:'🔵', title:'ח — פרוגנוזה כללי', color:'#1a365d', qs:[
+      { id:'h1', q:'מה ה-STAGE הצפוי לפי מה שידוע?', hint:'' },
+      { id:'h2', q:'מה הפרוגנוזה — אחוזי ריפוי / רמיסיה?', hint:'' },
+      { id:'h3', q:'מי נקודת הקשר בין טיפולים?', hint:'מספר ישיר, אחות מטפלת' },
+      { id:'h4', q:'האם ביטוחי הבריאות מכסים את הטיפולים?', hint:'הראל + איילון — מה מכוסה? טופס 17?' },
+    ]},
+  ];
+
+  // Load state
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e){}
+
+  function save() { try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){} updateBadge(); }
+
+  function updateBadge() {
+    const total = cats.reduce((n,c)=>n+c.qs.length,0);
+    const asked = Object.values(state).filter(v=>v && v.checked).length;
+    document.getElementById('oncoBadge').textContent = `${asked}/${total} נשאלו`;
+  }
+
+  function render() {
+    const el = document.getElementById('oncoChecklist');
+    el.innerHTML = cats.map(cat => `
+      <div style="margin-bottom:16px">
+        <div style="background:${cat.color};color:#fff;padding:7px 12px;border-radius:8px 8px 0 0;font-weight:700;font-size:.88em">${cat.emoji} ${cat.title}</div>
+        <div style="border:1px solid #e2e8f0;border-top:none;border-radius:0 0 8px 8px;overflow:hidden">
+          ${cat.qs.map((q,i) => {
+            const s = state[q.id] || {};
+            return `
+            <div style="padding:12px;border-bottom:${i<cat.qs.length-1?'1px solid #f0f0f0':'none'};background:${s.checked?'#f0fff4':'#fff'}">
+              <div style="display:flex;align-items:flex-start;gap:10px">
+                <input type="checkbox" id="chk_${q.id}" ${s.checked?'checked':''} onchange="oncoToggle('${q.id}',this.checked)"
+                  style="width:18px;height:18px;margin-top:2px;accent-color:#276749;flex-shrink:0;cursor:pointer">
+                <div style="flex:1;min-width:0">
+                  <label for="chk_${q.id}" style="font-size:.88em;font-weight:600;color:var(--text);cursor:pointer;display:block;margin-bottom:4px">${q.q}</label>
+                  ${q.hint?`<div style="font-size:.75em;color:var(--text-muted);margin-bottom:6px">${q.hint}</div>`:''}
+                  <textarea id="ans_${q.id}" placeholder="תשובה / הערה..." rows="2"
+                    style="width:100%;font-family:var(--font);font-size:.8em;direction:rtl;border:1px solid #e2e8f0;border-radius:6px;padding:6px 8px;resize:vertical;color:var(--text);background:${s.checked?'#fff':'#fafafa'}"
+                    onchange="oncoAnswer('${q.id}',this.value)"
+                    onblur="oncoAnswer('${q.id}',this.value)">${s.answer||''}</textarea>
+                </div>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    `).join('');
+    updateBadge();
+  }
+
+  window.oncoToggle = function(id, checked) {
+    if(!state[id]) state[id]={};
+    state[id].checked = checked;
+    save();
+    render();
+  };
+  window.oncoAnswer = function(id, val) {
+    if(!state[id]) state[id]={};
+    state[id].answer = val;
+    save();
+  };
+  window.oncoCheckAll = function() {
+    cats.forEach(c=>c.qs.forEach(q=>{ if(!state[q.id]) state[q.id]={}; state[q.id].checked=true; }));
+    save(); render();
+  };
+  window.oncoClearAll = function() {
+    state = {};
+    localStorage.removeItem(STORAGE_KEY);
+    render();
+  };
+  window.oncoExport = function() {
+    let txt = 'סיכום פגישה — ד"ר נועה הורביץ להמן\n' + '='.repeat(40) + '\n\n';
+    cats.forEach(c => {
+      txt += c.title + '\n' + '-'.repeat(30) + '\n';
+      c.qs.forEach(q => {
+        const s = state[q.id]||{};
+        txt += `[${s.checked?'✓':' '}] ${q.q}\n`;
+        if(s.answer) txt += `    → ${s.answer}\n`;
+      });
+      txt += '\n';
+    });
+    navigator.clipboard.writeText(txt).then(()=>alert('הסיכום הועתק ללוח!')).catch(()=>alert('לא ניתן להעתיק — העתק ידנית'));
+  };
+
+  render();
 })();
 
 // Last update
