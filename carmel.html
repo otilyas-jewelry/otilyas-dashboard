@@ -260,7 +260,7 @@ document.getElementById('pwd-input').focus();
 // DATA — Edit here to update the dashboard
 // ═══════════════════════════════════════════
 const D = {
-  lastUpdated: '2026-04-22 (חשמל שולם, כאל הרשאות הועברו, פנסיה צלילה פתוחה)',
+  lastUpdated: '2026-05-01 (כרטיסי MAX, חשבון דיסקונט 0090666420, ויזה 8418 בנק יהב, הלוואות יהב מזוהות)',
 
   // Income
   income: {
@@ -283,17 +283,19 @@ const D = {
   // Mortgage
   mortgage: { payment: 5557, label: 'משכנתא (טפחות)' },
 
-  // Other loans
+  // Other loans — Bank Yahav (ויזה 8418) — identified 01/05/2026
   otherLoans: [
-    { name: 'הלוואה נוספת', payment: 1689.89, note: 'קרן ₪107,700' },
-    { name: 'בנק יהב', payment: 889, note: 'הלוואות ישנות' },
-    { name: 'פריטים נוספים', payment: 1690.15, note: '₪356.18 + ₪1,333.97' },
+    { name: 'הלוואת אקספרס — בנק יהב', payment: 356.18, note: 'תשלום 51/72 | יתרה ~₪7,479 | נגמר ינואר 2028' },
+    { name: 'הלוואה מחוץ למסגרת — בנק יהב', payment: 1333.71, note: 'תשלום 51/72 | יתרה ~₪28,007 | נגמר ינואר 2028' },
   ],
 
   // Standing orders
   standingOrders: {
-    'שריר יעקב': 462.65,
-    'דמי כרטיס': 18,
+    'ארנונה — מועצה מקומית כפר תבור': 770.35,
+    'APPLE.COM/BILL': 154.80,
+    'Google One': 39.00,
+    'דמי כרטיס ויזה 8418': 17.90,
+    'שריר יעקב (אח — החזר הוצאות)': 462.65,
   },
 
   // Credit cards — HISTORICAL averages (old cards closed)
@@ -306,13 +308,20 @@ const D = {
   },
 
   // New active cards
-  newCards: ['2818', '2917'],
+  newCards: [
+    '2818 — ויזה דיסקונט (כרמל+צלילה) | חיוב ב-03 לחודש | ₪25,137 ב-03.05',
+    '4327 — קרנות השוטרים MAX (כרמל) | ₪0 ✅',
+    '8418 — ויזה פלטינום בנק יהב (כרמל) | ₪3,015/חודש | ב-02 לחודש',
+    '2917 — דיסקונט פלטינה MAX (צלילה) | ⚠️ חריגת מסגרת ₪3,996 — לטפל ביום ראשון 04.05',
+    '1726 — קרנות השוטרים MAX (צלילה) | ₪0 ✅',
+  ],
 
   // Bank accounts
   accounts: {
-    account1: { id: '1615', type: 'עו"ש יומיומי', balance: 66.61 },
-    account2: { id: '1616', type: 'הלוואות/פנסיה', balance: 185603 },
+    account1: { id: '1615', type: 'עו"ש יומיומי — דיסקונט', balance: 66.61 },
+    account2: { id: '0090666420', type: 'משותף כרמל+צלילה — דיסקונט', balance: 210322.50 },
   },
+  yahavAccount: { id: '131-81152', bank: 'בנק יהב', card: 'ויזה 8418', monthlyCharge: 3015.10, loans: 1689.89 },
 
   // Insurance
   insurance: [
@@ -378,6 +387,8 @@ const D = {
       { name: 'ד"ר דראושה ח\'ליל', role: 'נוירולוגיה — חצור הגלילית' },
       { name: 'ד"ר לביא ארנון', role: 'אורולוגיה — רמת ישי' },
       { name: 'ד"ר לילאנה גולדרינג', role: 'פסיכיאטרית — כפר תבור, 052-8489249' },
+      { name: 'דניאלה בן זאב', role: 'פסיכולוגית של צלילה (אמא) | ~₪350-700 כל שבועיים' },
+      { name: 'חיה פיינשטיין', role: 'נציגת בנק דיסקונט | 0768051355 | סניף 362' },
     ],
     meds: ['Seroquel 25mg/d (PTSD)', 'Lyrica 150mg (כאב עצבי) — הועלה מינון 23/03/2026', 'ARCOXIA 90MG (כאב) — ד"ר דראושה 23/03', 'קנאביס רפואי (PTSD)', 'BIMATOPROST (עיניים)', 'CARGILOC 1.25mg (לב)', 'ROWATINEX (כליות)', 'EMDR — מומלץ (ד"ר גולדרינג)'],
   },
@@ -731,12 +742,12 @@ updateClock(); setInterval(updateClock, 30000);
   // Loan #4 ending
   const l4 = C.loanTimeline.find(l => l.id === '183265');
   if (l4) html += `<div class="alert alert-info"><span class="alert-icon">📌</span>הלוואה #4 נגמרת בעוד ~${Math.round(l4.daysLeft/30)} חודשים (ינואר 2028). ישתחררו ₪${fmt(l4.payment)}/חודש!</div>`;
-  // Old cards closed
-  html += `<div class="alert alert-warn"><span class="alert-icon">⚠️</span>כרטיסים ישנים (8563, 8309) נסגרו. כרטיסים חדשים (2818, 2917) פעילים. צריך לחכות חודש-חודשיים לנתונים.</div>`;
+  // Card 2917 overdraft — urgent
+  html += `<div class="alert alert-danger"><span class="alert-icon">💳</span>כרטיס 2917 (צלילה) — חריגת מסגרת ₪3,996! עסקאות מסורבות. יום ראשון 04.05: חיה פיינשטיין דיסקונט 0768051355</div>`;
+  // Account balance
+  html += `<div class="alert alert-info"><span class="alert-icon">💰</span>חשבון 0090666420: יתרה ₪210,322 (01.05.26). חיוב ₪25,137 ב-03.05 — כיסוי ✅</div>`;
   // MRI
-  if (D.medical.pendingMRI) html += `<div class="alert alert-danger"><span class="alert-icon">🏥</span>MRI בהרדמה: ${D.medical.mriStatus}. צריך מעקב!</div>`;
-  // Card 2818 issue
-  html += `<div class="alert alert-info"><span class="alert-icon">💳</span>כרטיס 2818: אם עדיין לא עובר מעל ₪300, לפנות למקס (חברת האשראי).</div>`;
+  if (D.medical.pendingMRI) html += `<div class="alert alert-warn"><span class="alert-icon">🏥</span>MRI: ${D.medical.mriStatus}</div>`;
   document.getElementById('alerts').innerHTML = html;
 })();
 
