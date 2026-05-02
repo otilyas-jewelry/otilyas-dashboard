@@ -7,6 +7,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              brand: { dark: '#1F4E79', mid: '#2E75B6', light: '#9DC3E6' }
+            },
+            fontFamily: {
+              hebrew: ['Heebo', 'sans-serif'],
+              latin: ['Inter', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
     <script type="module" crossorigin src="./assets/index-DND-uDxP.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-e8QEtbqc.css">
   </head>
