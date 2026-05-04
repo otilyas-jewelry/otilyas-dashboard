@@ -1836,8 +1836,97 @@ function renderAll() {
   if (active) switchTab(active);
 }
 
+function seedHospPeriodData() {
+  // ═══════════════════════════════════════════════════════════════
+  // נתוני תקופת אשפוז כרמל — 31/03/2026 עד 04/05/2026
+  // נוצר אוטומטית ע"י ריף 04/05/2026 — מבוסס על PDFs מקוריים
+  // פועל רק אם החודש ריק (לא ידרוס נתונים ידניים)
+  // ═══════════════════════════════════════════════════════════════
+
+  // ── אפריל 2026 ──
+  const apr = getMonth('2026-04');
+
+  if (!apr.expensesMax || apr.expensesMax.length === 0) {
+    apr.expensesMax = [
+      { name:'הוצאות קבועות עסקיות — כספיט+פרטנר+ביטוח לאומי+כלל+חשמל+רב-פס+פנגו', amount:1185.80, cat:'עסקי - קבוע' },
+      { name:'מנויים דיגיטל — Claude+Shopify+Midjourney+ChatGPT+Canva+YouTube+Anthropic+Spotify+Google One+Instagram+Higgsfield', amount:970.66, cat:'עסקי - מנויים' },
+      { name:'הייפ יעד סליקה', amount:118, cat:'עסקי - סליקה' },
+      { name:'סופר פארם רמב"ם + שופרסל עין כרם 🏥 (ביקורי הדסה)', amount:44.50, cat:'ביה"ח/בריאות' },
+      { name:'אלנבי 20 + SHIPPER GLOBAL + דמי כרטיס', amount:140.26, cat:'שונות' },
+      { name:'החזר שנקר למודי חוץ', amount:-408, cat:'זיכוי' },
+    ];
+    save();
+  }
+
+  if (!apr.expensesPersonal || apr.expensesPersonal.length === 0) {
+    apr.expensesPersonal = [
+      // ── ביה"ח ישיר ──
+      { name:'ביה"ח ישיר 🏥 — קפה פוריה+חניון פוריה+סופר פארם הדסה (×3)+שופרסל עין כרם+כרמל ניתוח+משקט חניה (×4)', amount:471, cat:'ביה"ח/בריאות' },
+      // ── Wolt ──
+      { name:'WOLT (×6) — אפריל כולו', amount:1440.36, cat:'אוכל / Wolt' },
+      // ── שוק ומזון ──
+      { name:'שוק ומזון — עילא+ניצת הדובדבן+הטחנה+בול מרקט+נוי השדה+השקד+אטליז+שנקין מרקט', amount:1048, cat:'מזון / שוק' },
+      // ── קפה ומסעדות ──
+      { name:'קפה/מסעדות — נומנה+WayCup+תמוז+ארומה+רוגה בר+אר קפה', amount:400, cat:'קפה / מסעדות' },
+      // ── קניות בגדים ──
+      { name:'קניות בגדים — בוטיק שלוש+טמאשי+הסטוק', amount:509.70, cat:'קניות בגדים' },
+      // ── שכ"ט רו"ח ──
+      { name:'שכ"ט רו"ח — עמית ברנשטיין (ינואר–מרץ 2026)', amount:1440, cat:'עסקי - רו"ח' },
+      // ── ביטוח הו"ק ──
+      { name:'ביטוח הו"ק — הפניקס+מגדל', amount:314.37, cat:'ביטוח' },
+      // ── תקשורת הו"ק ──
+      { name:'תקשורת הו"ק — סלקום+דינמיקה', amount:285.33, cat:'תקשורת' },
+      // ── שיעורי נהיגה גיא ──
+      { name:'שיעורי נהיגה גיא — ינון לוין (שיעור 1)', amount:285, cat:'משפחה' },
+      // ── בריאות אישית ──
+      { name:"ד\"ר ענת שמואלי 💊", amount:150, cat:'בריאות אישית' },
+      // ── קניות שונות ──
+      { name:'קניות שונות — aliexpress+צים הופטמן+HOTEL MONTEFIORE+שונות', amount:218, cat:'קניות' },
+      // ── הו"ק קטנות ──
+      { name:'הו"ק קטנות — סאני+פנגו Diners+Google One Diners+דמי כרטיסים', amount:117.60, cat:'מנויים / הו"ק' },
+      // ── דלק ──
+      { name:'דלק — פז יילו+דור אלון', amount:115.49, cat:'תחבורה' },
+      // ── זיכוי שופרסל ──
+      { name:'זיכוי שופרסל עין כרם', amount:-49.90, cat:'זיכוי' },
+      // ── PAYBOX ──
+      { name:'PAYBOX Yaniv Levin + שונות נוספות', amount:61.27, cat:'שונות' },
+    ];
+    save();
+  }
+
+  // הכנסות אפריל (אם ריק)
+  const aprIncomeEmpty = Object.values(apr.income).every(v => +v === 0);
+  if (aprIncomeEmpty) {
+    apr.income.store   = 5660.50; // הייפ ₪1,510 + יסמין ₪3,850 + עדן חמו ₪300.50
+    apr.income.maskit  = 1034.50;
+    apr.income.wix     = 972;
+    save();
+  }
+
+  // יתרות כרטיסים לאפריל (אם ריק)
+  if (!apr.cardMax)   { apr.cardMax   = 2064.34; save(); }
+  if (!apr.cardDiners){ apr.cardDiners = 7480.68; save(); }
+  if (!apr.cardVisa)  { apr.cardVisa   = 444.60;  save(); }
+
+  // ── מאי 2026 (חלקי — 01–04/05) ──
+  const may = getMonth('2026-05');
+  if (!may.expensesPersonal || may.expensesPersonal.length === 0) {
+    may.expensesPersonal = [
+      { name:'שיעורי נהיגה גיא — ינון לוין (שיעור 2)', amount:285, cat:'משפחה' },
+      { name:'שופרסל עין כרם (×2) + סופר פארם הדסה עין כרם 04/05 🏥', amount:87.90, cat:'ביה"ח/בריאות' },
+      { name:'סטור פלוס', amount:299.86, cat:'קניות' },
+      { name:'בול מרקט (×3)', amount:116.50, cat:'מזון' },
+      { name:'ארומה 03/05', amount:26, cat:'קפה / מסעדות' },
+      { name:'משק סמואל + mae', amount:49, cat:'מזון / שוק' },
+      { name:'Google One Diners', amount:8, cat:'מנויים / הו"ק' },
+    ];
+    save();
+  }
+}
+
 function init() {
   load();
+  seedHospPeriodData();
   initMonth();
   document.getElementById('headerDate').textContent = new Date().toLocaleDateString('he-IL',{weekday:'short',day:'numeric',month:'long'});
   renderAll();
