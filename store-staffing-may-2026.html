@@ -18,12 +18,24 @@
     --gold:    #c4a882;
     --gold-lt: #ede0cc;
 
-    /* Designer palette — sand & lilac */
-    --d-tali:    #e8e0f0;   /* לילך בהיר */
-    --d-michal:  #f0e8dc;   /* חול חם */
-    --d-irit:    #ddd4ec;   /* לילך עמוק יותר */
-    --d-tal:     #ede4d4;   /* חול בז' */
-    --d-closed:  #f4f1ee;   /* קרם ניטרלי */
+    /* Designer palette — sand & lilac, distinct */
+    --d-tali:        #c8b4e0;   /* לילך — כהה וחזק */
+    --d-tali-text:   #3a2858;
+    --d-tali-bar:    #7a4eb8;
+
+    --d-michal:      #e8d4a8;   /* חול זהוב */
+    --d-michal-text: #5a3e18;
+    --d-michal-bar:  #c49040;
+
+    --d-irit:        #dce8f4;   /* תכלת-לבנדר */
+    --d-irit-text:   #1e3d5c;
+    --d-irit-bar:    #4a80c0;
+
+    --d-tal:         #f0c8d8;   /* ורוד-מאוו */
+    --d-tal-text:    #5c1e38;
+    --d-tal-bar:     #c04870;
+
+    --d-closed:      #eeebe6;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -268,39 +280,39 @@
   /* Light monochromatic shades per designer */
   [data-designer="tali"] {
     background: var(--d-tali);
-    border-color: #c8b8d8;
+    border-color: #b09ccc;
   }
-  [data-designer="tali"] .day-number { color: var(--ink-mid); }
-  [data-designer="tali"] .day-note   { color: var(--ink-lt); }
-  [data-designer="tali"] .designer-badge { color: var(--ink); }
-  [data-designer="tali"]::before { background: #9070b0 !important; }
+  [data-designer="tali"] .day-number { color: var(--d-tali-text); }
+  [data-designer="tali"] .day-note   { color: #7a62a0; }
+  [data-designer="tali"] .designer-badge { color: var(--d-tali-text); }
+  [data-designer="tali"]::before { background: var(--d-tali-bar) !important; }
 
   [data-designer="michal"] {
     background: var(--d-michal);
-    border-color: #d4c0a0;
+    border-color: #d4b880;
   }
-  [data-designer="michal"] .day-number { color: var(--ink-mid); }
-  [data-designer="michal"] .day-note   { color: var(--ink-lt); }
-  [data-designer="michal"] .designer-badge { color: var(--ink); }
-  [data-designer="michal"]::before { background: #c4a882 !important; }
+  [data-designer="michal"] .day-number { color: var(--d-michal-text); }
+  [data-designer="michal"] .day-note   { color: #8a6830; }
+  [data-designer="michal"] .designer-badge { color: var(--d-michal-text); }
+  [data-designer="michal"]::before { background: var(--d-michal-bar) !important; }
 
   [data-designer="irit"] {
     background: var(--d-irit);
-    border-color: #b8a4d0;
+    border-color: #a0c0e0;
   }
-  [data-designer="irit"] .day-number { color: var(--ink-mid); }
-  [data-designer="irit"] .day-note   { color: var(--ink-lt); }
-  [data-designer="irit"] .designer-badge { color: var(--ink); }
-  [data-designer="irit"]::before { background: #7850a0 !important; }
+  [data-designer="irit"] .day-number { color: var(--d-irit-text); }
+  [data-designer="irit"] .day-note   { color: #3a6090; }
+  [data-designer="irit"] .designer-badge { color: var(--d-irit-text); }
+  [data-designer="irit"]::before { background: var(--d-irit-bar) !important; }
 
   [data-designer="tal"] {
     background: var(--d-tal);
-    border-color: #d0b890;
+    border-color: #e0a0b8;
   }
-  [data-designer="tal"] .day-number { color: var(--ink-mid); }
-  [data-designer="tal"] .day-note   { color: var(--ink-lt); }
-  [data-designer="tal"] .designer-badge { color: var(--ink); }
-  [data-designer="tal"]::before { background: #b09070 !important; }
+  [data-designer="tal"] .day-number { color: var(--d-tal-text); }
+  [data-designer="tal"] .day-note   { color: #903050; }
+  [data-designer="tal"] .designer-badge { color: var(--d-tal-text); }
+  [data-designer="tal"]::before { background: var(--d-tal-bar) !important; }
 
   [data-designer="closed"] {
     background: var(--d-closed);
