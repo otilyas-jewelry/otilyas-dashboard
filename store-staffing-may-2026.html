@@ -7,23 +7,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink:     #2a2a2a;
-    --ink-mid: #5a5a5a;
-    --ink-lt:  #9a9a9a;
-    --ink-xl:  #c8c8c8;
-    --paper:   #faf8f5;
-    --paper-2: #f4f0eb;
-    --paper-3: #ece5dc;
-    --paper-4: #dfd6c8;
-    --gold:    #b8975a;
-    --gold-lt: #f0e4c4;
+    --ink:     #3a3040;
+    --ink-mid: #6b5f78;
+    --ink-lt:  #a896b4;
+    --ink-xl:  #d4c8dc;
+    --paper:   #faf7f4;
+    --paper-2: #f3ede6;
+    --paper-3: #e8ddd0;
+    --paper-4: #d9cbb8;
+    --gold:    #c4a882;
+    --gold-lt: #ede0cc;
 
-    /* Designer palette — all light */
-    --d-tali:    #e8e4de;
-    --d-michal:  #dde6e0;
-    --d-irit:    #dde3ec;
-    --d-tal:     #ece0e8;
-    --d-closed:  #f4f2ef;
+    /* Designer palette — sand & lilac */
+    --d-tali:    #e8e0f0;   /* לילך בהיר */
+    --d-michal:  #f0e8dc;   /* חול חם */
+    --d-irit:    #ddd4ec;   /* לילך עמוק יותר */
+    --d-tal:     #ede4d4;   /* חול בז' */
+    --d-closed:  #f4f1ee;   /* קרם ניטרלי */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -268,39 +268,39 @@
   /* Light monochromatic shades per designer */
   [data-designer="tali"] {
     background: var(--d-tali);
-    border-color: #cdc8c0;
+    border-color: #c8b8d8;
   }
   [data-designer="tali"] .day-number { color: var(--ink-mid); }
   [data-designer="tali"] .day-note   { color: var(--ink-lt); }
   [data-designer="tali"] .designer-badge { color: var(--ink); }
-  [data-designer="tali"]::before { background: #8a8078 !important; }
+  [data-designer="tali"]::before { background: #9070b0 !important; }
 
   [data-designer="michal"] {
     background: var(--d-michal);
-    border-color: #beccbf;
+    border-color: #d4c0a0;
   }
   [data-designer="michal"] .day-number { color: var(--ink-mid); }
   [data-designer="michal"] .day-note   { color: var(--ink-lt); }
   [data-designer="michal"] .designer-badge { color: var(--ink); }
-  [data-designer="michal"]::before { background: #6a9a78 !important; }
+  [data-designer="michal"]::before { background: #c4a882 !important; }
 
   [data-designer="irit"] {
     background: var(--d-irit);
-    border-color: #bcc6d4;
+    border-color: #b8a4d0;
   }
   [data-designer="irit"] .day-number { color: var(--ink-mid); }
   [data-designer="irit"] .day-note   { color: var(--ink-lt); }
   [data-designer="irit"] .designer-badge { color: var(--ink); }
-  [data-designer="irit"]::before { background: #6a82a8 !important; }
+  [data-designer="irit"]::before { background: #7850a0 !important; }
 
   [data-designer="tal"] {
     background: var(--d-tal);
-    border-color: #d4becc;
+    border-color: #d0b890;
   }
   [data-designer="tal"] .day-number { color: var(--ink-mid); }
   [data-designer="tal"] .day-note   { color: var(--ink-lt); }
   [data-designer="tal"] .designer-badge { color: var(--ink); }
-  [data-designer="tal"]::before { background: #a06888 !important; }
+  [data-designer="tal"]::before { background: #b09070 !important; }
 
   [data-designer="closed"] {
     background: var(--d-closed);
