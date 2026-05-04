@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>איוש החנות — מאי 2026 | OTILYAS</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Heebo', 'Arial Hebrew', sans-serif;
+    background: linear-gradient(135deg, #f5e6d3 0%, #e8d5c4 100%);
+    color: #2d2d2d;
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.5;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding: 24px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+  }
+  header h1 { font-size: 28px; color: #4a2c2a; margin-bottom: 6px; letter-spacing: -0.5px; }
+  header p { color: #7a5a52; font-size: 15px; }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin: 18px 0;
+  }
+  .legend-item {
+    background: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .calendar {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 6px;
+    margin-bottom: 24px;
+  }
+  .calendar th {
+    background: #4a2c2a;
+    color: #f5e6d3;
+    padding: 10px 4px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 13px;
+  }
+  .calendar td {
+    background: white;
+    border-radius: 10px;
+    padding: 10px 6px;
+    text-align: center;
+    height: 90px;
+    vertical-align: top;
+    position: relative;
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: default;
+    border: 2px solid transparent;
+  }
+  .calendar td.editable { cursor: pointer; }
+  .calendar td.editable:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-color: #4a2c2a; }
+  .calendar td.empty { background: transparent; }
+  .day-num { font-weight: 700; font-size: 16px; color: #4a2c2a; display: block; margin-bottom: 6px; }
+  .day-person {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 6px;
+    border-radius: 6px;
+    display: inline-block;
+    line-height: 1.2;
+  }
+  .day-note { font-size: 10px; color: #7a5a52; margin-top: 4px; font-style: italic; }
+  .person-tali { background: #fce4ec; color: #880e4f; }
+  .person-michal { background: #fff8e1; color: #b8860b; }
+  .person-irit { background: #f3e5f5; color: #6a1b9a; }
+  .person-tal { background: #e8f5e9; color: #2e7d32; }
+  .person-closed { background: #eceff1; color: #546e7a; }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .stat-num { font-size: 28px; font-weight: 700; color: #4a2c2a; }
+  .stat-label { font-size: 13px; color: #7a5a52; margin-top: 4px; }
+  .controls {
+    background: rgba(255,255,255,0.7);
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  button {
+    background: #4a2c2a;
+    color: #f5e6d3;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    margin: 0 4px;
+    transition: opacity 0.15s;
+  }
+  button:hover { opacity: 0.85; }
+  button.secondary { background: white; color: #4a2c2a; border: 1px solid #4a2c2a; }
+  .edit-banner {
+    background: #c8e6c9;
+    color: #1b5e20;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal.active { display: flex; }
+  .modal-content {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 360px;
+  }
+  .modal-content h3 { margin-bottom: 14px; color: #4a2c2a; }
+  .modal-content input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 12px;
+    font-family: inherit;
+    direction: rtl;
+  }
+  .modal-content .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .modal-content .option-btn {
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 600;
+    font-family: inherit;
+    font-size: 14px;
+  }
+  .modal-content .option-btn.selected { border-color: #4a2c2a; }
+  footer { text-align: center; color: #7a5a52; font-size: 12px; padding: 20px 0; }
+  @media (max-width: 600px) {
+    body { padding: 10px; }
+    header h1 { font-size: 22px; }
+    .calendar { border-spacing: 3px; }
+    .calendar td { padding: 6px 2px; height: 75px; }
+    .day-num { font-size: 13px; }
+    .day-person { font-size: 11px; padding: 2px 4px; }
+    .day-note { font-size: 9px; }
+    .calendar th { font-size: 11px; padding: 6px 2px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>איוש החנות — מאי 2026</h1>
+    <p>OTILYAS · עיצוב ואופנה</p>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#fce4ec"></span>טלי</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#fff8e1"></span>מיכל · תכשיטים</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#f3e5f5"></span>עירית · תכשיטים</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#e8f5e9"></span>טל · בגדים</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#eceff1"></span>סגור</span>
+    </div>
+  </header>
+
+  <div id="editBanner" class="edit-banner" style="display:none;">
+    מצב עריכה פעיל · לחצי על יום כדי לשנות
+  </div>
+
+  <div class="controls">
+    <button id="lockBtn" onclick="askPassword()">🔒 כניסה לעריכה</button>
+    <button id="saveBtn" class="secondary" onclick="exportData()" style="display:none;">📥 ייצוא JSON</button>
+    <button id="resetBtn" class="secondary" onclick="resetData()" style="display:none;">↺ איפוס</button>
+    <button id="logoutBtn" class="secondary" onclick="logout()" style="display:none;">🔓 יציאה</button>
+  </div>
+
+  <table class="calendar">
+    <thead>
+      <tr>
+        <th>ראשון</th><th>שני</th><th>שלישי</th><th>רביעי</th><th>חמישי</th><th>שישי</th><th>שבת</th>
+      </tr>
+    </thead>
+    <tbody id="calendarBody"></tbody>
+  </table>
+
+  <div class="stats" id="stats"></div>
+
+  <footer>
+    עודכן לאחרונה: <span id="lastUpdate">04/05/2026</span><br>
+    OTILYAS © 2026
+  </footer>
+</div>
+
+<div id="passwordModal" class="modal">
+  <div class="modal-content">
+    <h3>הזיני סיסמה לעריכה</h3>
+    <input type="password" id="passwordInput" placeholder="סיסמה" autocomplete="off">
+    <button onclick="checkPassword()">אישור</button>
+    <button class="secondary" onclick="closeModal('passwordModal')">ביטול</button>
+  </div>
+</div>
+
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <h3 id="editModalTitle">עריכת יום</h3>
+    <div class="options">
+      <button class="option-btn person-tali" onclick="setPerson('tali')">👩 טלי</button>
+      <button class="option-btn person-michal" onclick="setPerson('michal')">💍 מיכל</button>
+      <button class="option-btn person-irit" onclick="setPerson('irit')">💎 עירית</button>
+      <button class="option-btn person-tal" onclick="setPerson('tal')">👗 טל</button>
+      <button class="option-btn person-closed" onclick="setPerson('closed')">🔒 סגור</button>
+      <button class="option-btn" style="background:#fff;border:1px dashed #aaa;" onclick="setPerson('empty')">— ריק</button>
+    </div>
+    <button class="secondary" onclick="closeModal('editModal')">סגירה</button>
+  </div>
+</div>
+
+<script>
+const PERSON_DATA = {
+  tali:   { label: 'טלי',   class: 'person-tali' },
+  michal: { label: 'מיכל',  class: 'person-michal' },
+  irit:   { label: 'עירית', class: 'person-irit' },
+  tal:    { label: 'טל',    class: 'person-tal' },
+  closed: { label: 'סגור',  class: 'person-closed' },
+  empty:  { label: '',      class: '' }
+};
+
+const DEFAULT_SCHEDULE = {
+  '2026-05-04': { person: 'tali',   note: '' },
+  '2026-05-05': { person: 'tali',   note: 'ל״ג בעומר' },
+  '2026-05-06': { person: 'tali',   note: '' },
+  '2026-05-07': { person: 'tali',   note: '' },
+  '2026-05-08': { person: 'tali',   note: 'יום האם' },
+  '2026-05-09': { person: 'closed', note: '' },
+  '2026-05-10': { person: 'tali',   note: '' },
+  '2026-05-11': { person: 'tali',   note: 'בדיקת אמצע' },
+  '2026-05-12': { person: 'michal', note: '' },
+  '2026-05-13': { person: 'tali',   note: '' },
+  '2026-05-14': { person: 'tal',    note: '' },
+  '2026-05-15': { person: 'tal',    note: '' },
+  '2026-05-16': { person: 'closed', note: '' },
+  '2026-05-17': { person: 'tali',   note: '' },
+  '2026-05-18': { person: 'michal', note: '' },
+  '2026-05-19': { person: 'irit',   note: 'קצר · ערב חג' },
+  '2026-05-20': { person: 'tali',   note: '' },
+  '2026-05-21': { person: 'tali',   note: '' },
+  '2026-05-22': { person: 'tali',   note: '' },
+  '2026-05-23': { person: 'closed', note: '' },
+  '2026-05-24': { person: 'tali',   note: '' },
+  '2026-05-25': { person: 'michal', note: 'יום ירושלים' },
+  '2026-05-26': { person: 'irit',   note: '' },
+  '2026-05-27': { person: 'michal', note: '' },
+  '2026-05-28': { person: 'tali',   note: '' },
+  '2026-05-29': { person: 'tali',   note: '' },
+  '2026-05-30': { person: 'closed', note: '' },
+  '2026-05-31': { person: 'closed', note: 'ערב שבועות' },
+  '2026-06-01': { person: 'closed', note: 'שבועות' }
+};
+
+const PASSWORD = 'OTILYAS17';
+const STORAGE_KEY = 'otilyas-staffing-may-2026';
+let editMode = false;
+let currentEditKey = null;
+let schedule = loadSchedule();
+
+function loadSchedule() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
+  } catch(e) {
+    return JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
+  }
+}
+
+function saveSchedule() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(schedule));
+}
+
+function buildCalendar() {
+  const tbody = document.getElementById('calendarBody');
+  tbody.innerHTML = '';
+  const weeks = [
+    ['', '', '', '', '', '2026-05-01', '2026-05-02'],
+    ['2026-05-03', '2026-05-04', '2026-05-05', '2026-05-06', '2026-05-07', '2026-05-08', '2026-05-09'],
+    ['2026-05-10', '2026-05-11', '2026-05-12', '2026-05-13', '2026-05-14', '2026-05-15', '2026-05-16'],
+    ['2026-05-17', '2026-05-18', '2026-05-19', '2026-05-20', '2026-05-21', '2026-05-22', '2026-05-23'],
+    ['2026-05-24', '2026-05-25', '2026-05-26', '2026-05-27', '2026-05-28', '2026-05-29', '2026-05-30'],
+    ['2026-05-31', '2026-06-01', '', '', '', '', '']
+  ];
+
+  weeks.forEach(week => {
+    const tr = document.createElement('tr');
+    week.forEach(key => {
+      const td = document.createElement('td');
+      if (!key) {
+        td.className = 'empty';
+      } else {
+        const dayNum = parseInt(key.split('-')[2], 10);
+        const monthLabel = key.startsWith('2026-06') ? '/6' : '';
+        const data = schedule[key];
+        const personData = data ? PERSON_DATA[data.person] : null;
+        td.innerHTML = `<span class="day-num">${dayNum}${monthLabel}</span>`;
+        if (personData && personData.label) {
+          td.innerHTML += `<span class="day-person ${personData.class}">${personData.label}</span>`;
+        }
+        if (data && data.note) {
+          td.innerHTML += `<div class="day-note">${data.note}</div>`;
+        }
+        if (editMode && data) {
+          td.classList.add('editable');
+          td.onclick = () => openEdit(key);
+        }
+      }
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+function buildStats() {
+  const counts = { tali: 0, michal: 0, irit: 0, tal: 0, closed: 0 };
+  Object.values(schedule).forEach(d => { if (counts[d.person] !== undefined) counts[d.person]++; });
+  const statsEl = document.getElementById('stats');
+  const labels = {
+    tali: 'טלי', michal: 'מיכל', irit: 'עירית', tal: 'טל', closed: 'סגור'
+  };
+  statsEl.innerHTML = Object.keys(counts).map(k =>
+    `<div class="stat-card"><div class="stat-num">${counts[k]}</div><div class="stat-label">${labels[k]}</div></div>`
+  ).join('');
+}
+
+function askPassword() {
+  document.getElementById('passwordModal').classList.add('active');
+  setTimeout(() => document.getElementById('passwordInput').focus(), 100);
+}
+
+function checkPassword() {
+  const input = document.getElementById('passwordInput');
+  if (input.value === PASSWORD) {
+    editMode = true;
+    document.getElementById('editBanner').style.display = 'block';
+    document.getElementById('lockBtn').style.display = 'none';
+    document.getElementById('saveBtn').style.display = 'inline-block';
+    document.getElementById('resetBtn').style.display = 'inline-block';
+    document.getElementById('logoutBtn').style.display = 'inline-block';
+    closeModal('passwordModal');
+    input.value = '';
+    buildCalendar();
+  } else {
+    alert('סיסמה שגויה');
+    input.value = '';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('passwordInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkPassword();
+  });
+  buildCalendar();
+  buildStats();
+});
+
+function logout() {
+  editMode = false;
+  document.getElementById('editBanner').style.display = 'none';
+  document.getElementById('lockBtn').style.display = 'inline-block';
+  document.getElementById('saveBtn').style.display = 'none';
+  document.getElementById('resetBtn').style.display = 'none';
+  document.getElementById('logoutBtn').style.display = 'none';
+  buildCalendar();
+}
+
+function openEdit(key) {
+  if (!editMode) return;
+  currentEditKey = key;
+  const dayNum = parseInt(key.split('-')[2], 10);
+  const monthLabel = key.startsWith('2026-06') ? ' ביוני' : ' במאי';
+  document.getElementById('editModalTitle').textContent = `עריכת ${dayNum}${monthLabel}`;
+  document.getElementById('editModal').classList.add('active');
+}
+
+function setPerson(person) {
+  if (!currentEditKey) return;
+  schedule[currentEditKey].person = person;
+  saveSchedule();
+  buildCalendar();
+  buildStats();
+  closeModal('editModal');
+  updateLastEdited();
+}
+
+function updateLastEdited() {
+  const now = new Date();
+  const d = String(now.getDate()).padStart(2, '0');
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const y = now.getFullYear();
+  const h = String(now.getHours()).padStart(2, '0');
+  const min = String(now.getMinutes()).padStart(2, '0');
+  document.getElementById('lastUpdate').textContent = `${d}/${m}/${y} ${h}:${min}`;
+  localStorage.setItem(STORAGE_KEY + '-updated', document.getElementById('lastUpdate').textContent);
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+function exportData() {
+  const data = JSON.stringify(schedule, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'staffing-may-2026.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetData() {
+  if (!confirm('לאפס לערכים המקוריים?')) return;
+  schedule = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
+  saveSchedule();
+  buildCalendar();
+  buildStats();
+}
+
+const lastUpdated = localStorage.getItem(STORAGE_KEY + '-updated');
+if (lastUpdated) {
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('lastUpdate').textContent = lastUpdated;
+  });
+}
+</script>
+</body>
+</html>
