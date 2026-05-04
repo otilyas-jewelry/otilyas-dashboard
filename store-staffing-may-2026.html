@@ -7,16 +7,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink:     #1c1c1c;
-    --ink-mid: #4a4a4a;
-    --ink-lt:  #8a8a8a;
+    --ink:     #2a2a2a;
+    --ink-mid: #5a5a5a;
+    --ink-lt:  #9a9a9a;
     --ink-xl:  #c8c8c8;
-    --paper:   #f9f6f2;
-    --paper-2: #f2ede7;
-    --paper-3: #e8e0d6;
-    --paper-4: #d8cfc4;
+    --paper:   #faf8f5;
+    --paper-2: #f4f0eb;
+    --paper-3: #ece5dc;
+    --paper-4: #dfd6c8;
     --gold:    #b8975a;
-    --gold-lt: #e8d9b8;
+    --gold-lt: #f0e4c4;
+
+    /* Designer palette — all light */
+    --d-tali:    #e8e4de;
+    --d-michal:  #dde6e0;
+    --d-irit:    #dde3ec;
+    --d-tal:     #ece0e8;
+    --d-closed:  #f4f2ef;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -258,48 +265,48 @@
     letter-spacing: 0.5px;
   }
 
-  /* Monochromatic shades per designer */
+  /* Light monochromatic shades per designer */
   [data-designer="tali"] {
-    background: var(--ink);
-    border-color: var(--ink);
+    background: var(--d-tali);
+    border-color: #cdc8c0;
   }
-  [data-designer="tali"] .day-number { color: rgba(255,255,255,0.5); }
-  [data-designer="tali"] .day-note   { color: rgba(255,255,255,0.45); }
-  [data-designer="tali"] .designer-badge { color: var(--paper); }
-  [data-designer="tali"]::before { background: var(--gold) !important; }
+  [data-designer="tali"] .day-number { color: var(--ink-mid); }
+  [data-designer="tali"] .day-note   { color: var(--ink-lt); }
+  [data-designer="tali"] .designer-badge { color: var(--ink); }
+  [data-designer="tali"]::before { background: #8a8078 !important; }
 
   [data-designer="michal"] {
-    background: var(--ink-mid);
-    border-color: var(--ink-mid);
+    background: var(--d-michal);
+    border-color: #beccbf;
   }
-  [data-designer="michal"] .day-number { color: rgba(255,255,255,0.5); }
-  [data-designer="michal"] .day-note   { color: rgba(255,255,255,0.45); }
-  [data-designer="michal"] .designer-badge { color: white; }
-  [data-designer="michal"]::before { background: var(--gold) !important; }
+  [data-designer="michal"] .day-number { color: var(--ink-mid); }
+  [data-designer="michal"] .day-note   { color: var(--ink-lt); }
+  [data-designer="michal"] .designer-badge { color: var(--ink); }
+  [data-designer="michal"]::before { background: #6a9a78 !important; }
 
   [data-designer="irit"] {
-    background: var(--paper-4);
-    border-color: var(--paper-4);
+    background: var(--d-irit);
+    border-color: #bcc6d4;
   }
   [data-designer="irit"] .day-number { color: var(--ink-mid); }
   [data-designer="irit"] .day-note   { color: var(--ink-lt); }
   [data-designer="irit"] .designer-badge { color: var(--ink); }
-  [data-designer="irit"]::before { background: var(--ink) !important; }
+  [data-designer="irit"]::before { background: #6a82a8 !important; }
 
   [data-designer="tal"] {
-    background: var(--paper-3);
-    border-color: var(--paper-3);
+    background: var(--d-tal);
+    border-color: #d4becc;
   }
   [data-designer="tal"] .day-number { color: var(--ink-mid); }
   [data-designer="tal"] .day-note   { color: var(--ink-lt); }
   [data-designer="tal"] .designer-badge { color: var(--ink); }
-  [data-designer="tal"]::before { background: var(--ink-lt) !important; }
+  [data-designer="tal"]::before { background: #a06888 !important; }
 
   [data-designer="closed"] {
-    background: var(--paper-2);
+    background: var(--d-closed);
     border-color: var(--paper-3);
   }
-  [data-designer="closed"] .day-number { color: var(--xl); }
+  [data-designer="closed"] .day-number { color: var(--ink-xl); }
   [data-designer="closed"] .designer-badge {
     font-family: 'Heebo', sans-serif;
     font-size: 10px;
